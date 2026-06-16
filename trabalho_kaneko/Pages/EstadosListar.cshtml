@@ -1,0 +1,55 @@
+﻿@page
+@model trabalho_kaneko.Pages.EstadosListarModel
+@{
+    ViewData["Title"] = "Estados Cadastrados";
+}
+
+<div class="container mt-4 mb-5">
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3 class="mb-0">Gestão de Estados</h3>
+        <a asp-page="/Estados" class="btn btn-success fw-bold">+ Novo Estado</a>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-header bg-secondary text-white">
+            <h5 class="mb-0">Estados Cadastrados</h5>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Código</th>
+                            <th>Estado</th>
+                            <th>UF</th>
+                            <th>País</th>
+                            <th>Data de Inclusão</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.ListaEstados != null && Model.ListaEstados.Count > 0)
+                        {
+                            foreach (var item in Model.ListaEstados)
+                            {
+                                <tr>
+                                    <td>@item.IdEstado</td>
+                                    <td class="fw-bold">@item.Estado</td>
+                                    <td>@item.Uf</td>
+                                    <td>@item.NomePais</td>
+                                    <td>@item.DataInclusao?.ToString("dd/MM/yyyy HH:mm")</td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="5" class="text-center py-3">Nenhum estado cadastrado ainda.</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

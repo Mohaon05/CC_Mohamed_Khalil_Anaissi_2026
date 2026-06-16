@@ -9,8 +9,6 @@ namespace trabalho_kaneko.Pages
     public class CidadesModel : PageModel
     {
         private readonly CidadeRepository _cidadeRepository;
-
-        // NOVO: Trazemos o repositório de Estados para popular a caixa de seleção na tela
         private readonly EstadoRepository _estadoRepository;
 
         public CidadesModel(CidadeRepository cidadeRepository, EstadoRepository estadoRepository)
@@ -22,9 +20,8 @@ namespace trabalho_kaneko.Pages
         [BindProperty]
         public CidadeModel Cidade { get; set; }
 
-        public List<CidadeModel> ListaCidades { get; set; } = new List<CidadeModel>();
-
-        // NOVO: Lista para o campo <select> de Estados
+        // MODIFICADO: Removemos a ListaCidades daqui.
+        // Mantemos APENAS os estados para preencher o campo de seleção (Dropdown).
         public List<EstadoModel> ListaEstadosDisponiveis { get; set; } = new List<EstadoModel>();
 
         public void OnGet()
@@ -45,7 +42,9 @@ namespace trabalho_kaneko.Pages
             if (sucesso)
             {
                 TempData["MensagemSucesso"] = "Cidade cadastrada com sucesso!";
-                return RedirectToPage("/Cidades");
+
+                // MODIFICADO: Redireciona para a nova tela de listagem de cidades
+                return RedirectToPage("/CidadesListar");
             }
             else
             {
@@ -57,7 +56,7 @@ namespace trabalho_kaneko.Pages
 
         private void CarregarListas()
         {
-            ListaCidades = _cidadeRepository.ListarTodos();
+            // MODIFICADO: Carrega apenas a lista de estados para o formulário
             ListaEstadosDisponiveis = _estadoRepository.ListarTodos();
         }
     }

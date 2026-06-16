@@ -5,6 +5,10 @@
 }
 
 <div class="container mt-4">
+    <div class="mb-3">
+        <a asp-page="/CidadesListar" class="btn btn-secondary btn-sm">Voltar para a Lista</a>
+    </div>
+
     <div class="card shadow-sm">
         <div class="card-header bg-primary text-white">
             <h4 class="mb-0">Nova Cidade</h4>
@@ -22,7 +26,7 @@
                 <div class="row g-3">
                     <div class="col-md-8">
                         <label class="form-label fw-bold">Nome da Cidade</label>
-                        <input asp-for="Cidade.Cidade" class="form-control" placeholder="Ex: Foz do Iguaçu" required maxlength="60" />
+                        <input asp-for="Cidade.Cidade" class="form-control" placeholder="Ex: Curitiba" required maxlength="60" />
                     </div>
 
                     <div class="col-md-4">
@@ -44,50 +48,6 @@
                     <button type="submit" class="btn btn-success px-4">Salvar Cidade</button>
                 </div>
             </form>
-        </div>
-    </div>
-</div>
-
-<div class="container mt-4 mb-5">
-    <div class="card shadow-sm">
-        <div class="card-header bg-secondary text-white">
-            <h5 class="mb-0">Cidades Cadastradas</h5>
-        </div>
-        <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table table-striped table-hover mb-0">
-                    <thead class="table-light">
-                        <tr>
-                            <th>Código</th>
-                            <th>Cidade</th>
-                            <th>Estado</th>
-                            <th>Data de Inclusão</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @if (Model.ListaCidades != null && Model.ListaCidades.Count > 0)
-                        {
-                            foreach (var item in Model.ListaCidades)
-                            {
-                                <tr>
-                                    <td>@item.IdCidade</td>
-                                    <td class="fw-bold">@item.Cidade</td>
-
-                                    <td>@item.NomeEstado</td>
-
-                                    <td>@item.DataInclusao?.ToString("dd/MM/yyyy HH:mm")</td>
-                                </tr>
-                            }
-                        }
-                        else
-                        {
-                            <tr>
-                                <td colspan="4" class="text-center py-3">Nenhuma cidade cadastrada ainda.</td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
         </div>
     </div>
 </div>

@@ -9,9 +9,8 @@ namespace trabalho_kaneko.Pages
     public class EstadosModel : PageModel
     {
         private readonly EstadoRepository _estadoRepository;
-        private readonly PaisRepository _paisRepository; // NOVO: Injetamos o repositório de Países
+        private readonly PaisRepository _paisRepository;
 
-        // NOVO: O construtor agora pede os dois repositórios
         public EstadosModel(EstadoRepository estadoRepository, PaisRepository paisRepository)
         {
             _estadoRepository = estadoRepository;
@@ -21,9 +20,8 @@ namespace trabalho_kaneko.Pages
         [BindProperty]
         public EstadoModel Estado { get; set; }
 
-        public List<EstadoModel> ListaEstados { get; set; } = new List<EstadoModel>();
-
-        // NOVO: Lista criada especificamente para popular o campo "Select" de Países na tela
+        // MODIFICADO: Removemos a ListaEstados daqui. 
+        // Mantemos APENAS a lista de países para o campo de seleção (Dropdown) funcionar.
         public List<PaisModel> ListaPaisesDisponiveis { get; set; } = new List<PaisModel>();
 
         public void OnGet()
@@ -44,7 +42,9 @@ namespace trabalho_kaneko.Pages
             if (sucesso)
             {
                 TempData["MensagemSucesso"] = "Estado cadastrado com sucesso!";
-                return RedirectToPage("/Estados");
+
+                // MODIFICADO: Redireciona para a nova tela de listagem de estados
+                return RedirectToPage("/EstadosListar");
             }
             else
             {
@@ -54,10 +54,9 @@ namespace trabalho_kaneko.Pages
             }
         }
 
-        // NOVO: Um método auxiliar para não repetir código, carrega ambas as listas
         private void CarregarListas()
         {
-            ListaEstados = _estadoRepository.ListarTodos();
+            // MODIFICADO: Carrega apenas os países
             ListaPaisesDisponiveis = _paisRepository.ListarTodos();
         }
     }
