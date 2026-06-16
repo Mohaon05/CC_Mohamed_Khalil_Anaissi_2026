@@ -1,0 +1,68 @@
+﻿<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Despair System</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/trabalho_kaneko.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom box-shadow">
+            <div class="container-fluid">
+                <button class="btn btn-outline-dark me-3" id="sidebarToggle">
+                    ☰ Menu
+                </button>
+                <a class="navbar-brand fw-bold" asp-area="" asp-page="/Index">Despair System</a>
+            </div>
+        </nav>
+    </header>
+
+    <div class="d-flex" id="wrapper">
+
+        <div class="bg-dark border-end" id="sidebar-wrapper">
+            <div class="list-group list-group-flush mt-3">
+                <a asp-page="/Index" class="list-group-item list-group-item-action bg-dark sidebar-link border-0">
+                    Tela Inicial
+                </a>
+                <a asp-page="/PaisesListar" class="list-group-item list-group-item-action bg-dark sidebar-link border-0">
+                    🌎 Países
+                </a>
+                <a asp-page="/Estados" class="list-group-item list-group-item-action bg-dark sidebar-link border-0">
+                    📍 Estados
+                </a>
+                <a asp-page="/Cidades" class="list-group-item list-group-item-action bg-dark sidebar-link border-0">
+                    🏙️ Cidades
+                </a>
+                <a asp-page="/Clientes" class="list-group-item list-group-item-action bg-dark sidebar-link border-0">
+                    👥 Clientes
+                </a>
+            </div>
+        </div>
+
+        <div id="page-content-wrapper" class="flex-grow-1 w-100 bg-light">
+            <div class="container-fluid p-4">
+                <main role="main" class="pb-3">
+                    @RenderBody()
+                </main>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <script>
+        document.getElementById("sidebarToggle").addEventListener("click", function (e) {
+        e.preventDefault();
+        document.getElementById("sidebar-wrapper").classList.toggle("collapsed");
+        });
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,44 @@
+﻿@page
+@model trabalho_kaneko.Pages.PaisesModel
+@{
+    ViewData["Title"] = "Cadastro de Países";
+}
+
+<div class="container mt-4">
+    <div class="mb-3">
+        <a asp-page="/PaisesListar" class="btn btn-secondary btn-sm">Voltar para a Lista</a>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Novo País</h4>
+        </div>
+        <div class="card-body">
+
+            @if (TempData["MensagemSucesso"] != null)
+            {
+                <div class="alert alert-success">@TempData["MensagemSucesso"]</div>
+            }
+
+            <form method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <div class="row g-3">
+                    <div class="col-md-9">
+                        <label class="form-label fw-bold">Nome do País</label>
+                        <input asp-for="Pais.Pais" class="form-control" placeholder="Ex: Brasil" required maxlength="60" />
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold">Sigla</label>
+                        <input asp-for="Pais.Sigla" class="form-control" placeholder="Ex: BR" required maxlength="3" style="text-transform: uppercase;" />
+                    </div>
+                </div>
+
+                <div class="mt-4 text-end">
+                    <button type="submit" class="btn btn-success px-4">Salvar País</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

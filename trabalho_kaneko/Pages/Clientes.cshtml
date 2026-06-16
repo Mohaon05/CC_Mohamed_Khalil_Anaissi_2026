@@ -1,0 +1,100 @@
+﻿@page
+@model trabalho_kaneko.Pages.ClientesModel
+@{
+    ViewData["Title"] = "Cadastro de Clientes";
+}
+
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Novo Cliente</h4>
+        </div>
+        <div class="card-body">
+
+            @if (TempData["MensagemSucesso"] != null)
+            {
+                <div class="alert alert-success">@TempData["MensagemSucesso"]</div>
+            }
+
+            <form method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold">Tipo de Cliente</label>
+                        <select asp-for="Cliente.Tipo" class="form-select" id="txtTipo">
+                            <option value="Fisico">Pessoa Física (CPF)</option>
+                            <option value="Juridico">Pessoa Jurídica (CNPJ)</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-8">
+                        <label class="form-label" id="lblNome">Nome Completo</label>
+                        <input asp-for="Cliente.Cliente" class="form-control" placeholder="Digite o nome" required />
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label" id="lblDocumento">CPF</label>
+                        <input asp-for="Cliente.Documento" class="form-control" placeholder="Apenas números" required />
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label" id="lblRegistro">RG</label>
+                        <input asp-for="Cliente.RegistroGeral" class="form-control" />
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label">Data de Nascimento</label>
+                        <input asp-for="Cliente.DataNascimento" class="form-control" type="date" />
+                    </div>
+
+                    <div class="col-md-12">
+                        <label class="form-label">E-mail</label>
+                        <input asp-for="Cliente.Email" class="form-control" type="email" placeholder="exemplo@email.com" />
+                    </div>
+
+                    <div class="col-md-5">
+                        <label class="form-label">Logradouro (Rua/Av)</label>
+                        <input asp-for="Cliente.Logradouro" class="form-control" />
+                    </div>
+
+                    <div class="col-md-2">
+                        <label class="form-label">Número</label>
+                        <input asp-for="Cliente.Numero" class="form-control" />
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="form-label">Bairro</label>
+                        <input asp-for="Cliente.Bairro" class="form-control" />
+                    </div>
+
+                    <div class="col-md-2">
+                        <label class="form-label">CEP</label>
+                        <input asp-for="Cliente.Cep" class="form-control" placeholder="00000-000" />
+                    </div>
+                </div>
+
+                <div class="mt-4 text-end">
+                    <button type="submit" class="btn btn-success px-4">Salvar Cadastro</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.getElementById("txtTipo").addEventListener("change", function () {
+            var tipo = this.value;
+            if (tipo === "Juridico") {
+                document.getElementById("lblNome").innerText = "Razão Social";
+                document.getElementById("lblDocumento").innerText = "CNPJ";
+                document.getElementById("lblRegistro").innerText = "Inscrição Estadual";
+            } else {
+                document.getElementById("lblNome").innerText = "Nome Completo";
+                document.getElementById("lblDocumento").innerText = "CPF";
+                document.getElementById("lblRegistro").innerText = "RG";
+            }
+        });
+    </script>
+}
