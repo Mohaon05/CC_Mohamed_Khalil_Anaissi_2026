@@ -149,5 +149,30 @@ namespace trabalho_kaneko.Repository
                 return false;
             }
         }
+
+        public bool Excluir(int id)
+        {
+            try
+            {
+                using (var connection = _context.CreateConnection())
+                {
+                    connection.Open();
+                    string query = "DELETE FROM cidades WHERE id_cidade = @id";
+
+                    using (var command = new MySqlCommand(query, (MySqlConnection)connection))
+                    {
+                        command.Parameters.AddWithValue("@id", id);
+                        int linhasAfetadas = command.ExecuteNonQuery();
+                        return linhasAfetadas > 0;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Erro ao excluir cidade: " + ex.Message);
+                return false;
+            }
+        }
+
     }
 }

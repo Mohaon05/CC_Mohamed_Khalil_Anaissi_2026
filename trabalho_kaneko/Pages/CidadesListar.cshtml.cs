@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Collections.Generic;
 using trabalho_kaneko.Models;
@@ -21,6 +22,22 @@ namespace trabalho_kaneko.Pages
         {
             // Busca as cidades trazendo o JOIN com os estados
             ListaCidades = _cidadeRepository.ListarTodos();
+        }
+
+        public IActionResult OnPostDeletar(int id)
+        {
+            bool sucesso = _cidadeRepository.Excluir(id);
+
+            if (sucesso)
+            {
+                TempData["MensagemSucesso"] = "Cidade excluída com sucesso!";
+            }
+            else
+            {
+                TempData["MensagemErro"] = "Erro ao tentar excluir a cidade da base de dados.";
+            }
+
+            return RedirectToPage();
         }
     }
 }

@@ -159,5 +159,29 @@ namespace trabalho_kaneko.Repository
             }
         }
 
+        public bool Excluir(int id)
+        {
+            try
+            {
+                using (var connection = _context.CreateConnection())
+                {
+                    connection.Open();
+                    string query = "DELETE FROM estados WHERE id_estado = @id";
+
+                    using (var command = new MySqlCommand(query, (MySqlConnection)connection))
+                    {
+                        command.Parameters.AddWithValue("@id", id);
+                        int linhasAfetadas = command.ExecuteNonQuery();
+                        return linhasAfetadas > 0;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Erro ao excluir estado: " + ex.Message);
+                return false;
+            }
+        }
+
     }
 }

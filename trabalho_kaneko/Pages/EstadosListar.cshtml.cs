@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Collections.Generic;
 using trabalho_kaneko.Models;
@@ -21,5 +22,22 @@ namespace trabalho_kaneko.Pages
         {
             ListaEstados = _estadoRepository.ListarTodos();
         }
+
+        public IActionResult OnPostDeletar(int id)
+        {
+            bool sucesso = _estadoRepository.Excluir(id);
+
+            if (sucesso)
+            {
+                TempData["MensagemSucesso"] = "Estado excluído com sucesso!";
+            }
+            else
+            {
+                TempData["MensagemErro"] = "Não foi possível excluir o estado. Verifique se não existem cidades vinculadas a ele.";
+            }
+
+            return RedirectToPage();
+        }
+
     }
 }
