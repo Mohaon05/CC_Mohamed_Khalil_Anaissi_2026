@@ -145,5 +145,33 @@ namespace trabalho_kaneko.Repository
                 return false;
             }
         }
+
+        // NOVO: Método para deletar um registro pelo ID
+        public bool Excluir(int id)
+        {
+            try
+            {
+                using (var connection = _context.CreateConnection())
+                {
+                    connection.Open();
+                    string query = "DELETE FROM paises WHERE id_pais = @id";
+
+                    using (var command = new MySqlCommand(query, (MySqlConnection)connection))
+                    {
+                        command.Parameters.AddWithValue("@id", id);
+
+                        int linhasAfetadas = command.ExecuteNonQuery();
+                        return linhasAfetadas > 0;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Se cair aqui, provavelmente é porque o país está sendo usado em algum estado (chave estrangeira)
+                Console.WriteLine("Erro ao excluir país: " + ex.Message);
+                return false;
+            }
+        }
+
     }
 }
