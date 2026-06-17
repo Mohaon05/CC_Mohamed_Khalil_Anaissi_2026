@@ -8,6 +8,6 @@ namespace trabalho_kaneko.Models
         public string Pais { get; set; }
         public string Sigla { get; set; }
         public DateTime DataInclusao { get; set; }
-        public DateTime DataAlteracao { get; set; }
+        public DateTime? DataAlteracao { get; set; }
     }
 }
