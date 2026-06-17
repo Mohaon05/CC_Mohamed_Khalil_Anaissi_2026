@@ -6,13 +6,12 @@ using trabalho_kaneko.Repository;
 
 namespace trabalho_kaneko.Pages
 {
-    // CORRIGIDO: Usando o nome da sua Razor Page
-    public class ClientesModel : PageModel
+    public class ClientesEditarModel : PageModel
     {
         private readonly ClienteRepository _clienteRepository;
         private readonly CidadeRepository _cidadeRepository;
 
-        public ClientesModel(ClienteRepository clienteRepository, CidadeRepository cidadeRepository)
+        public ClientesEditarModel(ClienteRepository clienteRepository, CidadeRepository cidadeRepository)
         {
             _clienteRepository = clienteRepository;
             _cidadeRepository = cidadeRepository;
@@ -23,9 +22,18 @@ namespace trabalho_kaneko.Pages
 
         public List<CidadeModel> ListaCidades { get; set; } = new List<CidadeModel>();
 
-        public void OnGet()
+        public IActionResult OnGet(int id)
         {
+            // Puxa o cliente específico e a lista de cidades para o dropdown
+            Cliente = _clienteRepository.BuscarPorId(id);
             ListaCidades = _cidadeRepository.ListarTodos();
+
+            if (Cliente == null)
+            {
+                return RedirectToPage("/ClientesListar");
+            }
+
+            return Page();
         }
 
         public IActionResult OnPost()
@@ -36,16 +44,16 @@ namespace trabalho_kaneko.Pages
                 return Page();
             }
 
-            bool sucesso = _clienteRepository.Inserir(Cliente);
+            bool sucesso = _clienteRepository.Atualizar(Cliente);
 
             if (sucesso)
             {
-                TempData["MensagemSucesso"] = "Cliente cadastrado com sucesso!";
+                TempData["MensagemSucesso"] = "Cliente atualizado com sucesso!";
                 return RedirectToPage("/ClientesListar");
             }
             else
             {
-                ModelState.AddModelError(string.Empty, "Erro ao salvar o cliente. Verifique se o CPF/CNPJ já não está cadastrado.");
+                TempData["MensagemErro"] = "Erro ao atualizar o cliente no banco de dados.";
                 ListaCidades = _cidadeRepository.ListarTodos();
                 return Page();
             }

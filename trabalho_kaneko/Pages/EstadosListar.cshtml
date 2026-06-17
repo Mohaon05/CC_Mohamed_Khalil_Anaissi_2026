@@ -47,21 +47,20 @@
                                     <td>@item.DataInclusao?.ToString("dd/MM/yyyy HH:mm")</td>
                                     <td>@(item.DataAlteracao?.ToString("dd/MM/yyyy HH:mm"))</td>
 
-                                    <td class="text-center">
-                                        <a asp-page="/EstadosEditar" asp-route-id="@item.IdEstado" class="btn btn-warning btn-sm fw-bold">
-                                             Editar
-                                        </a>
+                                    <td class="text-center align-middle">
+                                        <div class="d-flex justify-content-center gap-2">
+                                            <a asp-page="/EstadosEditar" asp-route-id="@item.IdEstado" class="btn btn-warning btn-sm fw-bold">
+                                                Editar
+                                            </a>
 
-                                        <br />
-                                        <br />
-
-                                        <form method="post" asp-page-handler="Deletar" asp-route-id="@item.IdEstado"
-                                              onsubmit="return confirm('Tem certeza que deseja excluir este estado?');"
-                                              style="display: inline-block;">
-                                            <button type="submit" class="btn btn-danger btn-sm fw-bold ms-1">
-                                                Excluir
-                                            </button>
-                                        </form>
+                                            <form method="post" asp-page-handler="Deletar" asp-route-id="@item.IdEstado"
+                                                  onsubmit="return confirm('Tem certeza que deseja excluir este estado?');"
+                                                  class="m-0 p-0">
+                                                <button type="submit" class="btn btn-danger btn-sm fw-bold">
+                                                    Excluir
+                                                </button>
+                                            </form>
+                                        </div>
                                     </td>
                                 </tr>
                             }

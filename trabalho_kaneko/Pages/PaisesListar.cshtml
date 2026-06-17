@@ -46,21 +46,20 @@
 
                                     <td>@item.DataAlteracao?.ToString("dd/MM/yyyy HH:mm")</td>
 
-                                    <td class="text-center">
-                                        <a asp-page="/PaisesEditar" asp-route-id="@item.IdPais" class="btn btn-warning btn-sm fw-bold">
-                                            Editar
-                                        </a>
+                                    <td class="text-center align-middle">
+                                        <div class="d-flex justify-content-center gap-2">
+                                            <a asp-page="/PaisesEditar" asp-route-id="@item.IdPais" class="btn btn-warning btn-sm fw-bold">
+                                                Editar
+                                            </a>
 
-                                        <br>
-                                        <br>
-
-                                        <form method="post" asp-page-handler="Deletar" asp-route-id="@item.IdPais"
-                                              onsubmit="return confirm('Tem certeza que deseja excluir este país? This action cannot be undone.');"
-                                              style="display: inline;">
-                                            <button type="submit" class="btn btn-danger btn-sm fw-bold ms-1">
-                                                 Excluir
-                                            </button>
-                                        </form>
+                                            <form method="post" asp-page-handler="Deletar" asp-route-id="@item.IdPais"
+                                                  onsubmit="return confirm('Tem certeza que deseja excluir este país? This action cannot be undone.');"
+                                                  class="m-0 p-0">
+                                                <button type="submit" class="btn btn-danger btn-sm fw-bold">
+                                                    Excluir
+                                                </button>
+                                            </form>
+                                        </div>
                                     </td>
                                 </tr>
                             }

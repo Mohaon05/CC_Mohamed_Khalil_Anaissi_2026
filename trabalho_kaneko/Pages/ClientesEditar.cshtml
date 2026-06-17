@@ -1,7 +1,7 @@
 ﻿@page
-@model trabalho_kaneko.Pages.ClientesModel
+@model trabalho_kaneko.Pages.ClientesEditarModel
 @{
-    ViewData["Title"] = "Novo Cliente";
+    ViewData["Title"] = "Editar Cliente";
 }
 
 <div class="container mt-4">
@@ -9,13 +9,15 @@
         <a asp-page="/ClientesListar" class="btn btn-secondary btn-sm">Voltar para a Lista</a>
     </div>
 
-    <div class="card shadow-sm border-success">
-        <div class="card-header bg-success text-white fw-bold">
-            <h4 class="mb-0">+ Novo Cliente</h4>
+    <div class="card shadow-sm border-warning">
+        <div class="card-header bg-warning text-dark fw-bold">
+            <h4 class="mb-0">Editar Cliente</h4>
         </div>
         <div class="card-body">
             <form method="post">
-                <div asp-validation-summary="All" class="text-danger mb-3 fw-bold fs-5"></div>
+                <input type="hidden" asp-for="Cliente.IdCliente" />
+
+                <div asp-validation-summary="All" class="text-danger mb-3 fw-bold"></div>
 
                 <div class="row g-3">
                     <div class="col-md-3">
@@ -94,7 +96,7 @@
                 </div>
 
                 <div class="mt-4 text-end">
-                    <button type="submit" class="btn btn-success px-4 fw-bold">Salvar Cliente</button>
+                    <button type="submit" class="btn btn-warning px-4 fw-bold">Salvar Alterações</button>
                 </div>
             </form>
         </div>
