@@ -1,0 +1,55 @@
+﻿@page
+@model trabalho_kaneko.Pages.EstadosEditarModel
+@{
+    ViewData["Title"] = "Editar Estado";
+}
+
+<div class="container mt-4">
+    <div class="mb-3">
+        <a asp-page="/EstadosListar" class="btn btn-secondary btn-sm">⬅ Voltar para a Lista</a>
+    </div>
+
+    <div class="card shadow-sm border-warning">
+        <div class="card-header bg-warning text-dark fw-bold">
+            <h4 class="mb-0">✏️ Editar Estado</h4>
+        </div>
+        <div class="card-body">
+
+            <form method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <input type="hidden" asp-for="Estado.IdEstado" />
+
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Nome do Estado</label>
+                        <input asp-for="Estado.Estado" class="form-control" required maxlength="50" />
+                    </div>
+
+                    <div class="col-md-2">
+                        <label class="form-label fw-bold">UF</label>
+                        <input asp-for="Estado.Uf" class="form-control" required maxlength="2" style="text-transform: uppercase;" />
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold">País</label>
+                        <select asp-for="Estado.IdPais" class="form-select" required>
+                            <option value="">-- Selecione um País --</option>
+                            @if (Model.ListaPaisesDisponiveis != null)
+                            {
+                                foreach (var pais in Model.ListaPaisesDisponiveis)
+                                {
+                                    <option value="@pais.IdPais">@pais.Pais</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="mt-4 text-end">
+                    <button type="submit" class="btn btn-warning px-4 fw-bold">Atualizar Estado</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

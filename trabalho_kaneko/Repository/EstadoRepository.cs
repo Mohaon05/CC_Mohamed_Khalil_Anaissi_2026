@@ -56,10 +56,10 @@ namespace trabalho_kaneko.Repository
                     // NOVO: Usamos INNER JOIN para juntar as tabelas "estados" e "paises". 
                     // Assim conseguimos puxar o p.pais (nome do país) direto do banco.
                     string query = @"
-                        SELECT e.id_estado, e.estado, e.uf, e.id_pais, e.data_inclusao, p.pais AS nome_pais 
-                        FROM estados e 
-                        INNER JOIN paises p ON e.id_pais = p.id_pais 
-                        ORDER BY e.estado ASC";
+                    SELECT e.id_estado, e.estado, e.uf, e.id_pais, e.data_inclusao, e.data_alteracao, p.pais AS nome_pais 
+                    FROM estados e 
+                    INNER JOIN paises p ON e.id_pais = p.id_pais 
+                    ORDER BY e.estado ASC";
 
                     using (var command = new MySqlCommand(query, (MySqlConnection)connection))
                     {
@@ -74,6 +74,8 @@ namespace trabalho_kaneko.Repository
                                     Uf = reader["uf"].ToString(),
                                     IdPais = Convert.ToInt32(reader["id_pais"]),
                                     DataInclusao = Convert.ToDateTime(reader["data_inclusao"]),
+                                    // ADICIONADO: Puxando a data de alteração igual fizemos nos países
+                                    DataAlteracao = reader["data_alteracao"] != DBNull.Value ? Convert.ToDateTime(reader["data_alteracao"]) : (DateTime?)null,
                                     NomePais = reader["nome_pais"].ToString() // Puxa o nome vindo do JOIN
                                 });
                             }
@@ -87,5 +89,75 @@ namespace trabalho_kaneko.Repository
             }
             return estados;
         }
+
+        public EstadoModel BuscarPorId(int id)
+        {
+            EstadoModel estado = null;
+            try
+            {
+                using (var connection = _context.CreateConnection())
+                {
+                    connection.Open();
+                    // O SELECT puxa os dados básicos do estado para preencher o formulário
+                    string query = "SELECT id_estado, estado, uf, id_pais, data_inclusao, data_alteracao FROM estados WHERE id_estado = @id";
+
+                    using (var command = new MySqlCommand(query, (MySqlConnection)connection))
+                    {
+                        command.Parameters.AddWithValue("@id", id);
+                        using (var reader = command.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                estado = new EstadoModel
+                                {
+                                    IdEstado = Convert.ToInt32(reader["id_estado"]),
+                                    Estado = reader["estado"].ToString(),
+                                    Uf = reader["uf"].ToString(),
+                                    IdPais = Convert.ToInt32(reader["id_pais"]),
+                                    DataInclusao = Convert.ToDateTime(reader["data_inclusao"]),
+                                    DataAlteracao = reader["data_alteracao"] != DBNull.Value ? Convert.ToDateTime(reader["data_alteracao"]) : (DateTime?)null
+                                };
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Erro ao buscar estado por ID: " + ex.Message);
+            }
+            return estado;
+        }
+
+        public bool Atualizar(EstadoModel estado)
+        {
+            try
+            {
+                using (var connection = _context.CreateConnection())
+                {
+                    connection.Open();
+
+                    // Faz o UPDATE dos três campos que vêm da tela (nome, uf e a chave do país)
+                    string query = @"UPDATE estados SET estado = @estado, uf = @uf, id_pais = @id_pais WHERE id_estado = @id";
+
+                    using (var command = new MySqlCommand(query, (MySqlConnection)connection))
+                    {
+                        command.Parameters.AddWithValue("@estado", estado.Estado);
+                        command.Parameters.AddWithValue("@uf", estado.Uf.ToUpper());
+                        command.Parameters.AddWithValue("@id_pais", estado.IdPais);
+                        command.Parameters.AddWithValue("@id", estado.IdEstado);
+
+                        int linhasAfetadas = command.ExecuteNonQuery();
+                        return linhasAfetadas > 0;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Erro ao atualizar estado: " + ex.Message);
+                return false;
+            }
+        }
+
     }
 }
