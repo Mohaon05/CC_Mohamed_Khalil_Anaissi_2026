@@ -1,0 +1,241 @@
+-- =========================================================================
+-- 1. TABELAS DE LOCALIDADE (GEOGRAFIA)
+-- =========================================================================
+
+CREATE TABLE paises (
+    id_pais INT AUTO_INCREMENT,
+    pais VARCHAR(60) NOT NULL,
+    sigla VARCHAR(3) NOT NULL,
+    data_inclusao DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    data_alteracao DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (id_pais)
+);
+
+CREATE TABLE estados (
+    id_estado INT AUTO_INCREMENT,
+    estado VARCHAR(50) NOT NULL,
+    uf CHAR(2) NOT NULL,
+    id_pais INT NOT NULL,
+    data_inclusao DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    data_alteracao DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (id_estado),
+    FOREIGN KEY (id_pais) REFERENCES paises(id_pais)
+);
+
+CREATE TABLE cidades (
+    id_cidade INT AUTO_INCREMENT,
+    cidade VARCHAR(60) NOT NULL,
+    id_estado INT NOT NULL,
+    data_inclusao DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    data_alteracao DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (id_cidade),
+    FOREIGN KEY (id_estado) REFERENCES estados(id_estado)
+);
+
+-- =========================================================================
+-- 2. TABELA DE CARGO (ESTRUTURADA SEPARADAMENTE)
+-- =========================================================================
+
+CREATE TABLE cargos (
+    id_cargo INT AUTO_INCREMENT,
+    cargo VARCHAR(50) NOT NULL,
+    descricao VARCHAR(150),
+    data_inclusao DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    data_alteracao DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (id_cargo)
+);
+
+-- =========================================================================
+-- 3. TABELAS DE PRODUTO (MARCAS E GRUPOS) - *Movido para cima para atender PRODUTOS*
+-- =========================================================================
+
+CREATE TABLE grupos (
+    id_grupo INT AUTO_INCREMENT,
+    grupo VARCHAR(50) NOT NULL,
+    data_inclusao DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    data_alteracao DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (id_grupo)
+);
+
+CREATE TABLE marcas (
+    id_marca INT AUTO_INCREMENT,
+    marca VARCHAR(50) NOT NULL,
+    id_grupo INT, -- Sincronizado como INT para corresponder à PK de grupos
+    data_inclusao DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    data_alteracao DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (id_marca),
+    FOREIGN KEY (id_grupo) REFERENCES grupos(id_grupo)
+);
+
+CREATE TABLE produtos (
+    id_produto INT AUTO_INCREMENT,
+    produto VARCHAR(50) NOT NULL,  
+    und varchar(3) not null,
+    preco_venda DECIMAL(10,2) NOT NULL,
+    preco_compra DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+    custo DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+    Saldo INT NOT NULL DEFAULT 0,
+    id_marca INT NOT NULL, 
+    id_grupo int not null,
+    data_ult_compra datetime,
+    data_inclusao DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    data_alteracao DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (id_produto),
+    FOREIGN KEY (id_marca) REFERENCES marcas(id_marca),
+    foreign key (id_grupo) references grupos(id_grupo)
+);
+
+-- =========================================================================
+-- 6. TABELAS DE FORMAS E CONDIÇÕES DE PAGAMENTO
+-- =========================================================================
+
+CREATE TABLE condicoes_pagamento (
+    id_condicao INT AUTO_INCREMENT, 
+    condicao_pagamento VARCHAR(50) NOT NULL,	-- Ex: "30/60 dias", "À Vista"
+    quantidade_parcelas INT NOT NULL DEFAULT 1,
+    juros DECIMAL(5,2) DEFAULT 0.00,
+    data_inclusao DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    data_alteracao DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (id_condicao)
+);
+
+CREATE TABLE formas_pagamento (
+    id_forma_pagamento INT AUTO_INCREMENT,
+    forma_pagamento VARCHAR(50) NOT NULL,	-- Ex: "Cartão de Crédito", "Dinheiro"
+    #id_condicao_pagamento INT NOT NULL,   
+    ativo BOOLEAN NOT NULL DEFAULT TRUE,
+    data_inclusao DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    data_alteracao DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (id_forma_pagamento)
+    #FOREIGN KEY (id_condicao_pagamento) REFERENCES condicoes_pagamento(id_condicao_pagamento)
+);
+
+-- =========================================================================
+-- 4. TABELAS DE ATORES (CLIENTES, FUNCIONÁRIOS E FORNECEDORES)
+-- =========================================================================
+
+CREATE TABLE clientes (
+    id_cliente INT AUTO_INCREMENT,
+    cliente VARCHAR(50) NOT NULL,
+	tipo_pessoa VARCHAR(1) NOT NULL,				-- 'Fisico' ou 'Juridico'
+    cpf_cnpj varchar(14) NOT NULL UNIQUE,	-- Substitui cpf_ou_cnpj (suporta 11 ou 14 dígitos)
+    rg_inscest VARCHAR(10),					-- Substitui rg_ou_inscricao_estadual
+    data_nascimento DATE,
+    logradouro VARCHAR(50),
+    numero VARCHAR(10),
+    complemento varchar(50),
+    bairro VARCHAR(50),
+    cep VARCHAR(8),
+    id_cidade INT NOT NULL,
+    email VARCHAR(50),
+    id_condicao int not null,
+    data_inclusao DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    data_alteracao DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (id_cliente),
+    foreign key (id_condicao) references condicoes_pagamento(id_condicao),
+    FOREIGN KEY (id_cidade) REFERENCES cidades(id_cidade)
+);
+
+CREATE TABLE funcionarios (
+    id_funcionario INT AUTO_INCREMENT,
+    funcionario VARCHAR(50) NOT NULL,		
+    apelido VARCHAR(50),
+    cpf CHAR(11) NOT NULL UNIQUE,  -- Funcionário geralmente é apenas CPF (11 dígitos)
+    rg VARCHAR(10),
+    data_nascimento DATE,
+    email VARCHAR(50),                  
+    telefone VARCHAR(15),                	-- Expandido para aceitar (XX) XXXXX-XXXX
+    id_cargo INT NOT NULL, 
+    salario DECIMAL(10,2),
+    logradouro VARCHAR(50),
+    numero VARCHAR(10),
+    complemento varchar(50),
+    bairro VARCHAR(50),
+    cep VARCHAR(8),
+    id_cidade INT NOT NULL,
+    data_contratado DATE, 
+    data_demitido DATE,  
+    data_inclusao DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    data_alteracao DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (id_funcionario),
+    FOREIGN KEY (id_cidade) REFERENCES cidades(id_cidade),
+    FOREIGN KEY (id_cargo) REFERENCES cargos(id_cargo)
+);
+
+CREATE TABLE fornecedores (
+    id_fornecedor INT AUTO_INCREMENT,
+    fornecedor VARCHAR(50) NOT NULL,
+    nome_fantasia VARCHAR(50),
+	tipo_pessoa VARCHAR(1) NOT NULL,				-- 'Fisico' ou 'Juridico'
+    cpf_cnpj CHAR(14) NOT NULL UNIQUE, 	-- Geralmente CNPJ (14 dígitos)
+    rg_inscest VARCHAR(10),          	-- rg ou Inscrição Estadual
+    email VARCHAR(50),
+    celular VARCHAR(15),
+    site VARCHAR(50),
+    logradouro VARCHAR(50),
+    numero VARCHAR(10),
+    complemento varchar(50),
+    bairro VARCHAR(50),
+    cep VARCHAR(8),
+    id_cidade INT NOT NULL,
+    id_condicao int not null,
+    data_inclusao DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    data_alteracao DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (id_fornecedor),
+    foreign key (id_condicao) references condicoes_pagamento(id_condicao),
+    FOREIGN KEY (id_cidade) REFERENCES cidades(id_cidade)
+);
+
+-- =========================================================================
+-- 5. CONTROLE DE ACESSO E SEGURANÇA (USUÁRIOS E LOGS)
+-- =========================================================================
+
+CREATE TABLE usuarios (
+    id_usuario INT NOT NULL AUTO_INCREMENT,
+    usuario VARCHAR(50) NOT NULL UNIQUE,
+    senha VARCHAR(20) NOT NULL,        
+    id_funcionario INT NOT NULL,
+    PRIMARY KEY (id_usuario),
+    FOREIGN KEY (id_funcionario) REFERENCES funcionarios(id_funcionario)
+);
+
+CREATE TABLE log (
+    id_log INT NOT NULL AUTO_INCREMENT,
+    tabela_alterada VARCHAR(50) NOT NULL,
+    tipo_alteracao VARCHAR(250) NOT NULL,
+    id_usuario INT NOT NULL,
+    data_log DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP, 
+    PRIMARY KEY (id_log),
+    FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario)    
+);
+
+-- =========================================================================
+-- 7. TABELAS DE MOVIMENTAÇÃO COMERCIAL (VENDAS E ITENS VENDIDOS)
+-- =========================================================================
+
+CREATE TABLE vendas (
+    id_venda INT AUTO_INCREMENT,
+    data_venda DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    id_cliente INT NOT NULL,
+    id_funcionario INT NOT NULL,
+    id_forma_pagamento INT NOT NULL, 
+    valor_total_venda DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+    data_inclusao DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    data_alteracao DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (id_venda),
+    FOREIGN KEY (id_cliente) REFERENCES clientes(id_cliente),
+    FOREIGN KEY (id_funcionario) REFERENCES funcionarios(id_funcionario),
+    FOREIGN KEY (id_forma_pagamento) REFERENCES formas_pagamento(id_forma_pagamento)
+);
+
+CREATE TABLE produtos_venda (
+    id_venda INT NOT NULL,
+    id_produto INT NOT NULL,
+    quantidade INT NOT NULL,
+    preco_unitario_aplicado DECIMAL(10,2) NOT NULL,
+    data_inclusao DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    data_alteracao DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (id_venda, id_produto),
+    FOREIGN KEY (id_venda) REFERENCES vendas(id_venda),
+    FOREIGN KEY (id_produto) REFERENCES produtos(id_produto)
+);
