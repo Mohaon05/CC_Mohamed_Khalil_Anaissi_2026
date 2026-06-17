@@ -1,0 +1,50 @@
+﻿@page
+@model trabalho_kaneko.Pages.CidadesEditarModel
+@{
+    ViewData["Title"] = "Editar Cidade";
+}
+
+<div class="container mt-4">
+    <div class="mb-3">
+        <a asp-page="/CidadesListar" class="btn btn-secondary btn-sm">Voltar para a Lista</a>
+    </div>
+
+    <div class="card shadow-sm border-warning">
+        <div class="card-header bg-warning text-dark fw-bold">
+            <h4 class="mb-0">Editar Cidade</h4>
+        </div>
+        <div class="card-body">
+
+            <form method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <input type="hidden" asp-for="Cidade.IdCidade" />
+
+                <div class="row g-3">
+                    <div class="col-md-8">
+                        <label class="form-label fw-bold">Nome da Cidade</label>
+                        <input asp-for="Cidade.Cidade" class="form-control" required maxlength="60" />
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold">Estado</label>
+                        <select asp-for="Cidade.IdEstado" class="form-select" required>
+                            <option value="">-- Selecione um Estado --</option>
+                            @if (Model.ListaEstadosDisponiveis != null)
+                            {
+                                foreach (var estado in Model.ListaEstadosDisponiveis)
+                                {
+                                    <option value="@estado.IdEstado">@estado.Estado - @estado.Uf</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="mt-4 text-end">
+                    <button type="submit" class="btn btn-warning px-4 fw-bold">Atualizar Cidade</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

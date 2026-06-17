@@ -24,6 +24,8 @@
                             <th>Cidade</th>
                             <th>Estado</th>
                             <th>Data de Inclusão</th>
+                            <th>Última Alteração</th>
+                            <th class="text-center" style="width: 120px;">Ações</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -36,6 +38,13 @@
                                     <td class="fw-bold">@item.Cidade</td>
                                     <td>@item.NomeEstado</td>
                                     <td>@item.DataInclusao?.ToString("dd/MM/yyyy HH:mm")</td>
+                                    <td>@(item.DataAlteracao?.ToString("dd/MM/yyyy HH:mm"))</td>
+
+                                    <td class="text-center">
+                                        <a asp-page="/CidadesEditar" asp-route-id="@item.IdCidade" class="btn btn-warning btn-sm fw-bold">
+                                            Editar
+                                        </a>
+                                    </td>
                                 </tr>
                             }
                         }
