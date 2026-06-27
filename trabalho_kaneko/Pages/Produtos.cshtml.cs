@@ -27,6 +27,14 @@ namespace trabalho_kaneko.Pages
 
         public void OnGet()
         {
+            // Espelha estritamente os DEFAULTS do banco de dados na inicialização
+            ProdutoObj = new ProdutoModel
+            {
+                PrecoCompra = 0.00m,
+                Custo = 0.00m,
+                Saldo = 0
+            };
+
             CarregarListas();
         }
 

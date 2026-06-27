@@ -15,6 +15,7 @@ namespace trabalho_kaneko.Repository
             _context = context;
         }
 
+        // 1. LISTAR TODOS (Com Joins para exibir os nomes textuais da Marca e do Grupo)
         public List<ProdutoModel> ListarTodos()
         {
             List<ProdutoModel> produtos = new List<ProdutoModel>();
@@ -49,7 +50,8 @@ namespace trabalho_kaneko.Repository
                                 NomeMarca = reader["nome_marca"].ToString(),
                                 NomeGrupo = reader["nome_grupo"].ToString(),
                                 DataUltCompra = reader["data_ult_compra"] != DBNull.Value ? Convert.ToDateTime(reader["data_ult_compra"]) : (DateTime?)null,
-                                DataInclusao = Convert.ToDateTime(reader["data_inclusao"])
+                                DataInclusao = Convert.ToDateTime(reader["data_inclusao"]),
+                                DataAlteracao = Convert.ToDateTime(reader["data_alteracao"])
                             });
                         }
                     }
@@ -62,6 +64,7 @@ namespace trabalho_kaneko.Repository
             return produtos;
         }
 
+        // 2. INSERIR (Passando absolutamente todas as colunas obrigatórias e opcionais)
         public bool Inserir(ProdutoModel produto)
         {
             try
@@ -97,6 +100,7 @@ namespace trabalho_kaneko.Repository
             }
         }
 
+        // 3. BUSCAR POR ID (Carrega os dados para a tela de edição)
         public ProdutoModel BuscarPorId(int id)
         {
             ProdutoModel produto = null;
@@ -138,6 +142,7 @@ namespace trabalho_kaneko.Repository
             return produto;
         }
 
+        // 4. ATUALIZAR (Garante que todas as modificações sejam salvas)
         public bool Atualizar(ProdutoModel produto)
         {
             try
@@ -176,6 +181,7 @@ namespace trabalho_kaneko.Repository
             }
         }
 
+        // 5. EXCLUIR
         public bool Excluir(int id)
         {
             try

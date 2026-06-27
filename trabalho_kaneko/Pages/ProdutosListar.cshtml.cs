@@ -26,7 +26,7 @@ namespace trabalho_kaneko.Pages
         {
             bool sucesso = _produtoRepository.Excluir(id);
             if (sucesso) TempData["MensagemSucesso"] = "Produto excluído com sucesso!";
-            else TempData["MensagemErro"] = "Não foi possível excluir o produto. Verifique dependências.";
+            else TempData["MensagemErro"] = "Não foi possível excluir o produto. Verifique se ele está vinculado a movimentações.";
             return RedirectToPage();
         }
     }

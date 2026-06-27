@@ -30,6 +30,7 @@ namespace trabalho_kaneko.Pages
             ProdutoObj = _produtoRepository.BuscarPorId(id);
             if (ProdutoObj == null)
             {
+                TempData["MensagemErro"] = "Produto não encontrado.";
                 return RedirectToPage("/ProdutosListar");
             }
             CarregarListas();
@@ -51,7 +52,7 @@ namespace trabalho_kaneko.Pages
                 return RedirectToPage("/ProdutosListar");
             }
 
-            ModelState.AddModelError(string.Empty, "Erro ao atualizar.");
+            ModelState.AddModelError(string.Empty, "Erro ao atualizar dados do produto.");
             CarregarListas();
             return Page();
         }

@@ -32,7 +32,6 @@
                             <th>Nome</th>
                             <th>CPF</th>
                             <th>Cargo</th>
-                            <th>Cidade</th>
                             <th>Telefone</th>
                             <th class="text-center" style="width: 160px;">Ações</th>
                         </tr>
@@ -47,7 +46,6 @@
                                     <td class="fw-bold">@item.Funcionario @(!string.IsNullOrEmpty(item.Apelido) ? $"({item.Apelido})" : "")</td>
                                     <td>@item.Cpf</td>
                                     <td><span class="badge bg-info text-dark fw-bold">@item.NomeCargo</span></td>
-                                    <td>@item.NomeCidade</td>
                                     <td>@item.Telefone</td>
                                     <td class="text-center">
                                         <div class="d-flex justify-content-center gap-2">
