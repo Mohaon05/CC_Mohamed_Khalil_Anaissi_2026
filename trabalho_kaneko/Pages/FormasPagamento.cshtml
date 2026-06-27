@@ -1,0 +1,40 @@
+﻿@page
+@model trabalho_kaneko.Pages.FormasPagamentoModel
+@{
+    ViewData["Title"] = "Nova Forma de Pagamento";
+}
+
+<div class="container mt-4">
+    <div class="mb-3">
+        <a asp-page="/FormasPagamentoListar" class="btn btn-secondary btn-sm">Voltar para a Lista</a>
+    </div>
+
+    <div class="card shadow-sm border-success">
+        <div class="card-header bg-success text-white fw-bold">
+            <h4 class="mb-0">+ Nova Forma de Pagamento</h4>
+        </div>
+        <div class="card-body">
+            <form method="post">
+                <div asp-validation-summary="All" class="text-danger mb-3 fw-bold"></div>
+
+                <div class="row g-3 align-items-center">
+                    <div class="col-md-9">
+                        <label class="form-label fw-bold">Descrição da Forma de Pagamento</label>
+                        <input asp-for="FormaObj.FormaPagamento" class="form-control" required maxlength="50" placeholder="Ex: Cartão de Crédito, PIX, Dinheiro" />
+                    </div>
+
+                    <div class="col-md-3 pt-4">
+                        <div class="form-check form-switch fs-5">
+                            <input asp-for="FormaObj.Ativo" class="form-check-input" type="checkbox" role="switch">
+                            <label class="form-check-label fw-bold text-success" asp-for="FormaObj.Ativo">Forma Ativa</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-4 text-end">
+                    <button type="submit" class="btn btn-success px-4 fw-bold">Salvar Registro</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,3 +1,4 @@
+using trabajo_kaneko.Repository;
 using trabalho_kaneko.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +13,7 @@ builder.Services.AddScoped<FuncionarioRepository>();
 builder.Services.AddScoped<GrupoRepository>();
 builder.Services.AddScoped<MarcaRepository>();
 builder.Services.AddScoped<ProdutoRepository>();
+builder.Services.AddScoped<FormaPagamentoRepository>();
 
 // Add services to the container.
 builder.Services.AddRazorPages();
