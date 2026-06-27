@@ -1,0 +1,70 @@
+﻿@page
+@model trabalho_kaneko.Pages.CondicoesPagamentoListarModel
+@{
+    ViewData["Title"] = "Condições de Pagamento";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Gestão de Condições de Pagamento</h2>
+        <a asp-page="/CondicoesPagamento" class="btn btn-success fw-bold">+ Nova Condição</a>
+    </div>
+
+    @if (TempData["MensagemSucesso"] != null)
+    {
+        <div class="alert alert-success fw-bold shadow-sm">@TempData["MensagemSucesso"]</div>
+    }
+    @if (TempData["MensagemErro"] != null)
+    {
+        <div class="alert alert-danger fw-bold shadow-sm">@TempData["MensagemErro"]</div>
+    }
+
+    <div class="card shadow-sm">
+        <div class="card-header bg-secondary text-white fw-bold">
+            Condições Cadastradas
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover table-sm align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th style="width: 100px;">Código</th>
+                            <th>Descrição</th>
+                            <th class="text-center">Qtd. Parcelas</th>
+                            <th class="text-center">Juros (%)</th>
+                            <th class="text-center" style="width: 160px;">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.ListaCondicoes != null && Model.ListaCondicoes.Count > 0)
+                        {
+                            foreach (var item in Model.ListaCondicoes)
+                            {
+                                <tr>
+                                    <td>@item.IdCondicao</td>
+                                    <td class="fw-bold">@item.CondicaoPagamento</td>
+                                    <td class="text-center">@item.QuantidadeParcelas</td>
+                                    <td class="text-center">@(item.Juros.HasValue ? item.Juros.Value.ToString("N2") + "%" : "0,00%")</td>
+                                    <td class="text-center align-middle">
+                                        <div class="d-flex justify-content-center gap-2">
+                                            <a asp-page="/CondicoesPagamentoEditar" asp-route-id="@item.IdCondicao" class="btn btn-warning btn-sm fw-bold">Editar</a>
+                                            <form method="post" asp-page-handler="Deletar" asp-route-id="@item.IdCondicao" onsubmit="return confirm('Deseja excluir esta condição?');" class="m-0 p-0">
+                                                <button type="submit" class="btn btn-danger btn-sm fw-bold">Excluir</button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="5" class="text-center py-4 text-muted">Nenhuma condição cadastrada.</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
