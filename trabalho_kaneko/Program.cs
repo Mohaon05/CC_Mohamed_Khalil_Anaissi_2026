@@ -10,6 +10,7 @@ builder.Services.AddScoped<FornecedorRepository>();
 builder.Services.AddScoped<CargoRepository>();
 builder.Services.AddScoped<FuncionarioRepository>();
 builder.Services.AddScoped<GrupoRepository>();
+builder.Services.AddScoped<MarcaRepository>();
 
 // Add services to the container.
 builder.Services.AddRazorPages();

@@ -1,0 +1,45 @@
+﻿@page
+@model trabalho_kaneko.Pages.MarcasEditarModel
+@{
+    ViewData["Title"] = "Editar Marca";
+}
+
+<div class="container mt-4">
+    <div class="mb-3">
+        <a asp-page="/MarcasListar" class="btn btn-secondary btn-sm">Voltar para a Lista</a>
+    </div>
+
+    <div class="card shadow-sm border-warning">
+        <div class="card-header bg-warning text-dark fw-bold">
+            <h4 class="mb-0">Editar Marca</h4>
+        </div>
+        <div class="card-body">
+            <form method="post">
+                <input type="hidden" asp-for="MarcaObj.IdMarca" />
+                <div asp-validation-summary="All" class="text-danger mb-3 fw-bold"></div>
+
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Nome da Marca</label>
+                        <input asp-for="MarcaObj.Marca" class="form-control" required maxlength="50" />
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Grupo Pertencente</label>
+                        <select asp-for="MarcaObj.IdGrupo" class="form-select" required>
+                            <option value="">-- Selecione o Grupo --</option>
+                            @foreach (var grupo in Model.ListaGrupos)
+                            {
+                                <option value="@grupo.IdGrupo">@grupo.Grupo</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="mt-4 text-end">
+                    <button type="submit" class="btn btn-warning px-4 fw-bold">Salvar Alterações</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
