@@ -1,0 +1,76 @@
+﻿@page
+@model trabalho_kaneko.Pages.ProdutosListarModel
+@{
+    ViewData["Title"] = "Gestão de Produtos";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Gestão de Produtos</h2>
+        <a asp-page="/Produtos" class="btn btn-success fw-bold">+ Novo Produto</a>
+    </div>
+
+    @if (TempData["MensagemSucesso"] != null)
+    {
+        <div class="alert alert-success fw-bold shadow-sm">@TempData["MensagemSucesso"]</div>
+    }
+    @if (TempData["MensagemErro"] != null)
+    {
+        <div class="alert alert-danger fw-bold shadow-sm">@TempData["MensagemErro"]</div>
+    }
+
+    <div class="card shadow-sm">
+        <div class="card-header bg-secondary text-white fw-bold">
+            Catálogo de Produtos
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover table-sm align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th style="width: 70px;">Cód.</th>
+                            <th>Descrição do Produto</th>
+                            <th>Und</th>
+                            <th>Grupo</th>
+                            <th>Marca</th>
+                            <th class="text-end">Preço Venda</th>
+                            <th class="text-center">Estoque</th>
+                            <th class="text-center" style="width: 140px;">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.ListaProdutos != null && Model.ListaProdutos.Count > 0)
+                        {
+                            foreach (var item in Model.ListaProdutos)
+                            {
+                                <tr>
+                                    <td>@item.IdProduto</td>
+                                    <td class="fw-bold">@item.Produto</td>
+                                    <td>@item.Und</td>
+                                    <td><span class="badge bg-secondary">@item.NomeGrupo</span></td>
+                                    <td>@item.NomeMarca</td>
+                                    <td class="text-end text-success fw-bold">R$ @item.PrecoVenda.ToString("N2")</td>
+                                    <td class="text-center fw-bold @(item.Saldo <= 0 ? "text-danger" : "text-primary")">@item.Saldo</td>
+                                    <td class="text-center">
+                                        <div class="d-flex justify-content-center gap-1">
+                                            <a asp-page="/ProdutosEditar" asp-route-id="@item.IdProduto" class="btn btn-warning btn-sm fw-bold">Editar</a>
+                                            <form method="post" asp-page-handler="Deletar" asp-route-id="@item.IdProduto" onsubmit="return confirm('Excluir este produto?');" class="m-0 p-0">
+                                                <button type="submit" class="btn btn-danger btn-sm fw-bold">Excluir</button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="8" class="text-center py-4 text-muted">Nenhum produto cadastrado.</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

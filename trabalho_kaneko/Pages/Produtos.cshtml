@@ -1,0 +1,87 @@
+﻿@page
+@model trabalho_kaneko.Pages.ProdutosModel
+@{
+    ViewData["Title"] = "Novo Produto";
+}
+
+<div class="container mt-4">
+    <div class="mb-3">
+        <a asp-page="/ProdutosListar" class="btn btn-secondary btn-sm">Voltar para a Lista</a>
+    </div>
+
+    <div class="card shadow-sm border-success">
+        <div class="card-header bg-success text-white fw-bold">
+            <h4 class="mb-0">+ Novo Produto</h4>
+        </div>
+        <div class="card-body">
+            <form method="post">
+                <div asp-validation-summary="All" class="text-danger mb-3 fw-bold"></div>
+
+                <div class="row g-3">
+                    <h5 class="border-bottom pb-2">Informações Básicas</h5>
+
+                    <div class="col-md-9">
+                        <label class="form-label fw-bold">Descrição do Produto</label>
+                        <input asp-for="ProdutoObj.Produto" class="form-control" required maxlength="50" />
+                    </div>
+
+                    
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold">Und. Medida</label>
+                        <input asp-for="ProdutoObj.Und" class="form-control" required maxlength="3" placeholder="Ex: UN" style="text-transform: uppercase;" />
+                    </div>
+
+                    
+
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Grupo</label>
+                        <select asp-for="ProdutoObj.IdGrupo" class="form-select" required>
+                            <option value="">-- Selecione o Grupo --</option>
+                            @foreach (var grupo in Model.ListaGrupos)
+                            {
+                                <option value="@grupo.IdGrupo">@grupo.Grupo</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Marca</label>
+                        <select asp-for="ProdutoObj.IdMarca" class="form-select" required>
+                            <option value="">-- Selecione a Marca --</option>
+                            @foreach (var marca in Model.ListaMarcas)
+                            {
+                                <option value="@marca.IdMarca">@marca.Marca</option>
+                            }
+                        </select>
+                    </div>
+
+                    <h5 class="mt-4 border-bottom pb-2">Valores e Estoque</h5>
+
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold">Preço de Venda (R$)</label>
+                        <input asp-for="ProdutoObj.PrecoVenda" type="number" step="0.01" class="form-control" required />
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold">Preço de Compra (R$)</label>
+                        <input asp-for="ProdutoObj.PrecoCompra" type="number" step="0.01" class="form-control" required />
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold">Custo Adicional (R$)</label>
+                        <input asp-for="ProdutoObj.Custo" type="number" step="0.01" class="form-control" required />
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold text-primary">Saldo Inicial (Estoque)</label>
+                        <input asp-for="ProdutoObj.Saldo" type="number" class="form-control" required />
+                    </div>
+                </div>
+
+                <div class="mt-4 text-end">
+                    <button type="submit" class="btn btn-success px-4 fw-bold">Salvar Produto</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
