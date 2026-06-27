@@ -1,37 +1,33 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Collections.Generic;
 using trabalho_kaneko.Models;
 using trabalho_kaneko.Repository;
 
 namespace trabalho_kaneko.Pages
 {
-    public class GruposModel : PageModel
+    public class GruposListarModel : PageModel
     {
         private readonly GrupoRepository _grupoRepository;
 
-        public GruposModel(GrupoRepository grupoRepository)
+        public GruposListarModel(GrupoRepository grupoRepository)
         {
             _grupoRepository = grupoRepository;
         }
 
-        [BindProperty]
-        public GrupoModel GrupoObj { get; set; } // Nome 'GrupoObj' para evitar conflito
+        public List<GrupoModel> ListaGrupos { get; set; } = new List<GrupoModel>();
 
-        public void OnGet() { }
-
-        public IActionResult OnPost()
+        public void OnGet()
         {
-            if (!ModelState.IsValid) return Page();
+            ListaGrupos = _grupoRepository.ListarTodos();
+        }
 
-            bool sucesso = _grupoRepository.Inserir(GrupoObj);
-            if (sucesso)
-            {
-                TempData["MensagemSucesso"] = "Grupo cadastrado com sucesso!";
-                return RedirectToPage("/GruposListar");
-            }
-
-            ModelState.AddModelError(string.Empty, "Erro ao salvar o grupo.");
-            return Page();
+        public IActionResult OnPostDeletar(int id)
+        {
+            bool sucesso = _grupoRepository.Excluir(id);
+            if (sucesso) TempData["MensagemSucesso"] = "Grupo excluído com sucesso!";
+            else TempData["MensagemErro"] = "Não foi possível excluir o grupo. Verifique se ele está sendo usado em algum produto.";
+            return RedirectToPage();
         }
     }
 }
