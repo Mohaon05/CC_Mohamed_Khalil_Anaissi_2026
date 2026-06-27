@@ -25,16 +25,8 @@ namespace trabalho_kaneko.Pages
         public IActionResult OnPostDeletar(int id)
         {
             bool sucesso = _fornecedorRepository.Excluir(id);
-
-            if (sucesso)
-            {
-                TempData["MensagemSucesso"] = "Fornecedor excluído com sucesso!";
-            }
-            else
-            {
-                TempData["MensagemErro"] = "Não foi possível excluir o fornecedor.";
-            }
-
+            if (sucesso) TempData["MensagemSucesso"] = "Fornecedor excluído com sucesso!";
+            else TempData["MensagemErro"] = "Erro ao excluir o fornecedor.";
             return RedirectToPage();
         }
     }

@@ -6,7 +6,7 @@
 
 <div class="container mt-4">
     <div class="mb-3">
-        <a asp-page="/FornecedoresListar" class="btn btn-secondary btn-sm">⬅ Voltar para a Lista</a>
+        <a asp-page="/FornecedoresListar" class="btn btn-secondary btn-sm">Voltar para a Lista</a>
     </div>
 
     <div class="card shadow-sm border-success">
@@ -18,86 +18,88 @@
                 <div asp-validation-summary="All" class="text-danger mb-3 fw-bold"></div>
 
                 <div class="row g-3">
+                    <h5 class="border-bottom pb-2">Identificação</h5>
+
                     <div class="col-md-3">
                         <label class="form-label fw-bold">Tipo de Pessoa</label>
-                        <select asp-for="Fornecedor.TipoPessoa" class="form-select" required>
-                            <option value="J">Pessoa Jurídica (CNPJ)</option>
-                            <option value="F">Pessoa Física (CPF)</option>
+                        <select asp-for="FornecedorObj.TipoPessoa" class="form-select" required>
+                            <option value="">Selecione</option>
+                            <option value="F">Física (CPF)</option>
+                            <option value="J">Jurídica (CNPJ)</option>
                         </select>
                     </div>
 
                     <div class="col-md-5">
                         <label class="form-label fw-bold">Razão Social / Nome</label>
-                        <input asp-for="Fornecedor.Fornecedor" class="form-control" required maxlength="50" />
+                        <input asp-for="FornecedorObj.Fornecedor" class="form-control" required maxlength="50" />
                     </div>
 
                     <div class="col-md-4">
                         <label class="form-label fw-bold">Nome Fantasia</label>
-                        <input asp-for="Fornecedor.NomeFantasia" class="form-control" maxlength="50" />
-                    </div>
-
-                    <div class="col-md-3">
-                        <label class="form-label fw-bold">CNPJ / CPF</label>
-                        <input asp-for="Fornecedor.CpfCnpj" class="form-control" required maxlength="14" />
-                    </div>
-
-                    <div class="col-md-3">
-                        <label class="form-label fw-bold">Inscrição Estadual / RG</label>
-                        <input asp-for="Fornecedor.RgInscest" class="form-control" maxlength="10" />
+                        <input asp-for="FornecedorObj.NomeFantasia" class="form-control" maxlength="50" />
                     </div>
 
                     <div class="col-md-6">
-                        <label class="form-label fw-bold">E-mail</label>
-                        <input asp-for="Fornecedor.Email" class="form-control" type="email" maxlength="50" />
+                        <label class="form-label fw-bold">CPF / CNPJ (Apenas números)</label>
+                        <input asp-for="FornecedorObj.CpfCnpj" class="form-control" required maxlength="14" />
                     </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">RG / Inscrição Estadual</label>
+                        <input asp-for="FornecedorObj.RgInscest" class="form-control" maxlength="10" />
+                    </div>
+
+                    <h5 class="mt-4 border-bottom pb-2">Contato</h5>
 
                     <div class="col-md-4">
                         <label class="form-label fw-bold">Celular / Telefone</label>
-                        <input asp-for="Fornecedor.Celular" class="form-control" maxlength="15" />
+                        <input asp-for="FornecedorObj.Celular" class="form-control" maxlength="15" />
                     </div>
 
-                    <div class="col-md-8">
-                        <label class="form-label fw-bold">Site</label>
-                        <input asp-for="Fornecedor.Site" class="form-control" maxlength="50" />
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold">E-mail</label>
+                        <input asp-for="FornecedorObj.Email" type="email" class="form-control" maxlength="50" />
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold">Site Oficial</label>
+                        <input asp-for="FornecedorObj.Site" class="form-control" maxlength="50" />
                     </div>
 
                     <h5 class="mt-4 border-bottom pb-2">Endereço</h5>
 
                     <div class="col-md-3">
                         <label class="form-label fw-bold">CEP</label>
-                        <input asp-for="Fornecedor.Cep" class="form-control" maxlength="8" />
+                        <input asp-for="FornecedorObj.Cep" class="form-control" maxlength="8" />
                     </div>
 
                     <div class="col-md-7">
                         <label class="form-label fw-bold">Logradouro (Rua, Av.)</label>
-                        <input asp-for="Fornecedor.Logradouro" class="form-control" maxlength="50" />
+                        <input asp-for="FornecedorObj.Logradouro" class="form-control" maxlength="50" />
                     </div>
 
                     <div class="col-md-2">
                         <label class="form-label fw-bold">Número</label>
-                        <input asp-for="Fornecedor.Numero" class="form-control" maxlength="10" />
+                        <input asp-for="FornecedorObj.Numero" class="form-control" maxlength="10" />
                     </div>
 
                     <div class="col-md-4">
                         <label class="form-label fw-bold">Complemento</label>
-                        <input asp-for="Fornecedor.Complemento" class="form-control" maxlength="50" />
+                        <input asp-for="FornecedorObj.Complemento" class="form-control" maxlength="50" />
                     </div>
 
                     <div class="col-md-4">
                         <label class="form-label fw-bold">Bairro</label>
-                        <input asp-for="Fornecedor.Bairro" class="form-control" maxlength="50" />
+                        <input asp-for="FornecedorObj.Bairro" class="form-control" maxlength="50" />
                     </div>
 
                     <div class="col-md-4">
                         <label class="form-label fw-bold">Cidade</label>
-                        <select asp-for="Fornecedor.IdCidade" class="form-select" required>
+                        <select asp-for="FornecedorObj.IdCidade" class="form-select" required>
                             <option value="">-- Selecione a Cidade --</option>
-                            @if (Model.ListaCidades != null)
+                            @foreach (var cidade in Model.ListaCidades)
                             {
-                                foreach (var cidade in Model.ListaCidades)
-                                {
-                                    <option value="@cidade.IdCidade">@cidade.Cidade</option>
-                                }
+                                <option value="@cidade.IdCidade">@cidade.Cidade</option>
                             }
                         </select>
                     </div>

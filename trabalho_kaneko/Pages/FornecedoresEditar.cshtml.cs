@@ -11,29 +11,25 @@ namespace trabalho_kaneko.Pages
         private readonly FornecedorRepository _fornecedorRepository;
         private readonly CidadeRepository _cidadeRepository;
 
-        public FornecedoresEditarModel(FornecedorRepository fornecedorRepository, CidadeRepository cityRepository)
+        public FornecedoresEditarModel(FornecedorRepository fornecedorRepository, CidadeRepository cidadeRepository)
         {
             _fornecedorRepository = fornecedorRepository;
-            _cidadeRepository = cityRepository;
+            _cidadeRepository = cidadeRepository;
         }
 
         [BindProperty]
-        public FornecedorModel Fornecedor { get; set; }
+        public FornecedorModel FornecedorObj { get; set; }
 
         public List<CidadeModel> ListaCidades { get; set; } = new List<CidadeModel>();
 
         public IActionResult OnGet(int id)
         {
-            // Carrega o fornecedor específico pelo ID e a lista de cidades
-            Fornecedor = _fornecedorRepository.BuscarPorId(id);
-            ListaCidades = _cidadeRepository.ListarTodos();
-
-            if (Fornecedor == null)
+            FornecedorObj = _fornecedorRepository.BuscarPorId(id);
+            if (FornecedorObj == null)
             {
-                TempData["MensagemErro"] = "Fornecedor não encontrado.";
                 return RedirectToPage("/FornecedoresListar");
             }
-
+            ListaCidades = _cidadeRepository.ListarTodos();
             return Page();
         }
 
@@ -45,19 +41,16 @@ namespace trabalho_kaneko.Pages
                 return Page();
             }
 
-            bool sucesso = _fornecedorRepository.Atualizar(Fornecedor);
-
+            bool sucesso = _fornecedorRepository.Atualizar(FornecedorObj);
             if (sucesso)
             {
                 TempData["MensagemSucesso"] = "Fornecedor atualizado com sucesso!";
                 return RedirectToPage("/FornecedoresListar");
             }
-            else
-            {
-                TempData["MensagemErro"] = "Erro ao atualizar o fornecedor no banco de dados.";
-                ListaCidades = _cidadeRepository.ListarTodos();
-                return Page();
-            }
+
+            ModelState.AddModelError(string.Empty, "Erro ao atualizar dados.");
+            ListaCidades = _cidadeRepository.ListarTodos();
+            return Page();
         }
     }
 }

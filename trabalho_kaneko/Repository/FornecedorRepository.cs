@@ -15,7 +15,6 @@ namespace trabalho_kaneko.Repository
             _context = context;
         }
 
-        // 1. LISTAR TODOS
         public List<FornecedorModel> ListarTodos()
         {
             List<FornecedorModel> fornecedores = new List<FornecedorModel>();
@@ -24,44 +23,38 @@ namespace trabalho_kaneko.Repository
                 using (var connection = _context.CreateConnection())
                 {
                     connection.Open();
+                    // INNER JOIN para pegar o nome da cidade
                     string query = @"
-                        SELECT f.id_fornecedor, f.fornecedor, f.nome_fantasia, f.tipo_pessoa, 
-                               f.cpf_cnpj, f.rg_inscest, f.email, f.celular, f.site, 
-                               f.logradouro, f.numero, f.complemento, f.bairro, f.cep, 
-                               f.id_cidade, f.data_inclusao, f.data_alteracao, 
-                               c.cidade AS nome_cidade 
+                        SELECT f.*, c.cidade AS nome_cidade 
                         FROM fornecedores f 
                         INNER JOIN cidades c ON f.id_cidade = c.id_cidade 
                         ORDER BY f.fornecedor ASC";
 
                     using (var command = new MySqlCommand(query, (MySqlConnection)connection))
+                    using (var reader = command.ExecuteReader())
                     {
-                        using (var reader = command.ExecuteReader())
+                        while (reader.Read())
                         {
-                            while (reader.Read())
+                            fornecedores.Add(new FornecedorModel
                             {
-                                fornecedores.Add(new FornecedorModel
-                                {
-                                    IdFornecedor = Convert.ToInt32(reader["id_fornecedor"]),
-                                    Fornecedor = reader["fornecedor"].ToString(),
-                                    NomeFantasia = reader["nome_fantasia"].ToString(),
-                                    TipoPessoa = reader["tipo_pessoa"].ToString(),
-                                    CpfCnpj = reader["cpf_cnpj"].ToString(),
-                                    RgInscest = reader["rg_inscest"].ToString(),
-                                    Email = reader["email"].ToString(),
-                                    Celular = reader["celular"].ToString(),
-                                    Site = reader["site"].ToString(),
-                                    Logradouro = reader["logradouro"].ToString(),
-                                    Numero = reader["numero"].ToString(),
-                                    Complemento = reader["complemento"].ToString(),
-                                    Bairro = reader["bairro"].ToString(),
-                                    Cep = reader["cep"].ToString(),
-                                    IdCidade = Convert.ToInt32(reader["id_cidade"]),
-                                    NomeCidade = reader["nome_cidade"].ToString(),
-                                    DataInclusao = Convert.ToDateTime(reader["data_inclusao"]),
-                                    DataAlteracao = reader["data_alteracao"] != DBNull.Value ? Convert.ToDateTime(reader["data_alteracao"]) : (DateTime?)null
-                                });
-                            }
+                                IdFornecedor = Convert.ToInt32(reader["id_fornecedor"]),
+                                Fornecedor = reader["fornecedor"].ToString(),
+                                NomeFantasia = reader["nome_fantasia"].ToString(),
+                                TipoPessoa = reader["tipo_pessoa"].ToString(),
+                                CpfCnpj = reader["cpf_cnpj"].ToString(),
+                                RgInscest = reader["rg_inscest"].ToString(),
+                                Email = reader["email"].ToString(),
+                                Celular = reader["celular"].ToString(),
+                                Site = reader["site"].ToString(),
+                                Logradouro = reader["logradouro"].ToString(),
+                                Numero = reader["numero"].ToString(),
+                                Complemento = reader["complemento"].ToString(),
+                                Bairro = reader["bairro"].ToString(),
+                                Cep = reader["cep"].ToString(),
+                                IdCidade = Convert.ToInt32(reader["id_cidade"]),
+                                NomeCidade = reader["nome_cidade"].ToString(),
+                                DataInclusao = Convert.ToDateTime(reader["data_inclusao"])
+                            });
                         }
                     }
                 }
@@ -73,8 +66,7 @@ namespace trabalho_kaneko.Repository
             return fornecedores;
         }
 
-        // 2. INSERIR
-        public bool Inserir(FornecedorModel fornecedor)
+        public bool Inserir(FornecedorModel f)
         {
             try
             {
@@ -82,26 +74,26 @@ namespace trabalho_kaneko.Repository
                 {
                     connection.Open();
                     string query = @"INSERT INTO fornecedores 
-                                     (fornecedor, nome_fantasia, tipo_pessoa, cpf_cnpj, rg_inscest, email, celular, site, logradouro, numero, complemento, bairro, cep, id_cidade) 
-                                     VALUES 
-                                     (@fornecedor, @nome_fantasia, @tipo_pessoa, @cpf_cnpj, @rg_inscest, @email, @celular, @site, @logradouro, @numero, @complemento, @bairro, @cep, @id_cidade)";
+                        (fornecedor, nome_fantasia, tipo_pessoa, cpf_cnpj, rg_inscest, email, celular, site, logradouro, numero, complemento, bairro, cep, id_cidade) 
+                        VALUES 
+                        (@fornecedor, @nome_fantasia, @tipo_pessoa, @cpf_cnpj, @rg_inscest, @email, @celular, @site, @logradouro, @numero, @complemento, @bairro, @cep, @id_cidade)";
 
                     using (var command = new MySqlCommand(query, (MySqlConnection)connection))
                     {
-                        command.Parameters.AddWithValue("@fornecedor", fornecedor.Fornecedor);
-                        command.Parameters.AddWithValue("@nome_fantasia", string.IsNullOrEmpty(fornecedor.NomeFantasia) ? (object)DBNull.Value : fornecedor.NomeFantasia);
-                        command.Parameters.AddWithValue("@tipo_pessoa", fornecedor.TipoPessoa);
-                        command.Parameters.AddWithValue("@cpf_cnpj", fornecedor.CpfCnpj);
-                        command.Parameters.AddWithValue("@rg_inscest", string.IsNullOrEmpty(fornecedor.RgInscest) ? (object)DBNull.Value : fornecedor.RgInscest);
-                        command.Parameters.AddWithValue("@email", string.IsNullOrEmpty(fornecedor.Email) ? (object)DBNull.Value : fornecedor.Email);
-                        command.Parameters.AddWithValue("@celular", string.IsNullOrEmpty(fornecedor.Celular) ? (object)DBNull.Value : fornecedor.Celular);
-                        command.Parameters.AddWithValue("@site", string.IsNullOrEmpty(fornecedor.Site) ? (object)DBNull.Value : fornecedor.Site);
-                        command.Parameters.AddWithValue("@logradouro", string.IsNullOrEmpty(fornecedor.Logradouro) ? (object)DBNull.Value : fornecedor.Logradouro);
-                        command.Parameters.AddWithValue("@numero", string.IsNullOrEmpty(fornecedor.Numero) ? (object)DBNull.Value : fornecedor.Numero);
-                        command.Parameters.AddWithValue("@complemento", string.IsNullOrEmpty(fornecedor.Complemento) ? (object)DBNull.Value : fornecedor.Complemento);
-                        command.Parameters.AddWithValue("@bairro", string.IsNullOrEmpty(fornecedor.Bairro) ? (object)DBNull.Value : fornecedor.Bairro);
-                        command.Parameters.AddWithValue("@cep", string.IsNullOrEmpty(fornecedor.Cep) ? (object)DBNull.Value : fornecedor.Cep);
-                        command.Parameters.AddWithValue("@id_cidade", fornecedor.IdCidade);
+                        command.Parameters.AddWithValue("@fornecedor", f.Fornecedor);
+                        command.Parameters.AddWithValue("@nome_fantasia", string.IsNullOrEmpty(f.NomeFantasia) ? (object)DBNull.Value : f.NomeFantasia);
+                        command.Parameters.AddWithValue("@tipo_pessoa", f.TipoPessoa);
+                        command.Parameters.AddWithValue("@cpf_cnpj", f.CpfCnpj);
+                        command.Parameters.AddWithValue("@rg_inscest", string.IsNullOrEmpty(f.RgInscest) ? (object)DBNull.Value : f.RgInscest);
+                        command.Parameters.AddWithValue("@email", string.IsNullOrEmpty(f.Email) ? (object)DBNull.Value : f.Email);
+                        command.Parameters.AddWithValue("@celular", string.IsNullOrEmpty(f.Celular) ? (object)DBNull.Value : f.Celular);
+                        command.Parameters.AddWithValue("@site", string.IsNullOrEmpty(f.Site) ? (object)DBNull.Value : f.Site);
+                        command.Parameters.AddWithValue("@logradouro", string.IsNullOrEmpty(f.Logradouro) ? (object)DBNull.Value : f.Logradouro);
+                        command.Parameters.AddWithValue("@numero", string.IsNullOrEmpty(f.Numero) ? (object)DBNull.Value : f.Numero);
+                        command.Parameters.AddWithValue("@complemento", string.IsNullOrEmpty(f.Complemento) ? (object)DBNull.Value : f.Complemento);
+                        command.Parameters.AddWithValue("@bairro", string.IsNullOrEmpty(f.Bairro) ? (object)DBNull.Value : f.Bairro);
+                        command.Parameters.AddWithValue("@cep", string.IsNullOrEmpty(f.Cep) ? (object)DBNull.Value : f.Cep);
+                        command.Parameters.AddWithValue("@id_cidade", f.IdCidade);
 
                         return command.ExecuteNonQuery() > 0;
                     }
@@ -114,17 +106,15 @@ namespace trabalho_kaneko.Repository
             }
         }
 
-        // 3. BUSCAR POR ID
         public FornecedorModel BuscarPorId(int id)
         {
-            FornecedorModel fornecedor = null;
+            FornecedorModel f = null;
             try
             {
                 using (var connection = _context.CreateConnection())
                 {
                     connection.Open();
                     string query = "SELECT * FROM fornecedores WHERE id_fornecedor = @id";
-
                     using (var command = new MySqlCommand(query, (MySqlConnection)connection))
                     {
                         command.Parameters.AddWithValue("@id", id);
@@ -132,7 +122,7 @@ namespace trabalho_kaneko.Repository
                         {
                             if (reader.Read())
                             {
-                                fornecedor = new FornecedorModel
+                                f = new FornecedorModel
                                 {
                                     IdFornecedor = Convert.ToInt32(reader["id_fornecedor"]),
                                     Fornecedor = reader["fornecedor"].ToString(),
@@ -157,13 +147,12 @@ namespace trabalho_kaneko.Repository
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Erro ao buscar fornecedor por ID: " + ex.Message);
+                Console.WriteLine("Erro ao buscar fornecedor: " + ex.Message);
             }
-            return fornecedor;
+            return f;
         }
 
-        // 4. ATUALIZAR
-        public bool Atualizar(FornecedorModel fornecedor)
+        public bool Atualizar(FornecedorModel f)
         {
             try
             {
@@ -171,30 +160,29 @@ namespace trabalho_kaneko.Repository
                 {
                     connection.Open();
                     string query = @"UPDATE fornecedores SET 
-                                        fornecedor = @fornecedor, nome_fantasia = @nome_fantasia, tipo_pessoa = @tipo_pessoa, 
-                                        cpf_cnpj = @cpf_cnpj, rg_inscest = @rg_inscest, email = @email, celular = @celular, 
-                                        site = @site, logradouro = @logradouro, numero = @numero, 
-                                        complemento = @complemento, bairro = @bairro, cep = @cep, id_cidade = @id_cidade, 
-                                        data_alteracao = NOW() 
-                                     WHERE id_fornecedor = @id";
+                        fornecedor = @fornecedor, nome_fantasia = @nome_fantasia, tipo_pessoa = @tipo_pessoa, 
+                        cpf_cnpj = @cpf_cnpj, rg_inscest = @rg_inscest, email = @email, celular = @celular, 
+                        site = @site, logradouro = @logradouro, numero = @numero, complemento = @complemento, 
+                        bairro = @bairro, cep = @cep, id_cidade = @id_cidade, data_alteracao = NOW() 
+                        WHERE id_fornecedor = @id";
 
                     using (var command = new MySqlCommand(query, (MySqlConnection)connection))
                     {
-                        command.Parameters.AddWithValue("@id", fornecedor.IdFornecedor);
-                        command.Parameters.AddWithValue("@fornecedor", fornecedor.Fornecedor);
-                        command.Parameters.AddWithValue("@nome_fantasia", string.IsNullOrEmpty(fornecedor.NomeFantasia) ? (object)DBNull.Value : fornecedor.NomeFantasia);
-                        command.Parameters.AddWithValue("@tipo_pessoa", fornecedor.TipoPessoa);
-                        command.Parameters.AddWithValue("@cpf_cnpj", fornecedor.CpfCnpj);
-                        command.Parameters.AddWithValue("@rg_inscest", string.IsNullOrEmpty(fornecedor.RgInscest) ? (object)DBNull.Value : fornecedor.RgInscest);
-                        command.Parameters.AddWithValue("@email", string.IsNullOrEmpty(fornecedor.Email) ? (object)DBNull.Value : fornecedor.Email);
-                        command.Parameters.AddWithValue("@celular", string.IsNullOrEmpty(fornecedor.Celular) ? (object)DBNull.Value : fornecedor.Celular);
-                        command.Parameters.AddWithValue("@site", string.IsNullOrEmpty(fornecedor.Site) ? (object)DBNull.Value : fornecedor.Site);
-                        command.Parameters.AddWithValue("@logradouro", string.IsNullOrEmpty(fornecedor.Logradouro) ? (object)DBNull.Value : fornecedor.Logradouro);
-                        command.Parameters.AddWithValue("@numero", string.IsNullOrEmpty(fornecedor.Numero) ? (object)DBNull.Value : fornecedor.Numero);
-                        command.Parameters.AddWithValue("@complemento", string.IsNullOrEmpty(fornecedor.Complemento) ? (object)DBNull.Value : fornecedor.Complemento);
-                        command.Parameters.AddWithValue("@bairro", string.IsNullOrEmpty(fornecedor.Bairro) ? (object)DBNull.Value : fornecedor.Bairro);
-                        command.Parameters.AddWithValue("@cep", string.IsNullOrEmpty(fornecedor.Cep) ? (object)DBNull.Value : fornecedor.Cep);
-                        command.Parameters.AddWithValue("@id_cidade", fornecedor.IdCidade);
+                        command.Parameters.AddWithValue("@id", f.IdFornecedor);
+                        command.Parameters.AddWithValue("@fornecedor", f.Fornecedor);
+                        command.Parameters.AddWithValue("@nome_fantasia", string.IsNullOrEmpty(f.NomeFantasia) ? (object)DBNull.Value : f.NomeFantasia);
+                        command.Parameters.AddWithValue("@tipo_pessoa", f.TipoPessoa);
+                        command.Parameters.AddWithValue("@cpf_cnpj", f.CpfCnpj);
+                        command.Parameters.AddWithValue("@rg_inscest", string.IsNullOrEmpty(f.RgInscest) ? (object)DBNull.Value : f.RgInscest);
+                        command.Parameters.AddWithValue("@email", string.IsNullOrEmpty(f.Email) ? (object)DBNull.Value : f.Email);
+                        command.Parameters.AddWithValue("@celular", string.IsNullOrEmpty(f.Celular) ? (object)DBNull.Value : f.Celular);
+                        command.Parameters.AddWithValue("@site", string.IsNullOrEmpty(f.Site) ? (object)DBNull.Value : f.Site);
+                        command.Parameters.AddWithValue("@logradouro", string.IsNullOrEmpty(f.Logradouro) ? (object)DBNull.Value : f.Logradouro);
+                        command.Parameters.AddWithValue("@numero", string.IsNullOrEmpty(f.Numero) ? (object)DBNull.Value : f.Numero);
+                        command.Parameters.AddWithValue("@complemento", string.IsNullOrEmpty(f.Complemento) ? (object)DBNull.Value : f.Complemento);
+                        command.Parameters.AddWithValue("@bairro", string.IsNullOrEmpty(f.Bairro) ? (object)DBNull.Value : f.Bairro);
+                        command.Parameters.AddWithValue("@cep", string.IsNullOrEmpty(f.Cep) ? (object)DBNull.Value : f.Cep);
+                        command.Parameters.AddWithValue("@id_cidade", f.IdCidade);
 
                         return command.ExecuteNonQuery() > 0;
                     }
@@ -207,7 +195,6 @@ namespace trabalho_kaneko.Repository
             }
         }
 
-        // 5. EXCLUIR
         public bool Excluir(int id)
         {
             try

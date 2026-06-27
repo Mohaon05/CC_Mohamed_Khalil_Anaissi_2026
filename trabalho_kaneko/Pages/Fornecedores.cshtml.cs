@@ -18,7 +18,7 @@ namespace trabalho_kaneko.Pages
         }
 
         [BindProperty]
-        public FornecedorModel Fornecedor { get; set; }
+        public FornecedorModel FornecedorObj { get; set; }
 
         public List<CidadeModel> ListaCidades { get; set; } = new List<CidadeModel>();
 
@@ -35,19 +35,16 @@ namespace trabalho_kaneko.Pages
                 return Page();
             }
 
-            bool sucesso = _fornecedorRepository.Inserir(Fornecedor);
-
+            bool sucesso = _fornecedorRepository.Inserir(FornecedorObj);
             if (sucesso)
             {
                 TempData["MensagemSucesso"] = "Fornecedor cadastrado com sucesso!";
                 return RedirectToPage("/FornecedoresListar");
             }
-            else
-            {
-                ModelState.AddModelError(string.Empty, "Erro ao salvar. Verifique se o CPF/CNPJ já não está cadastrado.");
-                ListaCidades = _cidadeRepository.ListarTodos();
-                return Page();
-            }
+
+            ModelState.AddModelError(string.Empty, "Erro ao salvar. Verifique se o CPF/CNPJ já existe.");
+            ListaCidades = _cidadeRepository.ListarTodos();
+            return Page();
         }
     }
 }
