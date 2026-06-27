@@ -1,0 +1,68 @@
+﻿@page
+@model trabalho_kaneko.Pages.CargosListarModel
+@{
+    ViewData["Title"] = "Gestão de Cargos";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Gestão de Cargos</h2>
+        <a asp-page="/Cargos" class="btn btn-success fw-bold">+ Novo Cargo</a>
+    </div>
+
+    @if (TempData["MensagemSucesso"] != null)
+    {
+        <div class="alert alert-success fw-bold shadow-sm">@TempData["MensagemSucesso"]</div>
+    }
+    @if (TempData["MensagemErro"] != null)
+    {
+        <div class="alert alert-danger fw-bold shadow-sm">@TempData["MensagemErro"]</div>
+    }
+
+    <div class="card shadow-sm">
+        <div class="card-header bg-secondary text-white fw-bold">
+            Cargos Cadastrados
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover table-sm align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th style="width: 100px;">Código</th>
+                            <th style="width: 300px;">Nome do Cargo</th>
+                            <th>Descrição</th>
+                            <th class="text-center" style="width: 160px;">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.ListaCargos != null && Model.ListaCargos.Count > 0)
+                        {
+                            foreach (var item in Model.ListaCargos)
+                            {
+                                <tr>
+                                    <td>@item.IdCargo</td>
+                                    <td class="fw-bold">@item.Cargo</td>
+                                    <td>@item.Descricao</td>
+                                    <td class="text-center align-middle">
+                                        <div class="d-flex justify-content-center gap-2">
+                                            <a asp-page="/CargosEditar" asp-route-id="@item.IdCargo" class="btn btn-warning btn-sm fw-bold">Editar</a>
+                                            <form method="post" asp-page-handler="Deletar" asp-route-id="@item.IdCargo" onsubmit="return confirm('Excluir este cargo?');" class="m-0 p-0">
+                                                <button type="submit" class="btn btn-danger btn-sm fw-bold">Excluir</button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="4" class="text-center py-4 text-muted">Nenhum cargo cadastrado.</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

@@ -7,6 +7,9 @@ builder.Services.AddScoped<PaisRepository>();
 builder.Services.AddScoped<EstadoRepository>();
 builder.Services.AddScoped<CidadeRepository>();
 builder.Services.AddScoped<FornecedorRepository>();
+builder.Services.AddScoped<CargoRepository>();
+builder.Services.AddScoped<FuncionarioRepository>();
+builder.Services.AddScoped<GrupoRepository>();
 
 // Add services to the container.
 builder.Services.AddRazorPages();
