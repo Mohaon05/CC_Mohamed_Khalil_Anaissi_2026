@@ -172,7 +172,7 @@ namespace trabalho_kaneko.Repository
                     connection.Open();
                     // Adicionamos o data_alteracao = NOW() por segurança, igual fizemos nas cidades
                     string query = @"UPDATE clientes SET 
-                                        cliente = @cliente, tipo_pessoa = @tipo_pessoa, cpf_cnpj = @cpf_cnpj, 
+                                        cliente = @cliente, cpf_cnpj = @cpf_cnpj, 
                                         rg_inscest = @rg_inscest, data_nascimento = @data_nascimento, logradouro = @logradouro, 
                                         numero = @numero, complemento = @complemento, bairro = @bairro, cep = @cep, 
                                         id_cidade = @id_cidade, email = @email, data_alteracao = NOW() 
@@ -182,7 +182,8 @@ namespace trabalho_kaneko.Repository
                     {
                         command.Parameters.AddWithValue("@id", cliente.IdCliente);
                         command.Parameters.AddWithValue("@cliente", cliente.Cliente);
-                        command.Parameters.AddWithValue("@tipo_pessoa", cliente.TipoPessoa);
+                        //tirado para não poder atualizar o tipo de pessoa
+                        //command.Parameters.AddWithValue("@tipo_pessoa", cliente.TipoPessoa);
                         command.Parameters.AddWithValue("@cpf_cnpj", cliente.CpfCnpj);
                         command.Parameters.AddWithValue("@rg_inscest", string.IsNullOrEmpty(cliente.RgInscest) ? (object)DBNull.Value : cliente.RgInscest);
                         command.Parameters.AddWithValue("@data_nascimento", cliente.DataNascimento.HasValue ? cliente.DataNascimento.Value.Date : (object)DBNull.Value);
