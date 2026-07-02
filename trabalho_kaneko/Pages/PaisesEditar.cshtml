@@ -14,26 +14,34 @@
             <h4 class="mb-0">Editar País</h4>
         </div>
         <div class="card-body">
-
             <form method="post">
-                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
-
-                <input type="hidden" asp-for="Pais.IdPais" />
+                <input type="hidden" asp-for="PaisObj.IdPais" />
+                <div asp-validation-summary="All" class="text-danger mb-3 fw-bold"></div>
 
                 <div class="row g-3">
-                    <div class="col-md-9">
+                    <div class="col-md-5">
                         <label class="form-label fw-bold">Nome do País</label>
-                        <input asp-for="Pais.Pais" class="form-control" required maxlength="60" />
+                        <input asp-for="PaisObj.Pais" class="form-control" required maxlength="60" />
+                    </div>
+
+                    <div class="col-md-2">
+                        <label class="form-label fw-bold">Sigla</label>
+                        <input asp-for="PaisObj.Sigla" class="form-control" required maxlength="3" style="text-transform: uppercase;" />
+                    </div>
+
+                    <div class="col-md-2">
+                        <label class="form-label fw-bold">DDI</label>
+                        <input asp-for="PaisObj.Ddi" class="form-control" required maxlength="10" />
                     </div>
 
                     <div class="col-md-3">
-                        <label class="form-label fw-bold">Sigla</label>
-                        <input asp-for="Pais.Sigla" class="form-control" required maxlength="3" style="text-transform: uppercase;" />
+                        <label class="form-label fw-bold">Moeda</label>
+                        <input asp-for="PaisObj.Moeda" class="form-control" required maxlength="50" />
                     </div>
                 </div>
 
                 <div class="mt-4 text-end">
-                    <button type="submit" class="btn btn-warning px-4 fw-bold">Atualizar País</button>
+                    <button type="submit" class="btn btn-warning px-4 fw-bold">Salvar Alterações</button>
                 </div>
             </form>
         </div>

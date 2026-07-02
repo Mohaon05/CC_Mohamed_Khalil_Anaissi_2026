@@ -15,34 +15,23 @@ namespace trabalho_kaneko.Pages
         }
 
         [BindProperty]
-        public PaisModel Pais { get; set; }
+        public PaisModel PaisObj { get; set; }
 
-        public void OnGet()
-        {
-            // MODIFICADO: Removemos a busca da lista daqui. A tela carrega vazia.
-        }
+        public void OnGet() { }
 
         public IActionResult OnPost()
         {
-            if (!ModelState.IsValid)
-            {
-                return Page();
-            }
+            if (!ModelState.IsValid) return Page();
 
-            bool sucesso = _paisRepository.Inserir(Pais);
-
+            bool sucesso = _paisRepository.Inserir(PaisObj);
             if (sucesso)
             {
                 TempData["MensagemSucesso"] = "País cadastrado com sucesso!";
-
-                // MODIFICADO: Após salvar, redirecionamos o usuário de volta para a tela de listagem
                 return RedirectToPage("/PaisesListar");
             }
-            else
-            {
-                ModelState.AddModelError(string.Empty, "Erro ao salvar o país no banco de dados.");
-                return Page();
-            }
+
+            ModelState.AddModelError(string.Empty, "Erro ao salvar o país.");
+            return Page();
         }
     }
 }

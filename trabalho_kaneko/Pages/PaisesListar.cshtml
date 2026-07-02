@@ -1,36 +1,39 @@
 ﻿@page
 @model trabalho_kaneko.Pages.PaisesListarModel
 @{
-    ViewData["Title"] = "Países Cadastrados";
+    ViewData["Title"] = "Gestão de Países";
 }
 
-@if (TempData["MensagemErro"] != null)
-{
-    <div class="alert alert-danger">@TempData["MensagemErro"]</div>
-}
-
-<div class="container mt-4 mb-5">
-
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h3 class="mb-0">Gestão de Países</h3>
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Gestão de Países</h2>
         <a asp-page="/Paises" class="btn btn-success fw-bold">+ Novo País</a>
     </div>
 
+    @if (TempData["MensagemSucesso"] != null)
+    {
+        <div class="alert alert-success fw-bold shadow-sm">@TempData["MensagemSucesso"]</div>
+    }
+    @if (TempData["MensagemErro"] != null)
+    {
+        <div class="alert alert-danger fw-bold shadow-sm">@TempData["MensagemErro"]</div>
+    }
+
     <div class="card shadow-sm">
-        <div class="card-header bg-secondary text-white">
-            <h5 class="mb-0">Países Cadastrados</h5>
+        <div class="card-header bg-secondary text-white fw-bold">
+            Países Cadastrados
         </div>
         <div class="card-body p-0">
             <div class="table-responsive">
-                <table class="table table-striped table-hover mb-0">
+                <table class="table table-striped table-hover table-sm align-middle mb-0">
                     <thead class="table-light">
                         <tr>
-                            <th>Código</th>
+                            <th style="width: 100px;">Código</th>
                             <th>País</th>
-                            <th>Sigla</th>
-                            <th>Data de Inclusão</th>
-                            <th>Última Alteração</th>
-                            <th class="text-center" style="width: 120px;">Ações</th>
+                            <th style="width: 100px;">Sigla</th>
+                            <th style="width: 100px;">DDI</th>
+                            <th>Moeda</th>
+                            <th class="text-center" style="width: 160px;">Ações</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -42,22 +45,13 @@
                                     <td>@item.IdPais</td>
                                     <td class="fw-bold">@item.Pais</td>
                                     <td>@item.Sigla</td>
-                                    <td>@item.DataInclusao.ToString("dd/MM/yyyy HH:mm")</td>
-
-                                    <td>@item.DataAlteracao?.ToString("dd/MM/yyyy HH:mm")</td>
-
+                                    <td>@item.Ddi</td>
+                                    <td>@item.Moeda</td>
                                     <td class="text-center align-middle">
                                         <div class="d-flex justify-content-center gap-2">
-                                            <a asp-page="/PaisesEditar" asp-route-id="@item.IdPais" class="btn btn-warning btn-sm fw-bold">
-                                                Editar
-                                            </a>
-
-                                            <form method="post" asp-page-handler="Deletar" asp-route-id="@item.IdPais"
-                                                  onsubmit="return confirm('Tem certeza que deseja excluir este país? This action cannot be undone.');"
-                                                  class="m-0 p-0">
-                                                <button type="submit" class="btn btn-danger btn-sm fw-bold">
-                                                    Excluir
-                                                </button>
+                                            <a asp-page="/PaisesEditar" asp-route-id="@item.IdPais" class="btn btn-warning btn-sm fw-bold">Editar</a>
+                                            <form method="post" asp-page-handler="Deletar" asp-route-id="@item.IdPais" onsubmit="return confirm('Deseja excluir este país?');" class="m-0 p-0">
+                                                <button type="submit" class="btn btn-danger btn-sm fw-bold">Excluir</button>
                                             </form>
                                         </div>
                                     </td>
@@ -67,7 +61,7 @@
                         else
                         {
                             <tr>
-                                <td colspan="4" class="text-center py-3">Nenhum país cadastrado ainda.</td>
+                                <td colspan="6" class="text-center py-4 text-muted">Nenhum país cadastrado.</td>
                             </tr>
                         }
                     </tbody>
