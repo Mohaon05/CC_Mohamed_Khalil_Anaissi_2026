@@ -44,6 +44,14 @@ namespace trabalho_kaneko.Pages
                 return Page();
             }
 
+            // NOVA TRAVA DE SEGURANÇA (Usando 'Estado')
+            if (_estadoRepository.ExisteEstadoNoPais(Estado.Estado, Estado.Uf, Estado.IdPais, Estado.IdEstado))
+            {
+                ModelState.AddModelError(string.Empty, "Erro: Este Nome ou UF já pertence a outro Estado neste País!");
+                CarregarListas();
+                return Page();
+            }
+
             bool sucesso = _estadoRepository.Atualizar(Estado);
 
             if (sucesso)

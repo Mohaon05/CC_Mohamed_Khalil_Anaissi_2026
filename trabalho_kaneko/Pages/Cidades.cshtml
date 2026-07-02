@@ -37,7 +37,7 @@
                             {
                                 foreach (var estado in Model.ListaEstadosDisponiveis)
                                 {
-                                    <option value="@estado.IdEstado">@estado.Estado - @estado.Uf</option>
+                                    <option value="@estado.IdEstado">@estado.Estado - @estado.Uf (@estado.NomePais)</option>
                                 }
                             }
                         </select>

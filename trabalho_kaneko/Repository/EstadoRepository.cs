@@ -53,8 +53,6 @@ namespace trabalho_kaneko.Repository
                 {
                     connection.Open();
 
-                    // NOVO: Usamos INNER JOIN para juntar as tabelas "estados" e "paises". 
-                    // Assim conseguimos puxar o p.pais (nome do país) direto do banco.
                     string query = @"
                     SELECT e.id_estado, e.estado, e.uf, e.id_pais, e.data_inclusao, e.data_alteracao, p.pais AS nome_pais 
                     FROM estados e 
@@ -74,9 +72,8 @@ namespace trabalho_kaneko.Repository
                                     Uf = reader["uf"].ToString(),
                                     IdPais = Convert.ToInt32(reader["id_pais"]),
                                     DataInclusao = Convert.ToDateTime(reader["data_inclusao"]),
-                                    // ADICIONADO: Puxando a data de alteração igual fizemos nos países
                                     DataAlteracao = reader["data_alteracao"] != DBNull.Value ? Convert.ToDateTime(reader["data_alteracao"]) : (DateTime?)null,
-                                    NomePais = reader["nome_pais"].ToString() // Puxa o nome vindo do JOIN
+                                    NomePais = reader["nome_pais"].ToString()
                                 });
                             }
                         }
@@ -183,5 +180,41 @@ namespace trabalho_kaneko.Repository
             }
         }
 
+        public bool ExisteEstadoNoPais(string nomeEstado, string uf, int idPais, int idEstadoAtual = 0)
+        {
+            try
+            {
+                using (var connection = _context.CreateConnection())
+                {
+                    connection.Open();
+                    // Verifica se existe o MESMO nome ou a MESMA sigla (UF) no MESMO país.
+                    // O "id_estado != @idAtual" serve para não dar erro quando formos Editar o próprio estado.
+                    string query = @"
+                    SELECT COUNT(1) 
+                    FROM estados 
+                    WHERE (estado = @nomeEstado OR uf = @uf) 
+                      AND id_pais = @idPais 
+                      AND id_estado != @idAtual";
+
+                    using (var command = new MySqlCommand(query, (MySqlConnection)connection))
+                    {
+                        command.Parameters.AddWithValue("@nomeEstado", nomeEstado);
+                        command.Parameters.AddWithValue("@uf", uf);
+                        command.Parameters.AddWithValue("@idPais", idPais);
+                        command.Parameters.AddWithValue("@idAtual", idEstadoAtual);
+
+                        int count = Convert.ToInt32(command.ExecuteScalar());
+                        return count > 0; // Retorna true se encontrou alguma duplicata
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Erro ao verificar duplicidade de estado: " + ex.Message);
+                return false;
+            }
+        }
+
     }
 }
+

@@ -37,8 +37,15 @@ namespace trabalho_kaneko.Pages
                 return Page();
             }
 
-            bool sucesso = _estadoRepository.Inserir(Estado);
+            // 🛑 NOVA TRAVA DE SEGURANÇA AQUI (Usando 'Estado' em vez de 'EstadoObj')
+            if (_estadoRepository.ExisteEstadoNoPais(Estado.Estado, Estado.Uf, Estado.IdPais))
+            {
+                ModelState.AddModelError(string.Empty, "Erro: Já existe um Estado com este Nome ou UF cadastrado para este País!");
+                CarregarListas();
+                return Page();
+            }
 
+            bool sucesso = _estadoRepository.Inserir(Estado);
             if (sucesso)
             {
                 TempData["MensagemSucesso"] = "Estado cadastrado com sucesso!";
