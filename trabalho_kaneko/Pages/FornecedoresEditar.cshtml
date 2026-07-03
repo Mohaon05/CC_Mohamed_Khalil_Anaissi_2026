@@ -19,11 +19,13 @@
                 <div asp-validation-summary="All" class="text-danger mb-3 fw-bold"></div>
 
                 <div class="row g-3">
-                    <h5 class="border-bottom pb-2">Identificação</h5>
+                    <!-- 1. IDENTIFICAÇÃO (PARTE INICIAL) -->
+                    <h5 class="border-bottom pb-2 w-100">Identificação</h5>
 
                     <div class="col-md-3">
                         <label class="form-label fw-bold campo-obrigatorio">Tipo de Pessoa</label>
                         <select asp-for="FornecedorObj.TipoPessoa" class="form-select" required>
+                            <option value="">Selecione</option>
                             <option value="F">Física (CPF)</option>
                             <option value="J">Jurídica (CNPJ)</option>
                         </select>
@@ -39,34 +41,8 @@
                         <input asp-for="FornecedorObj.NomeFantasia" class="form-control" maxlength="50" />
                     </div>
 
-                    <div class="col-md-6">
-                        <label class="form-label fw-bold campo-obrigatorio">CPF / CNPJ</label>
-                        <input asp-for="FornecedorObj.CpfCnpj" class="form-control" required maxlength="14" />
-                    </div>
-
-                    <div class="col-md-6">
-                        <label class="form-label fw-bold">RG / Inscrição Estadual</label>
-                        <input asp-for="FornecedorObj.RgInscest" class="form-control" maxlength="10" />
-                    </div>
-
-                    <h5 class="mt-4 border-bottom pb-2">Contato</h5>
-
-                    <div class="col-md-4">
-                        <label class="form-label fw-bold">Celular / Telefone</label>
-                        <input asp-for="FornecedorObj.Celular" class="form-control" maxlength="15" />
-                    </div>
-
-                    <div class="col-md-4">
-                        <label class="form-label fw-bold">E-mail</label>
-                        <input asp-for="FornecedorObj.Email" type="email" class="form-control" maxlength="50" />
-                    </div>
-
-                    <div class="col-md-4">
-                        <label class="form-label fw-bold">Site Oficial</label>
-                        <input asp-for="FornecedorObj.Site" class="form-control" maxlength="50" />
-                    </div>
-
-                    <h5 class="mt-4 border-bottom pb-2">Endereço</h5>
+                    <!-- 2. ENDEREÇO (Movido para o meio) -->
+                    <h5 class="mt-4 border-bottom pb-2 w-100">Endereço</h5>
 
                     <div class="col-md-3">
                         <label class="form-label fw-bold">CEP</label>
@@ -102,6 +78,36 @@
                                 <option value="@cidade.IdCidade">@cidade.Cidade</option>
                             }
                         </select>
+                    </div>
+
+                    <!-- 3. DOCUMENTOS E CONTATO (Movidos para baixo do endereço) -->
+                    <h5 class="mt-4 border-bottom pb-2 w-100">Documentos</h5>
+
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold campo-obrigatorio">CPF / CNPJ</label>
+                        <input asp-for="FornecedorObj.CpfCnpj" class="form-control" required maxlength="14" />
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">RG / Inscrição Estadual</label>
+                        <input asp-for="FornecedorObj.RgInscest" class="form-control" maxlength="10" />
+                    </div>
+
+                    <h5 class="mt-4 border-bottom pb-2 w-100">Contato</h5>
+
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold">Celular / Telefone</label>
+                        <input asp-for="FornecedorObj.Celular" class="form-control" maxlength="15" />
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold">E-mail</label>
+                        <input asp-for="FornecedorObj.Email" type="email" class="form-control" maxlength="50" />
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold">Site Oficial</label>
+                        <input asp-for="FornecedorObj.Site" class="form-control" maxlength="50" />
                     </div>
                 </div>
 

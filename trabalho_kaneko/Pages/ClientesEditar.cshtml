@@ -21,13 +21,11 @@
 
                 <div class="row g-3">
                     <div class="col-md-3">
-                        <label class="form-label fw-bold">Tipo de Cliente</label>
-                        <select asp-for="Cliente.TipoPessoa" class="form-select" disabled>
+                        <label class="form-label fw-bold campo-obrigatorio">Tipo de Cliente</label>
+                        <select asp-for="Cliente.TipoPessoa" class="form-select" required>
                             <option value="F">Pessoa Física (CPF)</option>
                             <option value="J">Pessoa Jurídica (CNPJ)</option>
                         </select>
-
-                        <input type="hidden" asp-for="Cliente.TipoPessoa" />
                     </div>
 
                     <div class="col-md-9">
@@ -35,27 +33,7 @@
                         <input asp-for="Cliente.Cliente" class="form-control" required maxlength="50" />
                     </div>
 
-                    <div class="col-md-4">
-                        <label class="form-label fw-bold campo-obrigatorio">CPF / CNPJ</label>
-                        <input asp-for="Cliente.CpfCnpj" class="form-control" required maxlength="14" />
-                    </div>
-
-                    <div class="col-md-4">
-                        <label class="form-label fw-bold">RG / Inscrição Estadual</label>
-                        <input asp-for="Cliente.RgInscest" class="form-control" maxlength="10" />
-                    </div>
-
-                    <div class="col-md-4">
-                        <label class="form-label fw-bold">Data de Nascimento</label>
-                        <input asp-for="Cliente.DataNascimento" class="form-control" type="date" />
-                    </div>
-
-                    <div class="col-md-12">
-                        <label class="form-label fw-bold">E-mail</label>
-                        <input asp-for="Cliente.Email" class="form-control" type="email" maxlength="50" />
-                    </div>
-
-                    <h5 class="mt-4 border-bottom pb-2">Endereço</h5>
+                    <h5 class="mt-4 border-bottom pb-2 w-100">Endereço</h5>
 
                     <div class="col-md-3">
                         <label class="form-label fw-bold">CEP</label>
@@ -94,6 +72,28 @@
                                 }
                             }
                         </select>
+                    </div>
+
+                    <h5 class="mt-4 border-bottom pb-2 w-100">Documentos e Contato</h5>
+
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold campo-obrigatorio">CPF / CNPJ</label>
+                        <input asp-for="Cliente.CpfCnpj" class="form-control" required maxlength="14" />
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold">RG / Inscrição Estadual</label>
+                        <input asp-for="Cliente.RgInscest" class="form-control" maxlength="10" />
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold">Data de Nascimento</label>
+                        <input asp-for="Cliente.DataNascimento" class="form-control" type="date" />
+                    </div>
+
+                    <div class="col-md-12">
+                        <label class="form-label fw-bold">E-mail</label>
+                        <input asp-for="Cliente.Email" class="form-control" type="email" maxlength="50" />
                     </div>
                 </div>
 
