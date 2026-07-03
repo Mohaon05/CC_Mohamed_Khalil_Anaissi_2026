@@ -33,6 +33,9 @@
 
                     <div class="col-md-4">
                         <label class="form-label fw-bold">País</label>
+
+                        <div class="input-group flex-nowrap">
+
                         <select asp-for="Estado.IdPais" class="form-select" required>
                             <option value="">-- Selecione um País --</option>
                             @if (Model.ListaPaisesDisponiveis != null)
@@ -43,6 +46,11 @@
                                 }
                             }
                         </select>
+
+                        <button class="btn btn-outline-success fw-bold text-nowrap" type="button" data-bs-toggle="modal" data-bs-target="#modalNovoPais">
+                            + Novo
+                        </button>
+
                     </div>
                 </div>
 
@@ -53,3 +61,107 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="modalNovoPais" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content border-success">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title fw-bold">🌍 Cadastro Rápido de País</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-2">
+                    <label class="form-label fw-bold campo-obrigatorio">País</label>
+                    <input type="text" id="modalPaisNome" class="form-control" maxlength="60" required />
+                </div>
+                <div class="row g-2 mb-2">
+                    <div class="col-6">
+                        <label class="form-label fw-bold campo-obrigatorio">Sigla</label>
+                        <input type="text" id="modalPaisSigla" class="form-control" maxlength="3" style="text-transform: uppercase;" required />
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label fw-bold campo-obrigatorio">DDI</label>
+                        <input type="text" id="modalPaisDdi" class="form-control" maxlength="10" placeholder="+55" required />
+                    </div>
+                </div>
+                <div class="mb-2">
+                    <label class="form-label fw-bold campo-obrigatorio">Moeda</label>
+                    <input type="text" id="modalPaisMoeda" class="form-control" maxlength="50" placeholder="Ex: Real (BRL)" required />
+                </div>
+                <div id="modalPaisErro" class="text-danger fw-bold d-none mt-2">Erro ao salvar país. Verifique os dados.</div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary fw-bold" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-success fw-bold" onclick="salvarPaisAjax()">Salvar País</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function salvarPaisAjax() {
+            const nome = document.getElementById('modalPaisNome').value;
+            const sigla = document.getElementById('modalPaisSigla').value;
+            const ddi = document.getElementById('modalPaisDdi').value;
+            const moeda = document.getElementById('modalPaisMoeda').value;
+
+            if(!nome || !sigla || !ddi || !moeda) {
+                alert('Por favor, preencha todos os campos do país!');
+                return;
+            }
+
+            const tokenElement = document.querySelector('input[name="__RequestVerificationToken"]');
+            if (!tokenElement) return;
+
+            const formData = new URLSearchParams();
+            formData.append('paisNome', nome);
+            formData.append('paisSigla', sigla);
+            formData.append('paisDdi', ddi);
+            formData.append('paisMoeda', moeda);
+
+            fetch('?handler=CriarPaisRapido', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'RequestVerificationToken': tokenElement.value
+                },
+                body: formData.toString()
+            })
+            .then(response => {
+                if (!response.ok) throw new Error("Erro na resposta do servidor");
+                return response.json();
+            })
+            .then(data => {
+                if (data.sucesso) {
+                    // 1. Atualiza o select com trava de segurança
+                    const select = document.getElementById('selectPais');
+                    if (select) {
+                        const option = new Option(data.nome, data.id, true, true);
+                        select.add(option);
+                    } else {
+                        console.warn("Atenção: A tag do select está sem o id='selectPais'");
+                    }
+
+                    // 2. Fecha o modal simulando o clique no 'X' (Método 100% blindado)
+                    const btnFechar = document.querySelector('#modalNovoPais .btn-close');
+                    if (btnFechar) btnFechar.click();
+
+                    // 3. Limpa os dados
+                    document.getElementById('modalPaisNome').value = '';
+                    document.getElementById('modalPaisSigla').value = '';
+                    document.getElementById('modalPaisDdi').value = '';
+                    document.getElementById('modalPaisMoeda').value = '';
+                    document.getElementById('modalPaisErro').classList.add('d-none');
+                } else {
+                    document.getElementById('modalPaisErro').classList.remove('d-none');
+                }
+            })
+            .catch(error => {
+                // Agora o erro vai aparecer no F12 se tropeçar de novo!
+                console.error('Erro no JS ao atualizar a tela:', error);
+                document.getElementById('modalPaisErro').classList.remove('d-none');
+            });
+        }
+    </script>
+}

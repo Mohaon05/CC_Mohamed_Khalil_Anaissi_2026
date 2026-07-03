@@ -71,5 +71,31 @@ namespace trabalho_kaneko.Pages
         {
             ListaPaisesDisponiveis = _paisRepository.ListarTodos();
         }
+
+        // Método para salvar País direto da tela de Editar Estado
+        public JsonResult OnPostCriarPaisRapido(string paisNome, string paisSigla, string paisDdi, string paisMoeda)
+        {
+            if (string.IsNullOrEmpty(paisNome) || string.IsNullOrEmpty(paisSigla))
+            {
+                return new JsonResult(new { sucesso = false });
+            }
+
+            var novoPais = new PaisModel
+            {
+                Pais = paisNome,
+                Sigla = paisSigla,
+                Ddi = paisDdi,
+                Moeda = paisMoeda
+            };
+
+            int novoId = _paisRepository.InserirRetornandoId(novoPais);
+
+            if (novoId > 0)
+            {
+                return new JsonResult(new { sucesso = true, id = novoId, nome = novoPais.Pais });
+            }
+
+            return new JsonResult(new { sucesso = false });
+        }
     }
 }
