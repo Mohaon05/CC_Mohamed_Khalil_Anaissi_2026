@@ -10,23 +10,25 @@ namespace trabalho_kaneko.Pages
     {
         private readonly CidadeRepository _cidadeRepository;
         private readonly EstadoRepository _estadoRepository;
+        private readonly PaisRepository _paisRepository;
 
-        public CidadesModel(CidadeRepository cidadeRepository, EstadoRepository estadoRepository)
+        public CidadesModel(CidadeRepository cidadeRepository, EstadoRepository estadoRepository, PaisRepository paisRepository)
         {
             _cidadeRepository = cidadeRepository;
             _estadoRepository = estadoRepository;
+            _paisRepository = paisRepository; 
         }
 
         [BindProperty]
         public CidadeModel Cidade { get; set; }
 
-        // MODIFICADO: Removemos a ListaCidades daqui.
-        // Mantemos APENAS os estados para preencher o campo de seleção (Dropdown).
         public List<EstadoModel> ListaEstadosDisponiveis { get; set; } = new List<EstadoModel>();
+        public List<PaisModel> ListaPaises { get; set; } = new List<PaisModel>();
 
         public void OnGet()
         {
             CarregarListas();
+            ListaPaises = _paisRepository.ListarTodos();
         }
 
         public IActionResult OnPost()
@@ -59,5 +61,57 @@ namespace trabalho_kaneko.Pages
             // MODIFICADO: Carrega apenas a lista de estados para o formulário
             ListaEstadosDisponiveis = _estadoRepository.ListarTodos();
         }
+
+        public JsonResult OnPostCriarEstadoRapido(string estadoNome, string estadoUf, int idPais)
+        {
+            if (string.IsNullOrEmpty(estadoNome) || string.IsNullOrEmpty(estadoUf) || idPais <= 0)
+            {
+                return new JsonResult(new { sucesso = false });
+            }
+
+            var novoEstado = new EstadoModel
+            {
+                Estado = estadoNome,
+                Uf = estadoUf,
+                IdPais = idPais
+            };
+
+            int novoId = _estadoRepository.InserirRetornandoId(novoEstado);
+
+            if (novoId > 0)
+            {
+                string nomeExibicao = $"{novoEstado.Estado} - {novoEstado.Uf}";
+                return new JsonResult(new { sucesso = true, id = novoId, nome = nomeExibicao });
+            }
+
+            return new JsonResult(new { sucesso = false });
+        }
+
+        // Método para salvar País direto da tela de Cidades
+public JsonResult OnPostCriarPaisRapido(string paisNome, string paisSigla, string paisDdi, string paisMoeda)
+{
+    if (string.IsNullOrEmpty(paisNome) || string.IsNullOrEmpty(paisSigla))
+    {
+        return new JsonResult(new { sucesso = false });
     }
+
+    var novoPais = new PaisModel 
+    { 
+        Pais = paisNome, 
+        Sigla = paisSigla, 
+        Ddi = paisDdi, 
+        Moeda = paisMoeda 
+    };
+
+    int novoId = _paisRepository.InserirRetornandoId(novoPais);
+    
+    if (novoId > 0)
+    {
+        return new JsonResult(new { sucesso = true, id = novoId, nome = novoPais.Pais });
+    }
+    
+    return new JsonResult(new { sucesso = false });
+}
+    }
+
 }

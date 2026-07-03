@@ -215,6 +215,34 @@ namespace trabalho_kaneko.Repository
             }
         }
 
+        public int InserirRetornandoId(EstadoModel estado)
+        {
+            try
+            {
+                using (var connection = _context.CreateConnection())
+                {
+                    connection.Open();
+                    string query = @"INSERT INTO estados (estado, uf, id_pais) 
+                             VALUES (@estado, @uf, @id_pais); 
+                             SELECT LAST_INSERT_ID();";
+
+                    using (var command = new MySqlCommand(query, (MySqlConnection)connection))
+                    {
+                        command.Parameters.AddWithValue("@estado", estado.Estado);
+                        command.Parameters.AddWithValue("@uf", estado.Uf);
+                        command.Parameters.AddWithValue("@id_pais", estado.IdPais);
+
+                        return Convert.ToInt32(command.ExecuteScalar());
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Erro ao inserir estado via Pop-up: " + ex.Message);
+                return 0;
+            }
+        }
+
     }
 }
 
