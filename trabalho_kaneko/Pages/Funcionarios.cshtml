@@ -18,7 +18,7 @@
                 <div asp-validation-summary="All" class="text-danger mb-3 fw-bold"></div>
 
                 <div class="row g-3">
-                    <h5 class="border-bottom pb-2">Identificação</h5>
+                    <h5 class="border-bottom pb-2 w-100">Identificação</h5>
 
                     <div class="col-md-6">
                         <label class="form-label fw-bold campo-obrigatorio">Funcionário</label>
@@ -30,22 +30,7 @@
                         <input asp-for="Funcionario.Apelido" class="form-control" maxlength="50" />
                     </div>
 
-                    <div class="col-md-4">
-                        <label class="form-label fw-bold campo-obrigatorio">CPF</label>
-                        <input asp-for="Funcionario.Cpf" class="form-control" required maxlength="11" />
-                    </div>
-
-                    <div class="col-md-4">
-                        <label class="form-label fw-bold">RG</label>
-                        <input asp-for="Funcionario.Rg" class="form-control" maxlength="10" />
-                    </div>
-
-                    <div class="col-md-4">
-                        <label class="form-label fw-bold">Data de Nascimento</label>
-                        <input asp-for="Funcionario.DataNascimento" type="date" class="form-control" />
-                    </div>
-
-                    <h5 class="mt-4 border-bottom pb-2">Contrato e Atribuição</h5>
+                    <h5 class="mt-4 border-bottom pb-2 w-100">Contrato e Atribuição</h5>
 
                     <div class="col-md-4">
                         <label class="form-label fw-bold campo-obrigatorio">Cargo</label>
@@ -68,7 +53,7 @@
                         <input asp-for="Funcionario.DataContratado" type="date" class="form-control" />
                     </div>
 
-                    <h5 class="mt-4 border-bottom pb-2">Contato</h5>
+                    <h5 class="mt-4 border-bottom pb-2 w-100">Contato</h5>
 
                     <div class="col-md-6">
                         <label class="form-label fw-bold">E-mail</label>
@@ -80,7 +65,7 @@
                         <input asp-for="Funcionario.Telefone" class="form-control" maxlength="15" />
                     </div>
 
-                    <h5 class="mt-4 border-bottom pb-2">Endereço</h5>
+                    <h5 class="mt-4 border-bottom pb-2 w-100">Endereço</h5>
 
                     <div class="col-md-3">
                         <label class="form-label fw-bold">CEP</label>
@@ -116,6 +101,23 @@
                                 <option value="@cidade.IdCidade">@cidade.Cidade</option>
                             }
                         </select>
+                    </div>
+
+                    <h5 class="mt-4 border-bottom pb-2 w-100">Documentos Pessoais</h5>
+
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold campo-obrigatorio">CPF</label>
+                        <input asp-for="Funcionario.Cpf" class="form-control" required maxlength="11" />
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold">RG</label>
+                        <input asp-for="Funcionario.Rg" class="form-control" maxlength="10" />
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold">Data de Nascimento</label>
+                        <input asp-for="Funcionario.DataNascimento" type="date" class="form-control" />
                     </div>
                 </div>
 
