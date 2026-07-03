@@ -59,3 +59,10 @@ body {
         background-color: #495057;
         color: #ffffff;
     }
+
+/* Demarcação de campos obrigatórios */
+.campo-obrigatorio::after {
+    content: " *";
+    color: #dc3545; /* Vermelho padrão do Bootstrap (text-danger) */
+    font-weight: bold;
+}

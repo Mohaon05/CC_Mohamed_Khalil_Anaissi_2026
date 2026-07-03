@@ -11,7 +11,7 @@
 
     <div class="card shadow-sm">
         <div class="card-header bg-primary text-white">
-            <h4 class="mb-0">Novo Estado</h4>
+            <h4 class="mb-0">+ Novo Estado</h4>
         </div>
         <div class="card-body">
 
@@ -25,17 +25,17 @@
 
                 <div class="row g-3">
                     <div class="col-md-6">
-                        <label class="form-label fw-bold">Nome do Estado</label>
-                        <input asp-for="Estado.Estado" class="form-control" placeholder="Ex: Paraná" required maxlength="50" />
+                        <label class="form-label fw-bold campo-obrigatorio">Estado</label>
+                        <input asp-for="Estado.Estado" class="form-control" placeholder="Ex: Paraná" required maxlength="50" style="text-transform: uppercase;" />
                     </div>
 
                     <div class="col-md-2">
-                        <label class="form-label fw-bold">UF</label>
+                        <label class="form-label fw-bold campo-obrigatorio">UF</label>
                         <input asp-for="Estado.Uf" class="form-control" placeholder="Ex: PR" required maxlength="2" style="text-transform: uppercase;" />
                     </div>
 
                     <div class="col-md-4">
-                        <label class="form-label fw-bold">País</label>
+                        <label class="form-label fw-bold campo-obrigatorio">País</label>
                         <select asp-for="Estado.IdPais" class="form-select" required>
                             <option value="">-- Selecione um País --</option>
                             @if (Model.ListaPaisesDisponiveis != null)

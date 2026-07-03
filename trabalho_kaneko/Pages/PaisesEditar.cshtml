@@ -20,23 +20,23 @@
 
                 <div class="row g-3">
                     <div class="col-md-5">
-                        <label class="form-label fw-bold">Nome do País</label>
-                        <input asp-for="PaisObj.Pais" class="form-control" required maxlength="60" />
+                        <label class="form-label fw-bold campo-obrigatorio">País</label>
+                        <input asp-for="PaisObj.Pais" class="form-control" required maxlength="60" style="text-transform: uppercase;" />
                     </div>
 
                     <div class="col-md-2">
-                        <label class="form-label fw-bold">Sigla</label>
+                        <label class="form-label fw-bold campo-obrigatorio">Sigla</label>
                         <input asp-for="PaisObj.Sigla" class="form-control" required maxlength="3" style="text-transform: uppercase;" />
                     </div>
 
                     <div class="col-md-2">
-                        <label class="form-label fw-bold">DDI</label>
-                        <input asp-for="PaisObj.Ddi" class="form-control" required maxlength="10" />
+                        <label class="form-label fw-bold campo-obrigatorio">DDI</label>
+                        <input asp-for="PaisObj.Ddi" class="form-control" required maxlength="10" style="text-transform: uppercase;" />
                     </div>
 
                     <div class="col-md-3">
-                        <label class="form-label fw-bold">Moeda</label>
-                        <input asp-for="PaisObj.Moeda" class="form-control" required maxlength="50" />
+                        <label class="form-label fw-bold campo-obrigatorio">Moeda</label>
+                        <input asp-for="PaisObj.Moeda" class="form-control" required maxlength="50" style="text-transform: uppercase;" />
                     </div>
                 </div>
 

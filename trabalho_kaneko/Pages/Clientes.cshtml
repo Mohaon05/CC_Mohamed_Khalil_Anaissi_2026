@@ -19,7 +19,7 @@
 
                 <div class="row g-3">
                     <div class="col-md-3">
-                        <label class="form-label fw-bold">Tipo de Cliente</label>
+                        <label class="form-label fw-bold campo-obrigatorio">Tipo de Cliente</label>
                         <select asp-for="Cliente.TipoPessoa" class="form-select" required>
                             <option value="F">Pessoa Física (CPF)</option>
                             <option value="J">Pessoa Jurídica (CNPJ)</option>
@@ -27,12 +27,12 @@
                     </div>
 
                     <div class="col-md-9">
-                        <label class="form-label fw-bold">Nome / Razão Social</label>
+                        <label class="form-label fw-bold campo-obrigatorio">Nome / Razão Social</label>
                         <input asp-for="Cliente.Cliente" class="form-control" required maxlength="50" />
                     </div>
 
                     <div class="col-md-4">
-                        <label class="form-label fw-bold">CPF / CNPJ</label>
+                        <label class="form-label fw-bold campo-obrigatorio">CPF / CNPJ</label>
                         <input asp-for="Cliente.CpfCnpj" class="form-control" required maxlength="14" />
                     </div>
 
@@ -79,7 +79,7 @@
                     </div>
 
                     <div class="col-md-4">
-                        <label class="form-label fw-bold">Cidade</label>
+                        <label class="form-label fw-bold campo-obrigatorio">Cidade</label>
                         <select asp-for="Cliente.IdCidade" class="form-select" required>
                             <option value="">-- Selecione a Cidade --</option>
                             @if (Model.ListaCidades != null)

@@ -19,12 +19,12 @@
 
                 <div class="row g-3">
                     <div class="col-md-6">
-                        <label class="form-label fw-bold">Nome da Marca</label>
+                        <label class="form-label fw-bold campo-obrigatorio">Marca</label>
                         <input asp-for="MarcaObj.Marca" class="form-control" required maxlength="50" />
                     </div>
 
                     <div class="col-md-6">
-                        <label class="form-label fw-bold">Grupo Pertencente</label>
+                        <label class="form-label fw-bold campo-obrigatorio">Grupo Pertencente</label>
                         <select asp-for="MarcaObj.IdGrupo" class="form-select" required>
                             <option value="">-- Selecione o Grupo --</option>
                             @foreach (var grupo in Model.ListaGrupos)

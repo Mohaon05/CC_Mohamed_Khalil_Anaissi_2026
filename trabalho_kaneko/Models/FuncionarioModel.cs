@@ -6,7 +6,6 @@ namespace trabalho_kaneko.Models
     {
         public int IdFuncionario { get; set; }
         public string Funcionario { get; set; } // Obrigatório
-        public string TipoPessoa { get; set; } // 'F' ou 'J' (Obrigatório)
         public string? Apelido { get; set; }
         public string Cpf { get; set; } // Obrigatório
         public string? Rg { get; set; }

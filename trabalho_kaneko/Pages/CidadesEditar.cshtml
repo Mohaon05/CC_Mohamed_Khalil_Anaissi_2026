@@ -22,12 +22,12 @@
 
                 <div class="row g-3">
                     <div class="col-md-8">
-                        <label class="form-label fw-bold">Nome da Cidade</label>
+                        <label class="form-label fw-bold campo-obrigatorio">Cidade</label>
                         <input asp-for="Cidade.Cidade" class="form-control" required maxlength="60" />
                     </div>
 
                     <div class="col-md-4">
-                        <label class="form-label fw-bold">Estado</label>
+                        <label class="form-label fw-bold campo-obrigatorio">Estado</label>
                         <select asp-for="Cidade.IdEstado" class="form-select" required>
                             <option value="">-- Selecione um Estado --</option>
                             @if (Model.ListaEstadosDisponiveis != null)

@@ -22,17 +22,17 @@
                     <h5 class="border-bottom pb-2">Informações Básicas</h5>
 
                     <div class="col-md-9">
-                        <label class="form-label fw-bold">Descrição do Produto</label>
+                        <label class="form-label fw-bold campo-obrigatorio">Produto</label>
                         <input asp-for="ProdutoObj.Produto" class="form-control" required maxlength="50" />
                     </div>
 
                     <div class="col-md-3">
-                        <label class="form-label fw-bold">Und. Medida</label>
+                        <label class="form-label fw-bold campo-obrigatorio">Und. Medida</label>
                         <input asp-for="ProdutoObj.Und" class="form-control" required maxlength="3" style="text-transform: uppercase;" />
                     </div>
 
                     <div class="col-md-6">
-                        <label class="form-label fw-bold">Grupo</label>
+                        <label class="form-label fw-bold campo-obrigatorio">Grupo</label>
                         <select asp-for="ProdutoObj.IdGrupo" class="form-select" required>
                             <option value="">-- Selecione o Grupo --</option>
                             @foreach (var grupo in Model.ListaGrupos)
@@ -43,7 +43,7 @@
                     </div>
 
                     <div class="col-md-6">
-                        <label class="form-label fw-bold">Marca</label>
+                        <label class="form-label fw-bold campo-obrigatorio">Marca</label>
                         <select asp-for="ProdutoObj.IdMarca" class="form-select" required>
                             <option value="">-- Selecione a Marca --</option>
                             @foreach (var marca in Model.ListaMarcas)
@@ -56,22 +56,22 @@
                     <h5 class="mt-4 border-bottom pb-2">Valores, Estoque e Prazos</h5>
 
                     <div class="col-md-2">
-                        <label class="form-label fw-bold">Preço de Venda</label>
+                        <label class="form-label fw-bold campo-obrigatorio">Preço de Venda</label>
                         <input asp-for="ProdutoObj.PrecoVenda" type="number" step="0.01" class="form-control" required />
                     </div>
 
                     <div class="col-md-2">
-                        <label class="form-label fw-bold">Preço Compra</label>
+                        <label class="form-label fw-bold campo-obrigatorio">Preço Compra</label>
                         <input asp-for="ProdutoObj.PrecoCompra" type="number" step="0.01" class="form-control" required />
                     </div>
 
                     <div class="col-md-2">
-                        <label class="form-label fw-bold">Custo Adicional</label>
+                        <label class="form-label fw-bold campo-obrigatorio">Custo Adicional</label>
                         <input asp-for="ProdutoObj.Custo" type="number" step="0.01" class="form-control" required />
                     </div>
 
                     <div class="col-md-3">
-                        <label class="form-label fw-bold text-primary">Saldo (Estoque)</label>
+                        <label class="form-label fw-bold text-primary campo-obrigatorio">Saldo (Estoque)</label>
                         <input asp-for="ProdutoObj.Saldo" type="number" class="form-control" required />
                     </div>
 

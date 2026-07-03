@@ -6,12 +6,12 @@
 
 <div class="container mt-4">
     <div class="mb-3">
-        <a asp-page="/CondicoesPagamentoListar" class="btn btn-secondary btn-sm">⬅ Voltar para a Lista</a>
+        <a asp-page="/CondicoesPagamentoListar" class="btn btn-secondary btn-sm">Voltar para a Lista</a>
     </div>
 
     <div class="card shadow-sm border-warning">
         <div class="card-header bg-warning text-dark fw-bold">
-            <h4 class="mb-0">✏️ Editar Condição</h4>
+            <h4 class="mb-0">Editar Condição</h4>
         </div>
         <div class="card-body">
             <form method="post">
@@ -20,12 +20,12 @@
 
                 <div class="row g-3 align-items-center">
                     <div class="col-md-6">
-                        <label class="form-label fw-bold">Descrição da Condição</label>
+                        <label class="form-label fw-bold campo-obrigatorio">Condição</label>
                         <input asp-for="CondicaoObj.CondicaoPagamento" class="form-control" required maxlength="50" />
                     </div>
 
                     <div class="col-md-3">
-                        <label class="form-label fw-bold text-primary">Qtd. de Parcelas</label>
+                        <label class="form-label fw-bold text-primary campo-obrigatorio">Quantidade de Parcelas</label>
                         <input asp-for="CondicaoObj.QuantidadeParcelas" type="number" class="form-control" required min="1" />
                     </div>
 

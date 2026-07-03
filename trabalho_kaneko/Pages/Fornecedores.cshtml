@@ -21,7 +21,7 @@
                     <h5 class="border-bottom pb-2">Identificação</h5>
 
                     <div class="col-md-3">
-                        <label class="form-label fw-bold">Tipo de Pessoa</label>
+                        <label class="form-label fw-bold campo-obrigatorio">Tipo de Pessoa</label>
                         <select asp-for="FornecedorObj.TipoPessoa" class="form-select" required>
                             <option value="">Selecione</option>
                             <option value="F">Física (CPF)</option>
@@ -30,7 +30,7 @@
                     </div>
 
                     <div class="col-md-5">
-                        <label class="form-label fw-bold">Razão Social / Nome</label>
+                        <label class="form-label fw-bold campo-obrigatorio">Razão Social / Nome</label>
                         <input asp-for="FornecedorObj.Fornecedor" class="form-control" required maxlength="50" />
                     </div>
 
@@ -40,7 +40,7 @@
                     </div>
 
                     <div class="col-md-6">
-                        <label class="form-label fw-bold">CPF / CNPJ (Apenas números)</label>
+                        <label class="form-label fw-bold campo-obrigatorio">CPF / CNPJ</label>
                         <input asp-for="FornecedorObj.CpfCnpj" class="form-control" required maxlength="14" />
                     </div>
 
@@ -94,7 +94,7 @@
                     </div>
 
                     <div class="col-md-4">
-                        <label class="form-label fw-bold">Cidade</label>
+                        <label class="form-label fw-bold campo-obrigatorio">Cidade</label>
                         <select asp-for="FornecedorObj.IdCidade" class="form-select" required>
                             <option value="">-- Selecione a Cidade --</option>
                             @foreach (var cidade in Model.ListaCidades)

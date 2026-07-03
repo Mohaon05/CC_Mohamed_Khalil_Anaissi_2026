@@ -22,12 +22,12 @@
 
                 <div class="row g-3">
                     <div class="col-md-6">
-                        <label class="form-label fw-bold">Nome do Estado</label>
-                        <input asp-for="Estado.Estado" class="form-control" required maxlength="50" />
+                        <label class="form-label fw-bold campo-obrigatorio">Estado</label>
+                        <input asp-for="Estado.Estado" class="form-control" required maxlength="50" style="text-transform: uppercase;" />
                     </div>
 
                     <div class="col-md-2">
-                        <label class="form-label fw-bold">UF</label>
+                        <label class="form-label fw-bold campo-obrigatorio">UF</label>
                         <input asp-for="Estado.Uf" class="form-control" required maxlength="2" style="text-transform: uppercase;" />
                     </div>
 
