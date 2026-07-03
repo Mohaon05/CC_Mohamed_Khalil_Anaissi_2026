@@ -66,5 +66,33 @@ namespace trabalho_kaneko.Pages
             // MODIFICADO: Carrega apenas os países
             ListaPaisesDisponiveis = _paisRepository.ListarTodos();
         }
+
+        // Método blindado para receber dados via AJAX no Razor Pages
+        public JsonResult OnPostCriarPaisRapido(string paisNome, string paisSigla, string paisDdi, string paisMoeda)
+        {
+            if (string.IsNullOrEmpty(paisNome) || string.IsNullOrEmpty(paisSigla))
+            {
+                return new JsonResult(new { sucesso = false });
+            }
+
+            // Montamos o objeto aqui dentro
+            var novoPais = new PaisModel
+            {
+                Pais = paisNome,
+                Sigla = paisSigla,
+                Ddi = paisDdi,
+                Moeda = paisMoeda
+            };
+
+            // Salva no banco e pega o ID
+            int novoId = _paisRepository.InserirRetornandoId(novoPais);
+
+            if (novoId > 0)
+            {
+                return new JsonResult(new { sucesso = true, id = novoId, nome = novoPais.Pais });
+            }
+
+            return new JsonResult(new { sucesso = false });
+        }
     }
 }

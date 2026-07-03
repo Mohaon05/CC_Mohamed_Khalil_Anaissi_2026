@@ -158,5 +158,38 @@ namespace trabalho_kaneko.Repository
                 return false;
             }
         }
+
+        // Adicione junto com os outros métodos no PaisRepository.cs
+        public int InserirRetornandoId(PaisModel pais)
+        {
+            try
+            {
+                using (var connection = _context.CreateConnection())
+                {
+                    connection.Open();
+                    // A mágica do MySQL: Insere e já busca o ID gerado na mesma hora
+                    string query = @"INSERT INTO paises (pais, sigla, ddi, moeda) 
+                             VALUES (@pais, @sigla, @ddi, @moeda); 
+                             SELECT LAST_INSERT_ID();";
+
+                    using (var command = new MySqlCommand(query, (MySqlConnection)connection))
+                    {
+                        command.Parameters.AddWithValue("@pais", pais.Pais);
+                        command.Parameters.AddWithValue("@sigla", pais.Sigla);
+                        command.Parameters.AddWithValue("@ddi", pais.Ddi);
+                        command.Parameters.AddWithValue("@moeda", pais.Moeda);
+
+                        // ExecuteScalar retorna a primeira coluna da primeira linha (o nosso ID)
+                        return Convert.ToInt32(command.ExecuteScalar());
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Erro ao inserir país via Pop-up: " + ex.Message);
+                return 0;
+            }
+        }
+
     }
 }
