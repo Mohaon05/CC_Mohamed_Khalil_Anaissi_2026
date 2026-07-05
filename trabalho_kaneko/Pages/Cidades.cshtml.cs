@@ -16,13 +16,13 @@ namespace trabalho_kaneko.Pages
         {
             _cidadeRepository = cidadeRepository;
             _estadoRepository = estadoRepository;
-            _paisRepository = paisRepository; 
+            _paisRepository = paisRepository;
         }
 
         [BindProperty]
         public CidadeModel Cidade { get; set; }
 
-        public List<EstadoModel> ListaEstadosDisponiveis { get; set; } = new List<EstadoModel>();
+        public List<EstadoModel> ListaEstados { get; set; } = new List<EstadoModel>();
         public List<PaisModel> ListaPaises { get; set; } = new List<PaisModel>();
 
         public void OnGet()
@@ -59,59 +59,31 @@ namespace trabalho_kaneko.Pages
         private void CarregarListas()
         {
             // MODIFICADO: Carrega apenas a lista de estados para o formulário
-            ListaEstadosDisponiveis = _estadoRepository.ListarTodos();
+            ListaEstados = _estadoRepository.ListarTodos();
         }
 
         public JsonResult OnPostCriarEstadoRapido(string estadoNome, string estadoUf, int idPais)
         {
-            if (string.IsNullOrEmpty(estadoNome) || string.IsNullOrEmpty(estadoUf) || idPais <= 0)
-            {
-                return new JsonResult(new { sucesso = false });
-            }
+            if (string.IsNullOrEmpty(estadoNome) || idPais <= 0) return new JsonResult(new { sucesso = false });
 
-            var novoEstado = new EstadoModel
-            {
-                Estado = estadoNome,
-                Uf = estadoUf,
-                IdPais = idPais
-            };
+            var novoEstado = new EstadoModel { Estado = estadoNome, Uf = estadoUf, IdPais = idPais };
+            int novoId = _estadoRepository.InserirRetornandoId(novoEstado); // Garanta que injetou o _estadoRepository!
 
-            int novoId = _estadoRepository.InserirRetornandoId(novoEstado);
-
-            if (novoId > 0)
-            {
-                string nomeExibicao = $"{novoEstado.Estado} - {novoEstado.Uf}";
-                return new JsonResult(new { sucesso = true, id = novoId, nome = nomeExibicao });
-            }
-
+            if (novoId > 0) return new JsonResult(new { sucesso = true, id = novoId, nome = $"{novoEstado.Estado} - {novoEstado.Uf}" });
             return new JsonResult(new { sucesso = false });
         }
 
-        // Método para salvar País direto da tela de Cidades
-public JsonResult OnPostCriarPaisRapido(string paisNome, string paisSigla, string paisDdi, string paisMoeda)
-{
-    if (string.IsNullOrEmpty(paisNome) || string.IsNullOrEmpty(paisSigla))
-    {
-        return new JsonResult(new { sucesso = false });
-    }
+        public JsonResult OnPostCriarPaisRapido(string paisNome, string paisSigla, string paisDdi, string paisMoeda)
+        {
+            if (string.IsNullOrEmpty(paisNome)) return new JsonResult(new { sucesso = false });
 
-    var novoPais = new PaisModel 
-    { 
-        Pais = paisNome, 
-        Sigla = paisSigla, 
-        Ddi = paisDdi, 
-        Moeda = paisMoeda 
-    };
+            var novoPais = new PaisModel { Pais = paisNome, Sigla = paisSigla, Ddi = paisDdi, Moeda = paisMoeda };
+            int novoId = _paisRepository.InserirRetornandoId(novoPais); // Garanta que injetou o _paisRepository no construtor!
 
-    int novoId = _paisRepository.InserirRetornandoId(novoPais);
-    
-    if (novoId > 0)
-    {
-        return new JsonResult(new { sucesso = true, id = novoId, nome = novoPais.Pais });
-    }
-    
-    return new JsonResult(new { sucesso = false });
-}
-    }
+            if (novoId > 0) return new JsonResult(new { sucesso = true, id = novoId, nome = novoPais.Pais });
+            return new JsonResult(new { sucesso = false });
+        }
 
+
+    }
 }
