@@ -61,51 +61,6 @@
     </div>
 </div>
 
-<div class="modal fade" id="modalNovoEstado" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content border-success">
-            <div class="modal-header bg-success text-white">
-                <h5 class="modal-title fw-bold">📍 Cadastro Rápido de Estado</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="mb-3">
-                    <label class="form-label fw-bold campo-obrigatorio">Estado</label>
-                    <input type="text" id="modalEstadoNome" class="form-control" maxlength="50" placeholder="Ex: Paraná" style="text-transform: uppercase;" required />
-                </div>
-                <div class="mb-3">
-                    <label class="form-label fw-bold campo-obrigatorio">UF</label>
-                    <input type="text" id="modalEstadoUf" class="form-control" maxlength="2" placeholder="Ex: PR" style="text-transform: uppercase;" required />
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label fw-bold campo-obrigatorio">País Correspondente</label>
-                    <div class="d-flex gap-2">
-                        <select id="modalEstadoPais" class="form-select" required>
-                            <option value="">-- Selecione um País --</option>
-                            @if (Model.ListaPaises != null)
-                            {
-                                foreach (var pais in Model.ListaPaises)
-                                {
-                                    <option value="@pais.IdPais">@pais.Pais</option>
-                                }
-                            }
-                        </select>
-                        <button class="btn btn-outline-success fw-bold text-nowrap" type="button" onclick="abrirModalPaisPorCima()">
-                            + Novo
-                        </button>
-                    </div>
-                </div>
-                <div id="modalEstadoErro" class="text-danger fw-bold d-none mt-2">Erro ao salvar estado. Verifique os dados.</div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary fw-bold" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-success fw-bold" onclick="salvarEstadoAjax()">Salvar Estado</button>
-            </div>
-        </div>
-    </div>
-</div>
-
 <div class="modal fade" id="modalNovoPais" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content border-primary shadow-lg">
@@ -140,6 +95,7 @@
             </div>
         </div>
     </div>
+(
 
 
 @section Scripts {
