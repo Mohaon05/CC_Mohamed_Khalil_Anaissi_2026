@@ -9,21 +9,27 @@ namespace trabalho_kaneko.Pages
     public class FuncionariosModel : PageModel
     {
         private readonly FuncionarioRepository _funcionarioRepository;
-        private readonly CidadeRepository _cidadeRepository;
         private readonly CargoRepository _cargoRepository;
+        private readonly CidadeRepository _cidadeRepository;
+        private readonly EstadoRepository _estadoRepository;
+        private readonly PaisRepository _paisRepository;
 
-        public FuncionariosModel(FuncionarioRepository funcionarioRepository, CidadeRepository cityRepository, CargoRepository cargoRepository)
+        public FuncionariosModel(FuncionarioRepository funcionarioRepository, CargoRepository cargoRepository, CidadeRepository cidadeRepository, EstadoRepository estadoRepository, PaisRepository paisRepository)
         {
             _funcionarioRepository = funcionarioRepository;
-            _cidadeRepository = cityRepository;
             _cargoRepository = cargoRepository;
+            _cidadeRepository = cidadeRepository;
+            _estadoRepository = estadoRepository;
+            _paisRepository = paisRepository;
         }
 
         [BindProperty]
         public FuncionarioModel Funcionario { get; set; }
 
+        public List<CargoModel> ListaCargos { get; set; } = new List<CargoModel>(); // Mantenha se já tiver
         public List<CidadeModel> ListaCidades { get; set; } = new List<CidadeModel>();
-        public List<CargoModel> ListaCargos { get; set; } = new List<CargoModel>();
+        public List<EstadoModel> ListaEstados { get; set; } = new List<EstadoModel>();
+        public List<PaisModel> ListaPaises { get; set; } = new List<PaisModel>();
 
         public void OnGet()
         {
@@ -52,8 +58,37 @@ namespace trabalho_kaneko.Pages
 
         private void CarregarListas()
         {
-            ListaCidades = _cidadeRepository.ListarTodos();
             ListaCargos = _cargoRepository.ListarTodos();
+            ListaCidades = _cidadeRepository.ListarTodos();
+            ListaEstados = _estadoRepository.ListarTodos();
+            ListaPaises = _paisRepository.ListarTodos();
+        }
+
+        public JsonResult OnPostCriarPaisRapido(string paisNome, string paisSigla, string paisDdi, string paisMoeda)
+        {
+            if (string.IsNullOrEmpty(paisNome)) return new JsonResult(new { sucesso = false });
+            var novoPais = new PaisModel { Pais = paisNome, Sigla = paisSigla, Ddi = paisDdi, Moeda = paisMoeda };
+            int novoId = _paisRepository.InserirRetornandoId(novoPais);
+            if (novoId > 0) return new JsonResult(new { sucesso = true, id = novoId, nome = novoPais.Pais });
+            return new JsonResult(new { sucesso = false });
+        }
+
+        public JsonResult OnPostCriarEstadoRapido(string estadoNome, string estadoUf, int idPais)
+        {
+            if (string.IsNullOrEmpty(estadoNome) || idPais <= 0) return new JsonResult(new { sucesso = false });
+            var novoEstado = new EstadoModel { Estado = estadoNome, Uf = estadoUf, IdPais = idPais };
+            int novoId = _estadoRepository.InserirRetornandoId(novoEstado);
+            if (novoId > 0) return new JsonResult(new { sucesso = true, id = novoId, nome = $"{novoEstado.Estado} - {novoEstado.Uf}" });
+            return new JsonResult(new { sucesso = false });
+        }
+
+        public JsonResult OnPostCriarCidadeRapido(string cidadeNome, int idEstado)
+        {
+            if (string.IsNullOrEmpty(cidadeNome) || idEstado <= 0) return new JsonResult(new { sucesso = false });
+            var novaCidade = new CidadeModel { Cidade = cidadeNome, IdEstado = idEstado };
+            int novoId = _cidadeRepository.InserirRetornandoId(novaCidade);
+            if (novoId > 0) return new JsonResult(new { sucesso = true, id = novoId, nome = novaCidade.Cidade });
+            return new JsonResult(new { sucesso = false });
         }
     }
 }
