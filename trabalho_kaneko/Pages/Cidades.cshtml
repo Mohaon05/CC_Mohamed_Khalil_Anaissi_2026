@@ -39,7 +39,7 @@
                                 {
                                     foreach (var estado in Model.ListaEstados)
                                     {
-                                        <option value="@estado.IdEstado">@estado.Estado - @estado.Uf</option>
+                                        <option value="@estado.IdEstado">@estado.Estado - @estado.Uf - @estado.NomePais</option>
                                     }
                                 }
                             </select>
@@ -267,6 +267,53 @@
             }, 100); // 100ms garante que o fundo já foi criado na tela
         }
 
+        function salvarPaisAjax() {
+            const nome = document.getElementById('modalPaisNome').value;
+            const sigla = document.getElementById('modalPaisSigla').value;
+            const ddi = document.getElementById('modalPaisDdi').value;
+            const moeda = document.getElementById('modalPaisMoeda').value;
+
+            if(!nome || !sigla || !ddi || !moeda) {
+                alert('Preencha todos os campos do país!'); return;
+            }
+
+            const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value || '';
+            const formData = new URLSearchParams({ paisNome: nome, paisSigla: sigla, paisDdi: ddi, paisMoeda: moeda });
+
+            fetch('?handler=CriarPaisRapido', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'RequestVerificationToken': token },
+                body: formData.toString()
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.sucesso) {
+                    const select = document.getElementById('selectPaisModalEstado');
+                    if(select) select.add(new Option(data.nome, data.id, true, true));
+
+                    const tbody = document.querySelector('#modalNovoPais tbody');
+                    if(tbody) {
+                        const novaLinha = `
+                            <tr>
+                                <td>${data.id}</td>
+                                <td class="fw-bold">${data.nome.toUpperCase()}</td>
+                                <td class="text-uppercase">${sigla.toUpperCase()}</td>
+                                <td>${ddi}</td>
+                                <td class="text-uppercase">${moeda.toUpperCase()}</td>
+                            </tr>`;
+                        tbody.insertAdjacentHTML('beforeend', novaLinha);
+                    }
+
+                    document.getElementById('modalPaisNome').value = '';
+                    document.getElementById('modalPaisSigla').value = '';
+                    document.getElementById('modalPaisDdi').value = '';
+                    document.getElementById('modalPaisMoeda').value = '';
+
+                }
+            })
+            .catch(err => console.error(err));
+        }
+
         function salvarEstadoAjax() {
             const nome = document.getElementById('modalEstadoNome').value;
             const uf = document.getElementById('modalEstadoUf').value;
@@ -289,10 +336,19 @@
                 return res.json();
             })
             .then(data => {
+
                 if (data.sucesso) {
+                    // Descobre qual país estava selecionado no modal
+                    const dropdownPais = document.getElementById('selectPaisModalEstado');
+                    const nomeDoPais = dropdownPais.options[dropdownPais.selectedIndex].text;
+
                     // 1. Atualiza o select principal que está lá atrás na tela de Cidades
                     const select = document.getElementById('selectEstado');
-                    if(select) select.add(new Option(data.nome, data.id, true, true));
+                    if(select) {
+                        // Junta o "Estado - UF" (que vem do data.nome) com o País
+                        const textoCompleto = `${data.nome} - ${nomeDoPais.toUpperCase()}`;
+                        select.add(new Option(textoCompleto, data.id, true, true));
+                    }
 
                     // 2. Adiciona o novo estado na tabela do modal na hora!
                     const tbody = document.querySelector('#modalNovoEstado tbody');
@@ -305,13 +361,9 @@
                             </tr>`;
                         tbody.insertAdjacentHTML('beforeend', novaLinha);
                     }
-
                     // 3. Limpa os campos
                     document.getElementById('modalEstadoNome').value = '';
                     document.getElementById('modalEstadoUf').value = '';
-                    
-                } else {
-                    alert('Erro: O C# não conseguiu salvar. Verifique o OnPostCriarEstadoRapido.');
                 }
             })
             .catch(err => {

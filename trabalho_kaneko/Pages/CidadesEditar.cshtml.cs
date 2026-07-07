@@ -22,7 +22,7 @@ namespace trabalho_kaneko.Pages
         [BindProperty]
         public CidadeModel Cidade { get; set; }
 
-        public List<EstadoModel> ListaEstadosDisponiveis { get; set; } = new List<EstadoModel>();
+        public List<EstadoModel> ListaEstados { get; set; } = new List<EstadoModel>();
         public List<PaisModel> ListaPaises { get; set; } = new List<PaisModel>();
 
         public IActionResult OnGet(int id)
@@ -64,57 +64,30 @@ namespace trabalho_kaneko.Pages
 
         private void CarregarListas()
         {
-            ListaEstadosDisponiveis = _estadoRepository.ListarTodos();
+            ListaEstados = _estadoRepository.ListarTodos();
+        }
+
+        public JsonResult OnPostCriarPaisRapido(string paisNome, string paisSigla, string paisDdi, string paisMoeda)
+        {
+            if (string.IsNullOrEmpty(paisNome)) return new JsonResult(new { sucesso = false });
+
+            // Ajuste "PaisModel" para o nome exato da sua classe de modelo, caso seja diferente
+            var novoPais = new PaisModel { Pais = paisNome, Sigla = paisSigla, Ddi = paisDdi, Moeda = paisMoeda };
+            int novoId = _paisRepository.InserirRetornandoId(novoPais);
+
+            if (novoId > 0) return new JsonResult(new { sucesso = true, id = novoId, nome = novoPais.Pais });
+            return new JsonResult(new { sucesso = false });
         }
 
         public JsonResult OnPostCriarEstadoRapido(string estadoNome, string estadoUf, int idPais)
         {
-            if (string.IsNullOrEmpty(estadoNome) || string.IsNullOrEmpty(estadoUf) || idPais <= 0)
-            {
-                return new JsonResult(new { sucesso = false });
-            }
+            if (string.IsNullOrEmpty(estadoNome) || idPais <= 0) return new JsonResult(new { sucesso = false });
 
-            var novoEstado = new EstadoModel
-            {
-                Estado = estadoNome,
-                Uf = estadoUf,
-                IdPais = idPais
-            };
-
+            // Ajuste "EstadoModel" para o nome exato da sua classe de modelo
+            var novoEstado = new EstadoModel { Estado = estadoNome, Uf = estadoUf, IdPais = idPais };
             int novoId = _estadoRepository.InserirRetornandoId(novoEstado);
 
-            if (novoId > 0)
-            {
-                string nomeExibicao = $"{novoEstado.Estado} - {novoEstado.Uf}";
-                return new JsonResult(new { sucesso = true, id = novoId, nome = nomeExibicao });
-            }
-
-            return new JsonResult(new { sucesso = false });
-        }
-
-        // Método para salvar País direto da tela de Editar Cidades
-        public JsonResult OnPostCriarPaisRapido(string paisNome, string paisSigla, string paisDdi, string paisMoeda)
-        {
-            if (string.IsNullOrEmpty(paisNome) || string.IsNullOrEmpty(paisSigla))
-            {
-                return new JsonResult(new { sucesso = false });
-            }
-
-            var novoPais = new PaisModel
-            {
-                Pais = paisNome,
-                Sigla = paisSigla,
-                Ddi = paisDdi,
-                Moeda = paisMoeda
-            };
-
-            int novoId = _paisRepository.InserirRetornandoId(novoPais);
-
-            if (novoId > 0)
-            {
-                return new JsonResult(new { sucesso = true, id = novoId, nome = novoPais.Pais });
-            }
-
+            if (novoId > 0) return new JsonResult(new { sucesso = true, id = novoId, nome = $"{novoEstado.Estado} - {novoEstado.Uf}" });
             return new JsonResult(new { sucesso = false });
         }
     }

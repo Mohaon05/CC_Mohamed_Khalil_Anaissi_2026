@@ -27,27 +27,24 @@
                     </div>
 
                     <div class="col-md-4">
-                        <label class="form-label fw-bold campo-obrigatorio">Estado</label>
-
-                        <div class="input-group">
-
-                        <select asp-for="Cidade.IdEstado" class="form-select" id="selectEstado" required>
-                            <option value="">-- Selecione um Estado --</option>
-                            @if (Model.ListaEstadosDisponiveis != null)
-                            {
-                                foreach (var estado in Model.ListaEstadosDisponiveis)
+                        <label class="form-label fw-bold campo-obrigatorio text-uppercase">Estado</label>
+                        <div class="input-group flex-nowrap">
+                            <select asp-for="Cidade.IdEstado" class="form-select" id="selectEstado" required>
+                                <option value="">-- Selecione um Estado --</option>
+                                @if (Model.ListaEstados != null)
                                 {
-                                    <option value="@estado.IdEstado">@estado.Estado - @estado.Uf (@estado.NomePais)</option>
+                                    foreach (var estado in Model.ListaEstados)
+                                    {
+                                        <option value="@estado.IdEstado">@estado.Estado - @estado.Uf - @estado.NomePais</option>
+                                    }
                                 }
-                            }
-                        </select>
+                            </select>
 
-                        <button class="btn btn-outline-success fw-bold" type="button" data-bs-toggle="modal" data-bs-target="#modalNovoEstado">
-                            + Novo
-                        </button>
-
+                            <button class="btn btn-outline-success fw-bold" type="button" data-bs-toggle="modal" data-bs-target="#modalNovoEstado">
+                                + Novo
+                            </button>
+                        </div>
                     </div>
-                </div>
 
                 <div class="mt-4 text-end">
                     <button type="submit" class="btn btn-warning px-4 fw-bold">Atualizar Cidade</button>
@@ -57,39 +54,73 @@
     </div>
 </div>
 
+
 <div class="modal fade" id="modalNovoEstado" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content border-success">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content border-success shadow-lg">
             <div class="modal-header bg-success text-white">
-                <h5 class="modal-title fw-bold">📍 Cadastro Rápido de Estado</h5>
+                <h5 class="modal-title fw-bold text-uppercase">Gestão Rápida de Estados</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-                <div class="mb-3">
-                    <label class="form-label fw-bold campo-obrigatorio">Estado</label>
-                    <input type="text" id="modalEstadoNome" class="form-control" maxlength="50" placeholder="Ex: Paraná" style="text-transform: uppercase;" required />
+            <div class="modal-body bg-light">
+
+                <div class="card shadow-sm border-secondary mb-4">
+                    <div class="card-header bg-secondary text-white fw-bold text-uppercase">Estados Cadastrados</div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive" style="max-height: 250px; overflow-y: auto;">
+                            <table class="table table-striped table-hover mb-0 text-center" style="font-size: 0.9rem;">
+                                <thead style="position: sticky; top: 0; z-index: 1;" class="table-dark">
+                                    <tr><th>CÓDIGO</th><th>ESTADO</th><th>UF</th></tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model.ListaEstados != null)
+                                    {
+                                        foreach (var estado in Model.ListaEstados)
+                                        {
+                                            <tr>
+                                                <td>@estado.IdEstado</td>
+                                                <td class="fw-bold text-uppercase">@estado.Estado</td>
+                                                <td class="text-uppercase">@estado.Uf</td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
-                <div class="mb-3">
-                    <label class="form-label fw-bold campo-obrigatorio">UF</label>
-                    <input type="text" id="modalEstadoUf" class="form-control" maxlength="2" placeholder="Ex: PR" style="text-transform: uppercase;" required />
+
+                <div class="card shadow-sm border-success">
+                    <div class="card-header bg-success text-white fw-bold text-uppercase">+ Novo Estado</div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold campo-obrigatorio text-uppercase">Estado</label>
+                                <input type="text" id="modalEstadoNome" class="form-control" maxlength="50" style="text-transform: uppercase;" required />
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label fw-bold campo-obrigatorio text-uppercase">UF</label>
+                                <input type="text" id="modalEstadoUf" class="form-control" maxlength="2" style="text-transform: uppercase;" required />
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold campo-obrigatorio text-uppercase">País</label>
+                                <div class="input-group flex-nowrap">
+                                    <select class="form-select" id="selectPaisModalEstado" required>
+                                        <option value="">-- Selecione --</option>
+                                        @if (Model.ListaPaises != null)
+                                        {
+                                            foreach (var pais in Model.ListaPaises)
+                                            {
+                                                <option value="@pais.IdPais">@pais.Pais</option>
+                                            }
+                                        }
+                                    </select>
+                                    <button class="btn btn-outline-success fw-bold" type="button" onclick="abrirModalPaisSobreposto()">+ Novo</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="mb-3">
-                    <label class="form-label fw-bold campo-obrigatorio">País Correspondente</label>
-                    <select id="modalEstadoPais" class="form-select" required>
-                        <option value="">-- Selecione um País --</option>
-                        @if (Model.ListaPaises != null)
-                        {
-                            foreach (var pais in Model.ListaPaises)
-                            {
-                                <option value="@pais.IdPais">@pais.Pais</option>
-                            }
-                        }
-                    </select>
-                        <button class="btn btn-outline-success fw-bold text-nowrap" type="button" onclick="abrirModalPaisPorCima()">
-                            + Novo
-                        </button>
-                </div>
-                <div id="modalEstadoErro" class="text-danger fw-bold d-none mt-2">Erro ao salvar estado. Verifique os dados.</div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary fw-bold" data-bs-dismiss="modal">Cancelar</button>
@@ -100,48 +131,97 @@
 </div>
 
 <div class="modal fade" id="modalNovoPais" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content border-primary shadow-lg">
-            <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title fw-bold">🌍 Cadastro Rápido de País</h5>
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content border-success shadow-lg">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title fw-bold text-uppercase">Gestão Rápida de Países</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-                <div class="mb-2">
-                    <label class="form-label fw-bold campo-obrigatorio">Nome do País</label>
-                    <input type="text" id="modalPaisNome" class="form-control" maxlength="60" required />
-                </div>
-                <div class="row g-2 mb-2">
-                    <div class="col-6">
-                        <label class="form-label fw-bold campo-obrigatorio">Sigla</label>
-                        <input type="text" id="modalPaisSigla" class="form-control" maxlength="3" style="text-transform: uppercase;" required />
+            <div class="modal-body bg-light">
+
+                <div class="card shadow-sm border-secondary mb-4">
+                    <div class="card-header bg-secondary text-white fw-bold text-uppercase">Países Cadastrados</div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive" style="max-height: 250px; overflow-y: auto;">
+                            <table class="table table-striped table-hover mb-0 text-center" style="font-size: 0.9rem;">
+                                <thead style="position: sticky; top: 0; z-index: 1;" class="table-dark">
+                                    <tr><th>CÓDIGO</th><th>PAÍS</th><th>SIGLA</th><th>DDI</th><th>MOEDA</th></tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model.ListaPaises != null)
+                                    {
+                                        foreach (var pais in Model.ListaPaises)
+                                        {
+                                            <tr>
+                                                <td>@pais.IdPais</td>
+                                                <td class="fw-bold">@pais.Pais</td>
+                                                <td class="text-uppercase">@pais.Sigla</td>
+                                                <td>@pais.Ddi</td>
+                                                <td class="text-uppercase">@pais.Moeda</td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                    <div class="col-6">
-                        <label class="form-label fw-bold campo-obrigatorio">DDI</label>
-                        <input type="text" id="modalPaisDdi" class="form-control" maxlength="10" placeholder="+55" required />
+                </div>
+
+                <div class="card shadow-sm border-success">
+                    <div class="card-header bg-success text-white fw-bold text-uppercase">+ Novo País</div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-5">
+                                <label class="form-label fw-bold campo-obrigatorio text-uppercase">País</label>
+                                <input type="text" id="modalPaisNome" class="form-control" maxlength="60" style="text-transform: uppercase;" required />
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label fw-bold campo-obrigatorio text-uppercase">Sigla</label>
+                                <input type="text" id="modalPaisSigla" class="form-control" maxlength="3" style="text-transform: uppercase;" required />
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label fw-bold campo-obrigatorio text-uppercase">DDI</label>
+                                <input type="text" id="modalPaisDdi" class="form-control" maxlength="10" required />
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label fw-bold campo-obrigatorio text-uppercase">Moeda</label>
+                                <input type="text" id="modalPaisMoeda" class="form-control" maxlength="50" style="text-transform: uppercase;" required />
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="mb-2">
-                    <label class="form-label fw-bold campo-obrigatorio">Moeda</label>
-                    <input type="text" id="modalPaisMoeda" class="form-control" maxlength="50" placeholder="Ex: Real (BRL)" required />
-                </div>
-                <div id="modalPaisErro" class="text-danger fw-bold d-none mt-2">Erro ao salvar país. Verifique os dados.</div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary fw-bold" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-primary fw-bold" onclick="salvarPaisAjax()">Salvar País</button>
+                <button type="button" class="btn btn-success fw-bold" onclick="salvarPaisAjax()">Salvar País</button>
             </div>
         </div>
     </div>
 </div>
 
+
+
+
 @section Scripts {
     <script>
-        function abrirModalPaisPorCima() {
-            const elModalPais = document.getElementById('modalNovoPais');
-            elModalPais.style.zIndex = '1060';
-            const modalPais = new bootstrap.Modal(elModalPais);
+        // Mantém o scroll no modal de Estado quando o de País fecha
+        document.getElementById('modalNovoPais').addEventListener('hidden.bs.modal', function () {
+            if (document.getElementById('modalNovoEstado').classList.contains('show')) {
+                document.body.classList.add('modal-open');
+            }
+        });
+
+        function abrirModalPaisSobreposto() {
+            var modalPais = new bootstrap.Modal(document.getElementById('modalNovoPais'));
             modalPais.show();
+            document.getElementById('modalNovoPais').style.zIndex = '1060';
+
+            setTimeout(() => {
+                const backdrops = document.querySelectorAll('.modal-backdrop');
+                if (backdrops.length > 1) {
+                    backdrops[backdrops.length - 1].style.zIndex = '1059';
+                }
+            }, 100);
         }
 
         function salvarPaisAjax() {
@@ -151,103 +231,105 @@
             const moeda = document.getElementById('modalPaisMoeda').value;
 
             if(!nome || !sigla || !ddi || !moeda) {
-                alert('Por favor, preencha todos os campos do país!');
-                return;
+                alert('Preencha todos os campos do país!'); return;
             }
 
-            const tokenElement = document.querySelector('input[name="__RequestVerificationToken"]');
-            if (!tokenElement) return;
-
-            const formData = new URLSearchParams();
-            formData.append('paisNome', nome);
-            formData.append('paisSigla', sigla);
-            formData.append('paisDdi', ddi);
-            formData.append('paisMoeda', moeda);
+            const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value || '';
+            const formData = new URLSearchParams({ paisNome: nome, paisSigla: sigla, paisDdi: ddi, paisMoeda: moeda });
 
             fetch('?handler=CriarPaisRapido', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    'RequestVerificationToken': tokenElement.value
-                },
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'RequestVerificationToken': token },
                 body: formData.toString()
             })
-            .then(response => {
-                if (!response.ok) throw new Error("Erro");
-                return response.json();
-            })
+            .then(res => res.json())
             .then(data => {
                 if (data.sucesso) {
-                    const select = document.getElementById('modalEstadoPais');
-                    const option = new Option(data.nome, data.id, true, true);
-                    select.add(option);
+                    const select = document.getElementById('selectPaisModalEstado');
+                    if(select) select.add(new Option(data.nome, data.id, true, true));
 
-                    const modalPais = bootstrap.Modal.getInstance(document.getElementById('modalNovoPais'));
-                    modalPais.hide();
+                    const tbody = document.querySelector('#modalNovoPais tbody');
+                    if(tbody) {
+                        const novaLinha = `
+                            <tr>
+                                <td>${data.id}</td>
+                                <td class="fw-bold">${data.nome.toUpperCase()}</td>
+                                <td class="text-uppercase">${sigla.toUpperCase()}</td>
+                                <td>${ddi}</td>
+                                <td class="text-uppercase">${moeda.toUpperCase()}</td>
+                            </tr>`;
+                        tbody.insertAdjacentHTML('beforeend', novaLinha);
+                    }
 
                     document.getElementById('modalPaisNome').value = '';
                     document.getElementById('modalPaisSigla').value = '';
                     document.getElementById('modalPaisDdi').value = '';
                     document.getElementById('modalPaisMoeda').value = '';
-                    document.getElementById('modalPaisErro').classList.add('d-none');
+
+                    alert('País salvo com sucesso!');
                 } else {
-                    document.getElementById('modalPaisErro').classList.remove('d-none');
+                    alert('Erro ao salvar país.');
                 }
             })
-            .catch(error => {
-                document.getElementById('modalPaisErro').classList.remove('d-none');
-            });
+            .catch(err => console.error(err));
         }
 
         function salvarEstadoAjax() {
             const nome = document.getElementById('modalEstadoNome').value;
             const uf = document.getElementById('modalEstadoUf').value;
-            const idPais = document.getElementById('modalEstadoPais').value;
+            const idPais = document.getElementById('selectPaisModalEstado').value;
 
             if(!nome || !uf || !idPais) {
-                alert('Por favor, preencha todos os campos do estado!');
-                return;
+                alert('Preencha todos os campos do estado (incluindo o País)!'); return;
             }
 
-            const tokenElement = document.querySelector('input[name="__RequestVerificationToken"]');
-            if (!tokenElement) return;
-
-            const formData = new URLSearchParams();
-            formData.append('estadoNome', nome);
-            formData.append('estadoUf', uf);
-            formData.append('idPais', idPais);
+            const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value || '';
+            const formData = new URLSearchParams({ estadoNome: nome, estadoUf: uf, idPais: idPais });
 
             fetch('?handler=CriarEstadoRapido', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    'RequestVerificationToken': tokenElement.value
-                },
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'RequestVerificationToken': token },
                 body: formData.toString()
             })
-            .then(response => {
-                if (!response.ok) throw new Error("Erro");
-                return response.json();
+            .then(res => {
+                if (!res.ok) throw new Error('Erro 400/500 no C#');
+                return res.json();
             })
             .then(data => {
                 if (data.sucesso) {
+                    // Descobre qual país estava selecionado no modal
+                    const dropdownPais = document.getElementById('selectPaisModalEstado');
+                    const nomeDoPais = dropdownPais.options[dropdownPais.selectedIndex].text;
+
+                    // 1. Atualiza o select principal que está lá atrás na tela de Cidades
                     const select = document.getElementById('selectEstado');
-                    const option = new Option(data.nome, data.id, true, true);
-                    select.add(option);
+                    if(select) {
+                        // Junta o "Estado - UF" (que vem do data.nome) com o País
+                        const textoCompleto = `${data.nome} - ${nomeDoPais.toUpperCase()}`;
+                        select.add(new Option(textoCompleto, data.id, true, true));
+                    }
 
-                    const modal = bootstrap.Modal.getInstance(document.getElementById('modalNovoEstado'));
-                    modal.hide();
+                    // 2. Adiciona o novo estado na tabela do modal na hora!
+                    const tbody = document.querySelector('#modalNovoEstado tbody');
+                    if(tbody) {
+                        const novaLinha = `
+                            <tr>
+                                <td>${data.id}</td>
+                                <td class="fw-bold text-uppercase">${nome.toUpperCase()}</td>
+                                <td class="text-uppercase">${uf.toUpperCase()}</td>
+                            </tr>`;
+                        tbody.insertAdjacentHTML('beforeend', novaLinha);
+                    }
 
+                    // 3. Limpa os campos
                     document.getElementById('modalEstadoNome').value = '';
                     document.getElementById('modalEstadoUf').value = '';
-                    document.getElementById('modalEstadoPais').value = '';
-                    document.getElementById('modalEstadoErro').classList.add('d-none');
-                } else {
-                    document.getElementById('modalEstadoErro').classList.remove('d-none');
+                    
                 }
             })
-            .catch(error => {
-                document.getElementById('modalEstadoErro').classList.remove('d-none');
+            .catch(err => {
+                console.error(err);
+                alert('Erro de comunicação. O método C# existe e está acessível?');
             });
         }
     </script>
