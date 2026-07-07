@@ -65,17 +65,22 @@
 
                     <div class="col-md-4">
                         <label class="form-label fw-bold campo-obrigatorio">Cidade</label>
-                        <select asp-for="Cliente.IdCidade" class="form-select" required>
-                            <option value="">-- Selecione a Cidade --</option>
-                            @if (Model.ListaCidades != null)
-                            {
-                                foreach (var cidade in Model.ListaCidades)
+                        <div class="input-group flex-nowrap">
+                            <select asp-for="Cliente.IdCidade" class="form-select" id="selectCidadePrincipal" required>
+                                <option value="">-- Selecione a Cidade --</option>
+                                @if (Model.ListaCidades != null)
                                 {
-                                    <option value="@cidade.IdCidade">@cidade.Cidade</option>
+                                    foreach (var cidade in Model.ListaCidades)
+                                    {
+                                        <option value="@cidade.IdCidade">@cidade.Cidade</option>
+                                    }
                                 }
-                            }
-                        </select>
-                    </div>
+                            </select>
+                            <button class="btn btn-outline-warning fw-bold" type="button" data-bs-toggle="modal" data-bs-target="#modalNovaCidade">
+                                + Novo
+                            </button>
+                        </div>
+                    </div>  
 
                     <h5 class="mt-4 border-bottom pb-2 w-100">Documentos e Contato</h5>
 
@@ -107,3 +112,357 @@
         </div>
     </div>
 </div>
+
+<!-- MODAL NOVA CIDADE -->
+<div class="modal fade" id="modalNovaCidade" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content border-success shadow-lg">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title fw-bold text-uppercase">Gestão Rápida de Cidades</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body bg-light">
+
+                <div class="card shadow-sm border-secondary mb-4">
+                    <div class="card-header bg-secondary text-white fw-bold text-uppercase">Cidades Cadastradas</div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive" style="max-height: 250px; overflow-y: auto;">
+                            <table class="table table-striped table-hover mb-0 text-center" style="font-size: 0.9rem;">
+                                <thead style="position: sticky; top: 0; z-index: 1;" class="table-dark">
+                                    <tr><th>CÓDIGO</th><th>CIDADE</th></tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model.ListaCidades != null)
+                                    {
+                                        foreach (var cidade in Model.ListaCidades)
+                                        {
+                                            <tr>
+                                                <td>@cidade.IdCidade</td>
+                                                <td class="fw-bold text-uppercase">@cidade.Cidade</td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card shadow-sm border-success">
+                    <div class="card-header bg-success text-white fw-bold text-uppercase">+ Nova Cidade</div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-7">
+                                <label class="form-label fw-bold campo-obrigatorio text-uppercase">Cidade</label>
+                                <input type="text" id="modalCidadeNome" class="form-control" maxlength="60" style="text-transform: uppercase;" required />
+                            </div>
+                            <div class="col-md-5">
+                                <label class="form-label fw-bold campo-obrigatorio text-uppercase">Estado</label>
+                                <div class="input-group flex-nowrap">
+                                    <select class="form-select" id="selectEstadoModalCidade" required>
+                                        <option value="">-- Selecione --</option>
+                                        @if (Model.ListaEstados != null)
+                                        {
+                                            foreach (var estado in Model.ListaEstados)
+                                            {
+                                                <option value="@estado.IdEstado">@estado.Estado - @estado.Uf - @estado.NomePais</option>
+                                            }
+                                        }
+                                    </select>
+                                    <button class="btn btn-outline-success fw-bold" type="button" onclick="abrirModalEstadoSobreposto()">+ Novo</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary fw-bold" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-success fw-bold" onclick="salvarCidadeAjax()">Salvar Cidade</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL NOVO ESTADO -->
+<div class="modal fade" id="modalNovoEstado" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content border-success shadow-lg">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title fw-bold text-uppercase">Gestão Rápida de Estados</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body bg-light">
+
+                <div class="card shadow-sm border-secondary mb-4">
+                    <div class="card-header bg-secondary text-white fw-bold text-uppercase">Estados Cadastrados</div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive" style="max-height: 250px; overflow-y: auto;">
+                            <table class="table table-striped table-hover mb-0 text-center" style="font-size: 0.9rem;">
+                                <thead style="position: sticky; top: 0; z-index: 1;" class="table-dark">
+                                    <tr><th>CÓDIGO</th><th>ESTADO</th><th>UF</th></tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model.ListaEstados != null)
+                                    {
+                                        foreach (var estado in Model.ListaEstados)
+                                        {
+                                            <tr>
+                                                <td>@estado.IdEstado</td>
+                                                <td class="fw-bold text-uppercase">@estado.Estado</td>
+                                                <td class="text-uppercase">@estado.Uf</td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card shadow-sm border-success">
+                    <div class="card-header bg-success text-white fw-bold text-uppercase">+ Novo Estado</div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold campo-obrigatorio text-uppercase">Estado</label>
+                                <input type="text" id="modalEstadoNome" class="form-control" maxlength="50" style="text-transform: uppercase;" required />
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label fw-bold campo-obrigatorio text-uppercase">UF</label>
+                                <input type="text" id="modalEstadoUf" class="form-control" maxlength="2" style="text-transform: uppercase;" required />
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold campo-obrigatorio text-uppercase">País</label>
+                                <div class="input-group flex-nowrap">
+                                    <select class="form-select" id="selectPaisModalEstado" required>
+                                        <option value="">-- Selecione --</option>
+                                        @if (Model.ListaPaises != null)
+                                        {
+                                            foreach (var pais in Model.ListaPaises)
+                                            {
+                                                <option value="@pais.IdPais">@pais.Pais</option>
+                                            }
+                                        }
+                                    </select>
+                                    <button class="btn btn-outline-success fw-bold" type="button" onclick="abrirModalPaisSobreposto()">+ Novo</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary fw-bold" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-success fw-bold" onclick="salvarEstadoAjax()">Salvar Estado</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL NOVO PAÍS -->
+<div class="modal fade" id="modalNovoPais" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content border-success shadow-lg">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title fw-bold text-uppercase">Gestão Rápida de Países</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body bg-light">
+
+                <div class="card shadow-sm border-secondary mb-4">
+                    <div class="card-header bg-secondary text-white fw-bold text-uppercase">Países Cadastrados</div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive" style="max-height: 250px; overflow-y: auto;">
+                            <table class="table table-striped table-hover mb-0 text-center" style="font-size: 0.9rem;">
+                                <thead style="position: sticky; top: 0; z-index: 1;" class="table-dark">
+                                    <tr><th>CÓDIGO</th><th>PAÍS</th><th>SIGLA</th><th>DDI</th><th>MOEDA</th></tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model.ListaPaises != null)
+                                    {
+                                        foreach (var pais in Model.ListaPaises)
+                                        {
+                                            <tr>
+                                                <td>@pais.IdPais</td>
+                                                <td class="fw-bold text-uppercase">@pais.Pais</td>
+                                                <td class="text-uppercase">@pais.Sigla</td>
+                                                <td>@pais.Ddi</td>
+                                                <td class="text-uppercase">@pais.Moeda</td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card shadow-sm border-success">
+                    <div class="card-header bg-success text-white fw-bold text-uppercase">+ Novo País</div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-5">
+                                <label class="form-label fw-bold campo-obrigatorio text-uppercase">País</label>
+                                <input type="text" id="modalPaisNome" class="form-control" maxlength="60" style="text-transform: uppercase;" required />
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label fw-bold campo-obrigatorio text-uppercase">Sigla</label>
+                                <input type="text" id="modalPaisSigla" class="form-control" maxlength="3" style="text-transform: uppercase;" required />
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label fw-bold campo-obrigatorio text-uppercase">DDI</label>
+                                <input type="text" id="modalPaisDdi" class="form-control" maxlength="10" required />
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label fw-bold campo-obrigatorio text-uppercase">Moeda</label>
+                                <input type="text" id="modalPaisMoeda" class="form-control" maxlength="50" style="text-transform: uppercase;" required />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary fw-bold" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-success fw-bold" onclick="salvarPaisAjax()">Salvar País</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // TRUQUE PARA SOBREPOR MODAIS
+        function abrirModalEstadoSobreposto() {
+            var modalEstado = new bootstrap.Modal(document.getElementById('modalNovoEstado'));
+            modalEstado.show();
+            document.getElementById('modalNovoEstado').style.zIndex = '1060';
+            setTimeout(() => {
+                const backdrops = document.querySelectorAll('.modal-backdrop');
+                if (backdrops.length > 1) backdrops[backdrops.length - 1].style.zIndex = '1059';
+            }, 100);
+        }
+
+        function abrirModalPaisSobreposto() {
+            var modalPais = new bootstrap.Modal(document.getElementById('modalNovoPais'));
+            modalPais.show();
+            document.getElementById('modalNovoPais').style.zIndex = '1070';
+            setTimeout(() => {
+                const backdrops = document.querySelectorAll('.modal-backdrop');
+                if (backdrops.length > 1) backdrops[backdrops.length - 1].style.zIndex = '1069';
+            }, 100);
+        }
+
+        // SALVAR PAÍS
+        function salvarPaisAjax() {
+            const nome = document.getElementById('modalPaisNome').value;
+            const sigla = document.getElementById('modalPaisSigla').value;
+            const ddi = document.getElementById('modalPaisDdi').value;
+            const moeda = document.getElementById('modalPaisMoeda').value;
+
+            if(!nome || !sigla || !ddi || !moeda) { alert('Preencha os campos!'); return; }
+
+            const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value || '';
+            const formData = new URLSearchParams({ paisNome: nome, paisSigla: sigla, paisDdi: ddi, paisMoeda: moeda });
+
+            fetch('?handler=CriarPaisRapido', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'RequestVerificationToken': token }, body: formData.toString() })
+            .then(res => res.json())
+            .then(data => {
+                if (data.sucesso) {
+                    const select = document.getElementById('selectPaisModalEstado');
+                    if(select) select.add(new Option(data.nome, data.id, true, true));
+
+                    const tbody = document.querySelector('#modalNovoPais tbody');
+                    if(tbody) {
+                        tbody.insertAdjacentHTML('beforeend', `
+                            <tr>
+                                <td>${data.id}</td>
+                                <td class="fw-bold text-uppercase">${nome.toUpperCase()}</td>
+                                <td class="text-uppercase">${sigla.toUpperCase()}</td>
+                                <td>${ddi}</td>
+                                <td class="text-uppercase">${moeda.toUpperCase()}</td>
+                            </tr>`);
+                    }
+
+                    document.getElementById('modalPaisNome').value = '';
+                    document.getElementById('modalPaisSigla').value = '';
+                    document.getElementById('modalPaisDdi').value = '';
+                    document.getElementById('modalPaisMoeda').value = '';
+
+                } else alert('Erro ao salvar país.');
+            });
+        }
+
+        // SALVAR ESTADO
+        function salvarEstadoAjax() {
+            const nome = document.getElementById('modalEstadoNome').value;
+            const uf = document.getElementById('modalEstadoUf').value;
+            const dropdownPais = document.getElementById('selectPaisModalEstado');
+            const idPais = dropdownPais.value;
+
+            if(!nome || !uf || !idPais) { alert('Preencha os campos!'); return; }
+
+            const nomeDoPais = dropdownPais.options[dropdownPais.selectedIndex].text;
+            const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value || '';
+            const formData = new URLSearchParams({ estadoNome: nome, estadoUf: uf, idPais: idPais });
+
+            fetch('?handler=CriarEstadoRapido', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'RequestVerificationToken': token }, body: formData.toString() })
+            .then(res => res.json())
+            .then(data => {
+                if (data.sucesso) {
+                    const select = document.getElementById('selectEstadoModalCidade');
+                    if(select) {
+                        const textoCompleto = `${data.nome} - ${nomeDoPais.toUpperCase()}`;
+                        select.add(new Option(textoCompleto, data.id, true, true));
+                    }
+
+                    const tbody = document.querySelector('#modalNovoEstado tbody');
+                    if(tbody) {
+                        tbody.insertAdjacentHTML('beforeend', `
+                            <tr>
+                                <td>${data.id}</td>
+                                <td class="fw-bold text-uppercase">${nome.toUpperCase()}</td>
+                                <td class="text-uppercase">${uf.toUpperCase()}</td>
+                            </tr>`);
+                    }
+
+                    document.getElementById('modalEstadoNome').value = '';
+                    document.getElementById('modalEstadoUf').value = '';
+
+                } else alert('Erro ao salvar estado.');
+            });
+        }
+
+        // SALVAR CIDADE
+        function salvarCidadeAjax() {
+            const nome = document.getElementById('modalCidadeNome').value;
+            const idEstado = document.getElementById('selectEstadoModalCidade').value;
+
+            if(!nome || !idEstado) { alert('Preencha os campos!'); return; }
+
+            const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value || '';
+            const formData = new URLSearchParams({ cidadeNome: nome, idEstado: idEstado });
+
+            fetch('?handler=CriarCidadeRapido', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'RequestVerificationToken': token }, body: formData.toString() })
+            .then(res => res.json())
+            .then(data => {
+                if (data.sucesso) {
+                    const select = document.getElementById('selectCidadePrincipal');
+                    if(select) select.add(new Option(data.nome, data.id, true, true));
+
+                    const tbody = document.querySelector('#modalNovaCidade tbody');
+                    if(tbody) {
+                        tbody.insertAdjacentHTML('beforeend', `
+                            <tr>
+                                <td>${data.id}</td>
+                                <td class="fw-bold text-uppercase">${nome.toUpperCase()}</td>
+                            </tr>`);
+                    }
+
+                    document.getElementById('modalCidadeNome').value = '';
+
+                } else alert('Erro ao salvar cidade.');
+            });
+        }
+    </script>
+}
