@@ -21,11 +21,14 @@
 
                 <div class="row g-3">
                     <div class="col-md-3">
+
                         <label class="form-label fw-bold campo-obrigatorio">Tipo de Cliente</label>
                         <select asp-for="Cliente.TipoPessoa" class="form-select" disabled>
                             <option value="F">Pessoa Física (CPF)</option>
                             <option value="J">Pessoa Jurídica (CNPJ)</option>
                         </select>
+
+                        <input type="hidden" asp-for="Cliente.TipoPessoa" />
                     </div>
 
                     <div class="col-md-9">
