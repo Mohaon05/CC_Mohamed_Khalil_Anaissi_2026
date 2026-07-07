@@ -174,5 +174,38 @@ namespace trabalho_kaneko.Repository
             }
         }
 
+        public int InserirRetornandoId(CidadeModel cidade)
+        {
+            try
+            {
+                using (var connection = _context.CreateConnection())
+                {
+                    connection.Open();
+
+                    // Atenção: Confirme se os nomes das colunas (cidade, id_estado) estão iguais aos do seu banco de dados
+                    string query = @"
+                        INSERT INTO cidades (cidade, id_estado, data_inclusao) 
+                        VALUES (@cidade, @id_estado, NOW());
+                        
+                        SELECT LAST_INSERT_ID();";
+
+                    using (var command = new MySqlCommand(query, (MySqlConnection)connection))
+                    {
+                        command.Parameters.AddWithValue("@cidade", cidade.Cidade);
+                        command.Parameters.AddWithValue("@id_estado", cidade.IdEstado);
+
+                        // O ExecuteScalar executa o INSERT e já puxa o SELECT LAST_INSERT_ID() que colocamos ali em cima
+                        int idGerado = Convert.ToInt32(command.ExecuteScalar());
+                        return idGerado;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Erro ao inserir cidade retornando ID: " + ex.Message);
+                return 0; // Retorna 0 em caso de erro para o frontend saber que falhou
+            }
+        }
+
     }
 }
