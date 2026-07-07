@@ -5,7 +5,7 @@ namespace trabalho_kaneko.Models
     public class PaisModel
     {
         public int IdPais { get; set; }
-        public string Pais { get; set; } // O nome do país
+        public string Pais { get; set; }
         public string Sigla { get; set; }
         public string Ddi { get; set; }
         public string Moeda { get; set; }

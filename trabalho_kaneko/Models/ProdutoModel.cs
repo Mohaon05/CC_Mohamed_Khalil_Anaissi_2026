@@ -5,15 +5,15 @@ namespace trabalho_kaneko.Models
     public class ProdutoModel
     {
         public int IdProduto { get; set; }
-        public string Produto { get; set; } // NOT NULL
-        public string Und { get; set; } // NOT NULL (Digitação livre de até 3 caracteres)
-        public decimal PrecoVenda { get; set; } // NOT NULL
-        public decimal PrecoCompra { get; set; } // NOT NULL DEFAULT 0.00
-        public decimal Custo { get; set; } // NOT NULL DEFAULT 0.00
-        public int Saldo { get; set; } // NOT NULL DEFAULT 0
-        public int IdMarca { get; set; } // NOT NULL
-        public int IdGrupo { get; set; } // NOT NULL
-        public DateTime? DataUltCompra { get; set; } // DATETIME (Permite nulo se nunca foi comprado)
+        public string Produto { get; set; } 
+        public string Und { get; set; } 
+        public decimal PrecoVenda { get; set; }
+        public decimal PrecoCompra { get; set; }
+        public decimal Custo { get; set; }
+        public int Saldo { get; set; }
+        public int IdMarca { get; set; }
+        public int IdGrupo { get; set; }
+        public DateTime? DataUltCompra { get; set; }
         public DateTime? DataInclusao { get; set; }
         public DateTime? DataAlteracao { get; set; }
 

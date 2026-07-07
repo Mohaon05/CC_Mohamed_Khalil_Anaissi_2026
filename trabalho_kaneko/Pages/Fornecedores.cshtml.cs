@@ -8,19 +8,32 @@ namespace trabalho_kaneko.Pages
 {
     public class FornecedoresModel : PageModel
     {
+        // 1. INJEÇÃO DOS REPOSITÓRIOS
         private readonly FornecedorRepository _fornecedorRepository;
         private readonly CidadeRepository _cidadeRepository;
+        private readonly EstadoRepository _estadoRepository;
+        private readonly PaisRepository _paisRepository;
 
-        public FornecedoresModel(FornecedorRepository fornecedorRepository, CidadeRepository cidadeRepository)
+        // 2. CONSTRUTOR
+        public FornecedoresModel(
+            FornecedorRepository fornecedorRepository,
+            CidadeRepository cidadeRepository,
+            EstadoRepository estadoRepository,
+            PaisRepository paisRepository)
         {
             _fornecedorRepository = fornecedorRepository;
             _cidadeRepository = cidadeRepository;
+            _estadoRepository = estadoRepository;
+            _paisRepository = paisRepository;
         }
 
         [BindProperty]
-        public FornecedorModel FornecedorObj { get; set; }
+        public FornecedorModel Fornecedor { get; set; }
 
+        // 3. DECLARAÇÃO DAS LISTAS
         public List<CidadeModel> ListaCidades { get; set; } = new List<CidadeModel>();
+        public List<EstadoModel> ListaEstados { get; set; } = new List<EstadoModel>();
+        public List<PaisModel> ListaPaises { get; set; } = new List<PaisModel>();
 
         public void OnGet()
         {
@@ -35,7 +48,7 @@ namespace trabalho_kaneko.Pages
                 return Page();
             }
 
-            bool sucesso = _fornecedorRepository.Inserir(FornecedorObj);
+            bool sucesso = _fornecedorRepository.Inserir(Fornecedor);
             if (sucesso)
             {
                 TempData["MensagemSucesso"] = "Fornecedor cadastrado com sucesso!";

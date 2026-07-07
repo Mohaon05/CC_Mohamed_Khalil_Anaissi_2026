@@ -10,7 +10,6 @@ namespace trabalho_kaneko.Models
         public string TipoPessoa { get; set; }
         public string CpfCnpj { get; set; }
 
-        // --- CAMPOS COM '?' SÃO OPCIONAIS PARA O C# ---
         public string? RgInscest { get; set; }
         public DateTime? DataNascimento { get; set; }
         public string? Logradouro { get; set; }
@@ -25,7 +24,6 @@ namespace trabalho_kaneko.Models
         public DateTime? DataInclusao { get; set; }
         public DateTime? DataAlteracao { get; set; }
 
-        // Como esse campo não é preenchido no cadastro, ele PRECISA do '?'
         public string? NomeCidade { get; set; }
     }
 }
