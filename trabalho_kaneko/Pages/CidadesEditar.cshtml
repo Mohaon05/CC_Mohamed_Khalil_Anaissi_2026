@@ -6,7 +6,7 @@
 
 <div class="container mt-4">
     <div class="mb-3">
-        <a asp-page="/CidadesListar" class="btn btn-secondary btn-sm">Voltar para a Lista</a>
+        <a asp-page="/CidadesListar" class="btn btn-danger btn-sm">Voltar para a Lista</a>
     </div>
 
     <div class="card shadow-sm border-warning">
@@ -40,7 +40,7 @@
                                 }
                             </select>
 
-                            <button class="btn btn-outline-success fw-bold" type="button" data-bs-toggle="modal" data-bs-target="#modalNovoEstado">
+                            <button class="btn btn-outline-warning fw-bold" type="button" data-bs-toggle="modal" data-bs-target="#modalNovoEstado">
                                 + Novo
                             </button>
                         </div>
@@ -57,15 +57,15 @@
 
 <div class="modal fade" id="modalNovoEstado" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl">
-        <div class="modal-content border-success shadow-lg">
-            <div class="modal-header bg-success text-white">
+        <div class="modal-content border-warning shadow-lg">
+            <div class="modal-header bg-warning text-white">
                 <h5 class="modal-title fw-bold text-uppercase">Gestão Rápida de Estados</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body bg-light">
 
                 <div class="card shadow-sm border-secondary mb-4">
-                    <div class="card-header bg-secondary text-white fw-bold text-uppercase">Estados Cadastrados</div>
+                    <div class="card-header bg-dark text-white fw-bold text-uppercase">Estados Cadastrados</div>
                     <div class="card-body p-0">
                         <div class="table-responsive" style="max-height: 250px; overflow-y: auto;">
                             <table class="table table-striped table-hover mb-0 text-center" style="font-size: 0.9rem;">
@@ -90,8 +90,8 @@
                     </div>
                 </div>
 
-                <div class="card shadow-sm border-success">
-                    <div class="card-header bg-success text-white fw-bold text-uppercase">+ Novo Estado</div>
+                <div class="card shadow-sm border-warning">
+                    <div class="card-header bg-warning text-white fw-bold text-uppercase">+ Novo Estado</div>
                     <div class="card-body">
                         <div class="row g-3">
                             <div class="col-md-6">
@@ -115,7 +115,7 @@
                                             }
                                         }
                                     </select>
-                                    <button class="btn btn-outline-success fw-bold" type="button" onclick="abrirModalPaisSobreposto()">+ Novo</button>
+                                    <button class="btn btn-outline-warning fw-bold" type="button" onclick="abrirModalPaisSobreposto()">+ Novo</button>
                                 </div>
                             </div>
                         </div>
@@ -132,15 +132,15 @@
 
 <div class="modal fade" id="modalNovoPais" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl">
-        <div class="modal-content border-success shadow-lg">
-            <div class="modal-header bg-success text-white">
+        <div class="modal-content border-warning shadow-lg">
+            <div class="modal-header bg-warning text-white">
                 <h5 class="modal-title fw-bold text-uppercase">Gestão Rápida de Países</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body bg-light">
 
                 <div class="card shadow-sm border-secondary mb-4">
-                    <div class="card-header bg-secondary text-white fw-bold text-uppercase">Países Cadastrados</div>
+                    <div class="card-header bg-dark text-white fw-bold text-uppercase">Países Cadastrados</div>
                     <div class="card-body p-0">
                         <div class="table-responsive" style="max-height: 250px; overflow-y: auto;">
                             <table class="table table-striped table-hover mb-0 text-center" style="font-size: 0.9rem;">
@@ -167,8 +167,8 @@
                     </div>
                 </div>
 
-                <div class="card shadow-sm border-success">
-                    <div class="card-header bg-success text-white fw-bold text-uppercase">+ Novo País</div>
+                <div class="card shadow-sm border-warning">
+                    <div class="card-header bg-warning text-white fw-bold text-uppercase">+ Novo País</div>
                     <div class="card-body">
                         <div class="row g-3">
                             <div class="col-md-5">
