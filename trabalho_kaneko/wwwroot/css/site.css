@@ -36,29 +36,27 @@ body {
    =================================================== */
 #wrapper {
     overflow-x: hidden;
-    min-height: calc(100vh - 60px); /* Ocupa a tela toda tirando o header */
 }
 
 #sidebar-wrapper {
-    min-height: 100vh;
     width: 250px;
     transition: margin 0.25s ease-out;
 }
 
     /* Classe que esconde a barra lateral (joga ela pra fora da tela) */
-    #sidebar-wrapper.collapsed {
-        margin-left: -250px;
-    }
+#sidebar-wrapper.collapsed {
+    margin-left: -250px;
+}
 
-/* Efeito ao passar o mouse nos botões do menu */
 .sidebar-link {
-    color: #d1d5db;
-    transition: 0.2s;
+    transition: all 0.2s ease-in-out;
+    border-left: 4px solid transparent !important;
 }
 
     .sidebar-link:hover {
-        background-color: #495057;
-        color: #ffffff;
+        background-color: rgba(255, 255, 255, 0.15) !important; /* Deixa o fundo levemente mais claro */
+        border-left: 4px solid #ffffff !important; /* Cria uma barra branca na esquerda */
+        padding-left: 20px !important; /* Dá um leve "pulinho" para a direita */
     }
 
 /* Demarcação de campos obrigatórios */

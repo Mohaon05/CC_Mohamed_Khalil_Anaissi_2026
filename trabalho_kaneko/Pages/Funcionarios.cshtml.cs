@@ -26,7 +26,7 @@ namespace trabalho_kaneko.Pages
         [BindProperty]
         public FuncionarioModel Funcionario { get; set; }
 
-        public List<CargoModel> ListaCargos { get; set; } = new List<CargoModel>(); // Mantenha se já tiver
+        public List<CargoModel> ListaCargos { get; set; } = new List<CargoModel>();
         public List<CidadeModel> ListaCidades { get; set; } = new List<CidadeModel>();
         public List<EstadoModel> ListaEstados { get; set; } = new List<EstadoModel>();
         public List<PaisModel> ListaPaises { get; set; } = new List<PaisModel>();
@@ -88,6 +88,15 @@ namespace trabalho_kaneko.Pages
             var novaCidade = new CidadeModel { Cidade = cidadeNome, IdEstado = idEstado };
             int novoId = _cidadeRepository.InserirRetornandoId(novaCidade);
             if (novoId > 0) return new JsonResult(new { sucesso = true, id = novoId, nome = novaCidade.Cidade });
+            return new JsonResult(new { sucesso = false });
+        }
+
+        public JsonResult OnPostCriarCargoRapido(string cargoNome)
+        {
+            if (string.IsNullOrEmpty(cargoNome)) return new JsonResult(new { sucesso = false });
+            var novoCargo = new CargoModel { Cargo = cargoNome };
+            int novoId = _cargoRepository.InserirRetornandoId(novoCargo);
+            if (novoId > 0) return new JsonResult(new { sucesso = true, id = novoId, nome = novoCargo.Cargo });
             return new JsonResult(new { sucesso = false });
         }
     }

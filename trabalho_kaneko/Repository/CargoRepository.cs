@@ -150,5 +150,37 @@ namespace trabalho_kaneko.Repository
                 return false;
             }
         }
+
+        public int InserirRetornandoId(CargoModel cargo)
+        {
+            try
+            {
+                using (var connection = _context.CreateConnection())
+                {
+                    connection.Open();
+
+                    string query = @"
+                        INSERT INTO cargos (cargo, descricao, data_inclusao) 
+                        VALUES (@cargo, @descricao, NOW());
+                        
+                        SELECT LAST_INSERT_ID();";
+
+                    using (var command = new MySqlCommand(query, (MySqlConnection)connection))
+                    {
+                        command.Parameters.AddWithValue("@cargo", cargo.Cargo);
+                        command.Parameters.AddWithValue("@descricao", cargo.Descricao ?? "");
+
+                        // O ExecuteScalar executa o INSERT e já puxa o SELECT LAST_INSERT_ID() que colocamos ali em cima
+                        int idGerado = Convert.ToInt32(command.ExecuteScalar());
+                        return idGerado;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Erro ao inserir cargo retornando ID: " + ex.Message);
+                return 0; // Retorna 0 em caso de erro para o frontend saber que falhou
+            }
+        }
     }
 }

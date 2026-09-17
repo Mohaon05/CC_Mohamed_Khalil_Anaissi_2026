@@ -8,65 +8,67 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/trabalho_kaneko.styles.css" asp-append-version="true" />
 </head>
-<body>
+
+<body class="d-flex flex-column vh-100 overflow-hidden">
     <header>
         <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom box-shadow">
             <div class="container-fluid">
-                <button class="btn btn-outline-dark me-3" id="sidebarToggle">
+                <button class="btn btn-outline-danger me-3" id="sidebarToggle">
                     ☰ Menu
                 </button>
-                <a class="navbar-brand fw-bold" asp-area="" asp-page="/Index">Despair System</a>
+                <a class="navbar-brand fw-bold" asp-area="" asp-page="/Index"><span style="color: red">Despair System</span></a>
             </div>
         </nav>
     </header>
 
-    <div class="d-flex" id="wrapper">
+    <div class="d-flex flex-grow-1 overflow-hidden" id="wrapper">
 
-        <div class="bg-dark border-end" id="sidebar-wrapper">
+        <div class="bg-danger border-end h-100" style="overflow-y: auto;" id="sidebar-wrapper">
+
             <div class="list-group list-group-flush mt-3">
-                <a asp-page="/Index" class="list-group-item list-group-item-action bg-dark sidebar-link border-0">
+                <a asp-page="/Index" class="list-group-item list-group-item-action bg-transparent text-white sidebar-link border-0">
                     Tela Inicial
                 </a>
-                <a asp-page="/PaisesListar" class="list-group-item list-group-item-action bg-dark sidebar-link border-0">
-                    🌎 Países
+                <a asp-page="/PaisesListar" class="list-group-item list-group-item-action bg-transparent text-white sidebar-link border-0">
+                    Países
                 </a>
-                <a asp-page="/EstadosListar" class="list-group-item list-group-item-action bg-dark sidebar-link border-0">
-                    📍 Estados
+                <a asp-page="/EstadosListar" class="list-group-item list-group-item-action bg-transparent text-white sidebar-link border-0">
+                    Estados
                 </a>
-                <a asp-page="/CidadesListar" class="list-group-item list-group-item-action bg-dark sidebar-link border-0">
-                    🏙️ Cidades
+                <a asp-page="/CidadesListar" class="list-group-item list-group-item-action bg-transparent text-white sidebar-link border-0">
+                    Cidades
                 </a>
-                <a asp-page="/ClientesListar" class="list-group-item list-group-item-action bg-dark sidebar-link border-0">
-                    👥 Clientes
+                <a asp-page="/ClientesListar" class="list-group-item list-group-item-action bg-transparent text-white sidebar-link border-0">
+                    Clientes
                 </a>
-                <a asp-page="/FornecedoresListar" class="list-group-item list-group-item-action bg-dark sidebar-link border-0">
-                    🚚 Fornecedores
+                <a asp-page="/FornecedoresListar" class="list-group-item list-group-item-action bg-transparent text-white sidebar-link border-0">
+                    Fornecedores
                 </a>
-                <a asp-page="/CargosListar" class="list-group-item list-group-item-action bg-dark sidebar-link border-0">
-                    💼 Cargos
+                <a asp-page="/CargosListar" class="list-group-item list-group-item-action bg-transparent text-white sidebar-link border-0">
+                    Cargos
                 </a>
-                <a asp-page="/FuncionariosListar" class="list-group-item list-group-item-action bg-dark sidebar-link border-0">
-                    🆔 Funcionários
+                <a asp-page="/FuncionariosListar" class="list-group-item list-group-item-action bg-transparent text-white sidebar-link border-0">
+                    Funcionários
                 </a>
-                <a asp-page="/GruposListar" class="list-group-item list-group-item-action bg-dark sidebar-link border-0">
-                    📂 Grupos
+                <a asp-page="/GruposListar" class="list-group-item list-group-item-action bg-transparent text-white sidebar-link border-0">
+                    Grupos
                 </a>
-                <a asp-page="/MarcasListar" class="list-group-item list-group-item-action bg-dark sidebar-link border-0">
-                    🏷️ Marcas
+                <a asp-page="/MarcasListar" class="list-group-item list-group-item-action bg-transparent text-white sidebar-link border-0">
+                    Marcas
                 </a>
-                <a asp-page="/ProdutosListar" class="list-group-item list-group-item-action bg-dark sidebar-link border-0">
-                    📦 Produtos
+                <a asp-page="/ProdutosListar" class="list-group-item list-group-item-action bg-transparent text-white sidebar-link border-0">
+                    Produtos
                 </a>
-                <a asp-page="/FormasPagamentoListar" class="list-group-item list-group-item-action bg-dark sidebar-link border-0">
-                    💳 Formas de Pagamento
+                <a asp-page="/FormasPagamentoListar" class="list-group-item list-group-item-action bg-transparent text-white sidebar-link border-0">
+                    Formas de Pagamento
                 </a>
-                <a asp-page="/CondicoesPagamentoListar" class="list-group-item list-group-item-action bg-dark sidebar-link border-0">
-                    ⏳ Condições de Pagamento
+                <a asp-page="/CondicoesPagamentoListar" class="list-group-item list-group-item-action bg-transparent text-white sidebar-link border-0">
+                    Condições de Pagamento
                 </a>
             </div>
         </div>
 
-        <div id="page-content-wrapper" class="flex-grow-1 w-100 bg-light">
+        <div id="page-content-wrapper" class="flex-grow-1 w-100 bg-light" style="overflow-y: auto;">
             <div class="container-fluid p-4">
                 <main role="main" class="pb-3">
                     @RenderBody()
@@ -81,10 +83,10 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
 
     <script>
-        document.getElementById("sidebarToggle").addEventListener("click", function (e) {
-        e.preventDefault();
-        document.getElementById("sidebar-wrapper").classList.toggle("collapsed");
-        });
+            document.getElementById("sidebarToggle").addEventListener("click", function(e) {
+                e.preventDefault();
+                document.getElementById("sidebar-wrapper").classList.toggle("collapsed");
+            });
     </script>
 
     @await RenderSectionAsync("Scripts", required: false)
