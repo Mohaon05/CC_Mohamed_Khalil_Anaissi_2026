@@ -13,7 +13,6 @@ namespace trabalho_kaneko.Pages
         private readonly EstadoRepository _estadoRepository;
         private readonly PaisRepository _paisRepository;
 
-        // INJEÇÃO DOS 4 REPOSITÓRIOS
         public ClientesModel(
             ClienteRepository clienteRepository,
             CidadeRepository cidadeRepository,
@@ -35,17 +34,14 @@ namespace trabalho_kaneko.Pages
 
         public void OnGet()
         {
-            // Carrega tudo ao abrir a tela
-            ListaCidades = _cidadeRepository.ListarTodos();
-            ListaEstados = _estadoRepository.ListarTodos();
-            ListaPaises = _paisRepository.ListarTodos();
+            CarregarListas();
         }
 
         public IActionResult OnPost()
         {
             if (!ModelState.IsValid)
             {
-                ListaCidades = _cidadeRepository.ListarTodos();
+                CarregarListas();
                 return Page();
             }
 
@@ -59,39 +55,132 @@ namespace trabalho_kaneko.Pages
             else
             {
                 ModelState.AddModelError(string.Empty, "Erro ao salvar o cliente. Verifique se o CPF/CNPJ já não está cadastrado.");
-                ListaCidades = _cidadeRepository.ListarTodos();
+                CarregarListas();
                 return Page();
             }
         }
 
-        // --- MÉTODOS DE CADASTRO RÁPIDO VIA AJAX ---
-
-        public JsonResult OnPostCriarPaisRapido(string paisNome, string paisSigla, string paisDdi, string paisMoeda)
+        private void CarregarListas()
         {
-            if (string.IsNullOrEmpty(paisNome)) return new JsonResult(new { sucesso = false });
-            var novoPais = new PaisModel { Pais = paisNome, Sigla = paisSigla, Ddi = paisDdi, Moeda = paisMoeda };
-            int novoId = _paisRepository.InserirRetornandoId(novoPais);
-            if (novoId > 0) return new JsonResult(new { sucesso = true, id = novoId, nome = novoPais.Pais });
-            return new JsonResult(new { sucesso = false });
+            // Carrega apenas o necessário para popular o formulário principal e os modais aninhados
+            ListaCidades = _cidadeRepository.ListarTodos();
+            ListaEstados = _estadoRepository.ListarTodos();
+            ListaPaises = _paisRepository.ListarTodos();
         }
 
-        public JsonResult OnPostCriarEstadoRapido(string estadoNome, string estadoUf, int idPais)
-        {
-            if (string.IsNullOrEmpty(estadoNome) || idPais <= 0) return new JsonResult(new { sucesso = false });
-            var novoEstado = new EstadoModel { Estado = estadoNome, Uf = estadoUf, IdPais = idPais };
-            int novoId = _estadoRepository.InserirRetornandoId(novoEstado);
-            // Caso tenha ajustado para NomePais, mude aqui também se necessário
-            if (novoId > 0) return new JsonResult(new { sucesso = true, id = novoId, nome = $"{novoEstado.Estado} - {novoEstado.Uf}" });
-            return new JsonResult(new { sucesso = false });
-        }
-
+        // ========================================================================
+        // MÉTODOS AJAX: GESTÃO RÁPIDA DE CIDADES
+        // ========================================================================
         public JsonResult OnPostCriarCidadeRapido(string cidadeNome, int idEstado)
         {
-            if (string.IsNullOrEmpty(cidadeNome) || idEstado <= 0) return new JsonResult(new { sucesso = false });
+            if (string.IsNullOrEmpty(cidadeNome) || idEstado <= 0)
+                return new JsonResult(new { sucesso = false, mensagem = "Dados incompletos." });
+
             var novaCidade = new CidadeModel { Cidade = cidadeNome, IdEstado = idEstado };
             int novoId = _cidadeRepository.InserirRetornandoId(novaCidade);
-            if (novoId > 0) return new JsonResult(new { sucesso = true, id = novoId, nome = novaCidade.Cidade });
-            return new JsonResult(new { sucesso = false });
+
+            if (novoId > 0)
+                return new JsonResult(new { sucesso = true, id = novoId, nome = cidadeNome.ToUpper() });
+
+            return new JsonResult(new { sucesso = false, mensagem = "Erro ao salvar cidade no banco." });
+        }
+
+        public JsonResult OnPostEditarCidadeRapido(int id, string cidadeNome, int idEstado)
+        {
+            if (id <= 0 || string.IsNullOrEmpty(cidadeNome) || idEstado <= 0)
+                return new JsonResult(new { sucesso = false, mensagem = "Dados inválidos." });
+
+            var cidadeEditada = new CidadeModel { IdCidade = id, Cidade = cidadeNome, IdEstado = idEstado };
+            bool sucesso = _cidadeRepository.Atualizar(cidadeEditada);
+
+            if (sucesso) return new JsonResult(new { sucesso = true, nome = cidadeNome.ToUpper() });
+            return new JsonResult(new { sucesso = false, mensagem = "Erro ao atualizar cidade." });
+        }
+
+        public JsonResult OnPostExcluirCidadeRapido(int id)
+        {
+            if (id <= 0) return new JsonResult(new { sucesso = false });
+
+            bool sucesso = _cidadeRepository.Excluir(id);
+            if (sucesso) return new JsonResult(new { sucesso = true });
+
+            return new JsonResult(new { sucesso = false, mensagem = "Não é possível excluir esta cidade pois ela já está vinculada a um Cliente/Fornecedor." });
+        }
+
+        // ========================================================================
+        // MÉTODOS AJAX: GESTÃO RÁPIDA DE ESTADOS
+        // ========================================================================
+        public JsonResult OnPostCriarEstadoRapido(string estadoNome, string estadoUf, int idPais)
+        {
+            if (string.IsNullOrEmpty(estadoNome) || string.IsNullOrEmpty(estadoUf) || idPais <= 0)
+                return new JsonResult(new { sucesso = false, mensagem = "Dados incompletos." });
+
+            var novoEstado = new EstadoModel { Estado = estadoNome, Uf = estadoUf, IdPais = idPais };
+            int novoId = _estadoRepository.InserirRetornandoId(novoEstado);
+
+            if (novoId > 0)
+                return new JsonResult(new { sucesso = true, id = novoId, nome = $"{estadoNome.ToUpper()} - {estadoUf.ToUpper()}" });
+
+            return new JsonResult(new { sucesso = false, mensagem = "Erro ao salvar estado no banco." });
+        }
+
+        public JsonResult OnPostEditarEstadoRapido(int id, string estadoNome, string estadoUf, int idPais)
+        {
+            if (id <= 0 || string.IsNullOrEmpty(estadoNome) || string.IsNullOrEmpty(estadoUf) || idPais <= 0)
+                return new JsonResult(new { sucesso = false, mensagem = "Dados inválidos." });
+
+            var estadoEditado = new EstadoModel { IdEstado = id, Estado = estadoNome, Uf = estadoUf, IdPais = idPais };
+            bool sucesso = _estadoRepository.Atualizar(estadoEditado);
+
+            if (sucesso) return new JsonResult(new { sucesso = true, nome = $"{estadoNome.ToUpper()} - {estadoUf.ToUpper()}" });
+            return new JsonResult(new { sucesso = false, mensagem = "Erro ao atualizar estado." });
+        }
+
+        public JsonResult OnPostExcluirEstadoRapido(int id)
+        {
+            if (id <= 0) return new JsonResult(new { sucesso = false });
+
+            bool sucesso = _estadoRepository.Excluir(id);
+            if (sucesso) return new JsonResult(new { sucesso = true });
+
+            return new JsonResult(new { sucesso = false, mensagem = "Não é possível excluir este estado pois ele já está vinculado a uma Cidade." });
+        }
+
+        // ========================================================================
+        // MÉTODOS AJAX: GESTÃO RÁPIDA DE PAÍSES
+        // ========================================================================
+        public JsonResult OnPostCriarPaisRapido(string paisNome, string paisSigla, string paisDdi, string paisMoeda)
+        {
+            if (string.IsNullOrEmpty(paisNome) || string.IsNullOrEmpty(paisSigla))
+                return new JsonResult(new { sucesso = false, mensagem = "Dados incompletos." });
+
+            var novoPais = new PaisModel { Pais = paisNome, Sigla = paisSigla, Ddi = paisDdi, Moeda = paisMoeda };
+            int novoId = _paisRepository.InserirRetornandoId(novoPais);
+
+            if (novoId > 0) return new JsonResult(new { sucesso = true, id = novoId, nome = novoPais.Pais.ToUpper() });
+            return new JsonResult(new { sucesso = false, mensagem = "Erro ao salvar país no banco." });
+        }
+
+        public JsonResult OnPostEditarPaisRapido(int id, string paisNome, string paisSigla, string paisDdi, string paisMoeda)
+        {
+            if (id <= 0 || string.IsNullOrEmpty(paisNome))
+                return new JsonResult(new { sucesso = false, mensagem = "Dados inválidos." });
+
+            var paisEditado = new PaisModel { IdPais = id, Pais = paisNome, Sigla = paisSigla, Ddi = paisDdi, Moeda = paisMoeda };
+            bool sucesso = _paisRepository.Atualizar(paisEditado);
+
+            if (sucesso) return new JsonResult(new { sucesso = true });
+            return new JsonResult(new { sucesso = false, mensagem = "Erro ao atualizar país." });
+        }
+
+        public JsonResult OnPostExcluirPaisRapido(int id)
+        {
+            if (id <= 0) return new JsonResult(new { sucesso = false });
+
+            bool sucesso = _paisRepository.Excluir(id);
+            if (sucesso) return new JsonResult(new { sucesso = true });
+
+            return new JsonResult(new { sucesso = false, mensagem = "Não é possível excluir este país pois ele já está vinculado a um Estado." });
         }
     }
 }

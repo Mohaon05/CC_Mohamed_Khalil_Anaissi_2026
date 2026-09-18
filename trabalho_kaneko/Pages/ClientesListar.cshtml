@@ -31,6 +31,9 @@
                             <th>Código</th>
                             <th>Cliente</th>
                             <th>CPF / CNPJ</th>
+                            <th>Cidade</th>
+                            <th>Data de Inclusão</th>
+                            <th>Última Alteração</th>
                             <th class="text-center" style="width: 150px;">Ações</th>
                         </tr>
                     </thead>
@@ -43,6 +46,10 @@
                                     <td>@item.IdCliente</td>
                                     <td class="fw-bold">@item.Cliente</td>
                                     <td>@item.CpfCnpj</td>
+                                    <td class="fw-bold">@item.NomeCidade</td>
+                                    <td>@item.DataInclusao</td>
+                                    <td>@item.DataAlteracao</td>
+
                                     <td class="text-center align-middle">
                                         <div class="d-flex justify-content-center gap-2">
                                             <a asp-page="/ClientesEditar" asp-route-id="@item.IdCliente" class="btn btn-warning btn-sm fw-bold">
