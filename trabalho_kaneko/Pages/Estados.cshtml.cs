@@ -20,8 +20,6 @@ namespace trabalho_kaneko.Pages
         [BindProperty]
         public EstadoModel Estado { get; set; }
 
-        // MODIFICADO: Removemos a ListaEstados daqui. 
-        // Mantemos APENAS a lista de países para o campo de seleção (Dropdown) funcionar.
         public List<PaisModel> ListaPaisesDisponiveis { get; set; } = new List<PaisModel>();
 
         public void OnGet()
@@ -50,7 +48,6 @@ namespace trabalho_kaneko.Pages
             {
                 TempData["MensagemSucesso"] = "Estado cadastrado com sucesso!";
 
-                // MODIFICADO: Redireciona para a nova tela de listagem de estados
                 return RedirectToPage("/EstadosListar");
             }
             else
@@ -63,11 +60,10 @@ namespace trabalho_kaneko.Pages
 
         private void CarregarListas()
         {
-            // MODIFICADO: Carrega apenas os países
             ListaPaisesDisponiveis = _paisRepository.ListarTodos();
         }
 
-        // Método blindado para receber dados via AJAX no Razor Pages
+
         public JsonResult OnPostCriarPaisRapido(string paisNome, string paisSigla, string paisDdi, string paisMoeda)
         {
             if (string.IsNullOrEmpty(paisNome) || string.IsNullOrEmpty(paisSigla))
@@ -75,7 +71,6 @@ namespace trabalho_kaneko.Pages
                 return new JsonResult(new { sucesso = false });
             }
 
-            // Montamos o objeto aqui dentro
             var novoPais = new PaisModel
             {
                 Pais = paisNome,
@@ -84,7 +79,6 @@ namespace trabalho_kaneko.Pages
                 Moeda = paisMoeda
             };
 
-            // Salva no banco e pega o ID
             int novoId = _paisRepository.InserirRetornandoId(novoPais);
 
             if (novoId > 0)
@@ -93,6 +87,30 @@ namespace trabalho_kaneko.Pages
             }
 
             return new JsonResult(new { sucesso = false });
+        }
+
+
+        public JsonResult OnPostEditarPaisRapido(int id, string paisNome, string paisSigla, string paisDdi, string paisMoeda)
+        {
+            if (id <= 0 || string.IsNullOrEmpty(paisNome)) return new JsonResult(new { sucesso = false, mensagem = "Dados inválidos." });
+
+            var paisEditado = new PaisModel { IdPais = id, Pais = paisNome, Sigla = paisSigla, Ddi = paisDdi, Moeda = paisMoeda };
+            bool sucesso = _paisRepository.Atualizar(paisEditado); // Certifique-se de ter um método Atualizar no repositório
+
+            if (sucesso) return new JsonResult(new { sucesso = true });
+            return new JsonResult(new { sucesso = false, mensagem = "Erro ao atualizar." });
+        }
+
+
+        public JsonResult OnPostExcluirPaisRapido(int id)
+        {
+            if (id <= 0) return new JsonResult(new { sucesso = false });
+
+            bool sucesso = _paisRepository.Excluir(id); // Certifique-se de ter um método Excluir no repositório
+
+            if (sucesso) return new JsonResult(new { sucesso = true });
+            // Se falhar, provavelmente é porque o país já está vinculado a um estado/fornecedor (Foreign Key)
+            return new JsonResult(new { sucesso = false, mensagem = "Não é possível excluir este país pois ele está em uso." });
         }
     }
 }

@@ -31,7 +31,6 @@
 
                     <div class="col-md-4">
                         <label class="form-label fw-bold campo-obrigatorio text-uppercase">Estado</label>
-
                         <div class="input-group flex-nowrap">
                             <select asp-for="Cidade.IdEstado" class="form-select" id="selectEstado" required>
                                 <option value="">-- Selecione um Estado --</option>
@@ -60,6 +59,9 @@
     </div>
 </div>
 
+<!-- ============================================== -->
+<!-- MODAL 1: GESTÃO E CADASTRO DE ESTADOS          -->
+<!-- ============================================== -->
 <div class="modal fade" id="modalNovoEstado" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content border-success shadow-lg">
@@ -77,12 +79,15 @@
                     </div>
                     <div class="card-body p-0">
                         <div class="table-responsive" style="max-height: 250px; overflow-y: auto;">
-                            <table class="table table-striped table-hover mb-0 text-center" style="font-size: 0.9rem;">
+                            <table class="table table-striped table-hover mb-0 text-center align-middle" style="font-size: 0.9rem;">
                                 <thead style="position: sticky; top: 0; z-index: 1;" class="table-dark">
                                     <tr>
                                         <th>CÓDIGO</th>
                                         <th>ESTADO</th>
                                         <th>UF</th>
+                                        <th>DATA DE INCLUSÃO</th>
+                                        <th>DATA DE ALTERAÇÃO</th>
+                                        <th>AÇÕES</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -90,10 +95,16 @@
                                     {
                                         foreach (var estado in Model.ListaEstados)
                                         {
-                                            <tr>
+                                            <tr id="linha-estado-@estado.IdEstado">
                                                 <td>@estado.IdEstado</td>
-                                                <td class="fw-bold text-uppercase">@estado.Estado</td>
-                                                <td class="text-uppercase">@estado.Uf</td>
+                                                <td class="fw-bold text-uppercase" id="td-estado-nome-@estado.IdEstado">@estado.Estado</td>
+                                                <td class="text-uppercase" id="td-estado-uf-@estado.IdEstado">@estado.Uf</td>
+                                                <td>@estado.DataInclusao</td>
+                                                <td id="td-estado-alteracao-@estado.IdEstado">@estado.DataAlteracao</td>
+                                                <td>
+                                                    <button type="button" class="btn btn-warning btn-sm fw-bold" onclick="abrirModalEditarEstado(@estado.IdEstado, '@estado.Estado', '@estado.Uf', @estado.IdPais)">EDITAR</button>
+                                                    <button type="button" class="btn btn-danger btn-sm fw-bold" onclick="excluirEstadoAjax(@estado.IdEstado)">EXCLUIR</button>
+                                                </td>
                                             </tr>
                                         }
                                     }
@@ -132,7 +143,6 @@
                                             }
                                         }
                                     </select>
-
                                     <button class="btn btn-outline-success fw-bold" type="button" onclick="abrirModalPaisSobreposto()">
                                         + Novo
                                     </button>
@@ -154,7 +164,57 @@
     </div>
 </div>
 
+<!-- ============================================== -->
+<!-- MODAL 2: EDITAR ESTADO (Abre por cima)         -->
+<!-- ============================================== -->
+<div class="modal fade" id="modalEditarEstado" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content border-warning shadow-lg">
+            <div class="modal-header bg-warning text-dark">
+                <h5 class="modal-title fw-bold text-uppercase">Editar Estado</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body bg-light">
+                <div class="card shadow-sm border-secondary bg-dark text-white rounded">
+                    <div class="card-body">
+                        <input type="hidden" id="editEstadoId" />
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold text-uppercase">Estado</label>
+                                <input type="text" id="editEstadoNome" class="form-control" maxlength="50" style="text-transform: uppercase;" required />
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label fw-bold text-uppercase">UF</label>
+                                <input type="text" id="editEstadoUf" class="form-control" maxlength="2" style="text-transform: uppercase;" required />
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold text-uppercase">País</label>
+                                <select class="form-select" id="editEstadoIdPais" required>
+                                    <option value="">-- Selecione --</option>
+                                    @if (Model.ListaPaises != null)
+                                    {
+                                        foreach (var pais in Model.ListaPaises)
+                                        {
+                                            <option value="@pais.IdPais">@pais.Pais</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary fw-bold" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-warning fw-bold text-dark" onclick="salvarEdicaoEstadoAjax()">Salvar Alterações</button>
+            </div>
+        </div>
+    </div>
+</div>
 
+<!-- ============================================== -->
+<!-- MODAL 3: GESTÃO E CADASTRO DE PAÍSES           -->
+<!-- ============================================== -->
 <div class="modal fade" id="modalNovoPais" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content border-success shadow-lg">
@@ -172,7 +232,7 @@
                     </div>
                     <div class="card-body p-0">
                         <div class="table-responsive" style="max-height: 250px; overflow-y: auto;">
-                            <table class="table table-striped table-hover mb-0 text-center" style="font-size: 0.9rem;">
+                            <table class="table table-striped table-hover mb-0 text-center align-middle" style="font-size: 0.9rem;">
                                 <thead style="position: sticky; top: 0; z-index: 1;" class="table-dark">
                                     <tr>
                                         <th>CÓDIGO</th>
@@ -180,6 +240,9 @@
                                         <th>SIGLA</th>
                                         <th>DDI</th>
                                         <th>MOEDA</th>
+                                        <th>DATA DE INCLUSÃO</th>
+                                        <th>DATA DE ALTERAÇÃO</th>
+                                        <th>AÇÕES</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -187,12 +250,18 @@
                                     {
                                         foreach (var pais in Model.ListaPaises)
                                         {
-                                            <tr>
+                                            <tr id="linha-pais-@pais.IdPais">
                                                 <td>@pais.IdPais</td>
-                                                <td class="fw-bold">@pais.Pais</td>
-                                                <td class="text-uppercase">@pais.Sigla</td>
-                                                <td>@pais.Ddi</td>
-                                                <td class="text-uppercase">@pais.Moeda</td>
+                                                <td class="fw-bold" id="td-pais-nome-@pais.IdPais">@pais.Pais</td>
+                                                <td class="text-uppercase" id="td-pais-sigla-@pais.IdPais">@pais.Sigla</td>
+                                                <td id="td-pais-ddi-@pais.IdPais">@pais.Ddi</td>
+                                                <td class="text-uppercase" id="td-pais-moeda-@pais.IdPais">@pais.Moeda</td>
+                                                <td>@pais.DataInclusao</td>
+                                                <td id="td-pais-alteracao-@pais.IdPais">@pais.DataAlteracao</td>
+                                                <td>
+                                                    <button type="button" class="btn btn-warning btn-sm fw-bold" onclick="abrirModalEditarPais(@pais.IdPais, '@pais.Pais', '@pais.Sigla', '@pais.Ddi', '@pais.Moeda')">EDITAR</button>
+                                                    <button type="button" class="btn btn-danger btn-sm fw-bold" onclick="excluirPaisAjax(@pais.IdPais)">EXCLUIR</button>
+                                                </td>
                                             </tr>
                                         }
                                     }
@@ -240,31 +309,201 @@
     </div>
 </div>
 
+<!-- ============================================== -->
+<!-- MODAL 4: EDITAR PAÍS (Abre por cima do outro)  -->
+<!-- ============================================== -->
+<div class="modal fade" id="modalEditarPais" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content border-warning shadow-lg">
+            <div class="modal-header bg-warning text-dark">
+                <h5 class="modal-title fw-bold text-uppercase">Editar País</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body bg-light">
+                <div class="card shadow-sm border-secondary bg-dark text-white rounded">
+                    <div class="card-body">
+                        <input type="hidden" id="editPaisId" />
+                        <div class="row g-3">
+                            <div class="col-md-5">
+                                <label class="form-label fw-bold text-uppercase">País</label>
+                                <input type="text" id="editPaisNome" class="form-control" maxlength="60" style="text-transform: uppercase;" required />
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label fw-bold text-uppercase">Sigla</label>
+                                <input type="text" id="editPaisSigla" class="form-control" maxlength="3" style="text-transform: uppercase;" required />
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label fw-bold text-uppercase">DDI</label>
+                                <input type="text" id="editPaisDdi" class="form-control" maxlength="10" required />
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label fw-bold text-uppercase">Moeda</label>
+                                <input type="text" id="editPaisMoeda" class="form-control" maxlength="50" style="text-transform: uppercase;" required />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary fw-bold" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-warning fw-bold text-dark" onclick="salvarEdicaoPaisAjax()">Salvar Alterações</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 @section Scripts {
     <script>
-        // Correção de Bug do Bootstrap: Mantém o scroll no modal de Estado quando o de País fecha
+        // Correção de Bug do Bootstrap: Mantém o scroll no modal de Estado quando outros modais fecham
         document.getElementById('modalNovoPais').addEventListener('hidden.bs.modal', function () {
-            if (document.getElementById('modalNovoEstado').classList.contains('show')) {
-                document.body.classList.add('modal-open');
-            }
+            if (document.getElementById('modalNovoEstado').classList.contains('show')) document.body.classList.add('modal-open');
+        });
+        document.getElementById('modalEditarEstado').addEventListener('hidden.bs.modal', function () {
+            if (document.getElementById('modalNovoEstado').classList.contains('show')) document.body.classList.add('modal-open');
         });
 
-        function abrirModalPaisSobreposto() {
-            // 1. Abre o modal sem acionar o gatilho de fechamento do Bootstrap
-            var modalPais = new bootstrap.Modal(document.getElementById('modalNovoPais'));
-            modalPais.show();
+        const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value || '';
+        const dataAtualBR = () => new Date().toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute:'2-digit' });
 
-            // 2. Coloca o modal de País numa camada superior (z-index alto)
-            document.getElementById('modalNovoPais').style.zIndex = '1060';
+        // =========================================================
+        // SCRIPTS PARA ESTADOS
+        // =========================================================
+        function salvarEstadoAjax() {
+            const nome = document.getElementById('modalEstadoNome').value;
+            const uf = document.getElementById('modalEstadoUf').value;
+            const idPais = document.getElementById('selectPaisModalEstado').value;
 
-            // 3. Ajusta o fundo escuro (backdrop) para ficar entre o modal de Estado e o de País
+            if(!nome || !uf || !idPais) { alert('Preencha todos os campos do estado (incluindo o País)!'); return; }
+
+            const formData = new URLSearchParams({ estadoNome: nome, estadoUf: uf, idPais: idPais });
+
+            fetch('?handler=CriarEstadoRapido', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'RequestVerificationToken': token },
+                body: formData.toString()
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.sucesso) {
+                    const dropdownPais = document.getElementById('selectPaisModalEstado');
+                    const nomeDoPais = dropdownPais.options[dropdownPais.selectedIndex].text;
+                    const textoCompleto = `${data.nome} - ${nomeDoPais.toUpperCase()}`;
+
+                    const select = document.getElementById('selectEstado');
+                    if(select) select.add(new Option(textoCompleto, data.id, true, true));
+
+                    const tbody = document.querySelector('#modalNovoEstado tbody');
+                    if(tbody) {
+                        tbody.insertAdjacentHTML('beforeend', `
+                            <tr id="linha-estado-${data.id}">
+                                <td>${data.id}</td>
+                                <td class="fw-bold text-uppercase" id="td-estado-nome-${data.id}">${nome.toUpperCase()}</td>
+                                <td class="text-uppercase" id="td-estado-uf-${data.id}">${uf.toUpperCase()}</td>
+                                <td>${dataAtualBR()}</td>
+                                <td id="td-estado-alteracao-${data.id}"></td>
+                                <td>
+                                    <button type="button" class="btn btn-warning btn-sm fw-bold" onclick="abrirModalEditarEstado(${data.id}, '${nome.toUpperCase()}', '${uf.toUpperCase()}', ${idPais})">EDITAR</button>
+                                    <button type="button" class="btn btn-danger btn-sm fw-bold" onclick="excluirEstadoAjax(${data.id})">EXCLUIR</button>
+                                </td>
+                            </tr>`);
+                    }
+
+                    document.getElementById('modalEstadoNome').value = '';
+                    document.getElementById('modalEstadoUf').value = '';
+                    document.getElementById('modalEstadoErro').classList.add('d-none');
+                } else {
+                    document.getElementById('modalEstadoErro').classList.remove('d-none');
+                }
+            })
+            .catch(err => console.error(err));
+        }
+
+        function abrirModalEditarEstado(id, nome, uf, idPais) {
+            document.getElementById('editEstadoId').value = id;
+            document.getElementById('editEstadoNome').value = nome;
+            document.getElementById('editEstadoUf').value = uf;
+            document.getElementById('editEstadoIdPais').value = idPais;
+
+            var modal = new bootstrap.Modal(document.getElementById('modalEditarEstado'));
+            modal.show();
+            document.getElementById('modalEditarEstado').style.zIndex = '1060';
             setTimeout(() => {
                 const backdrops = document.querySelectorAll('.modal-backdrop');
-                if (backdrops.length > 1) {
-                    backdrops[backdrops.length - 1].style.zIndex = '1059';
-                }
-            }, 100); // 100ms garante que o fundo já foi criado na tela
+                if (backdrops.length > 1) backdrops[backdrops.length - 1].style.zIndex = '1059';
+            }, 100);
+        }
+
+        function salvarEdicaoEstadoAjax() {
+            const id = document.getElementById('editEstadoId').value;
+            const nome = document.getElementById('editEstadoNome').value;
+            const uf = document.getElementById('editEstadoUf').value;
+            const idPais = document.getElementById('editEstadoIdPais').value;
+
+            if(!nome || !uf || !idPais) { alert('Preencha os campos!'); return; }
+
+            const formData = new URLSearchParams({ id: id, estadoNome: nome, estadoUf: uf, idPais: idPais });
+
+            fetch('?handler=EditarEstadoRapido', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'RequestVerificationToken': token },
+                body: formData.toString()
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.sucesso) {
+                    document.getElementById('td-estado-nome-' + id).innerText = nome.toUpperCase();
+                    document.getElementById('td-estado-uf-' + id).innerText = uf.toUpperCase();
+                    document.getElementById('td-estado-alteracao-' + id).innerText = dataAtualBR();
+
+                    const dropdownPais = document.getElementById('editEstadoIdPais');
+                    const nomeDoPais = dropdownPais.options[dropdownPais.selectedIndex].text;
+                    const textoCompleto = `${data.nome} - ${nomeDoPais.toUpperCase()}`;
+
+                    const select = document.getElementById('selectEstado');
+                    if (select) {
+                        for (let i = 0; i < select.options.length; i++) {
+                            if (select.options[i].value === id) { select.options[i].text = textoCompleto; break; }
+                        }
+                    }
+
+                    bootstrap.Modal.getInstance(document.getElementById('modalEditarEstado')).hide();
+                } else alert(data.mensagem);
+            });
+        }
+
+        function excluirEstadoAjax(id) {
+            if (!confirm('Tem certeza que deseja excluir este estado?')) return;
+            const formData = new URLSearchParams({ id: id });
+            fetch('?handler=ExcluirEstadoRapido', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'RequestVerificationToken': token },
+                body: formData.toString()
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.sucesso) {
+                    document.getElementById('linha-estado-' + id).remove();
+                    const select = document.getElementById('selectEstado');
+                    if (select) {
+                        for (let i = 0; i < select.options.length; i++) {
+                            if (select.options[i].value == id) { select.remove(i); break; }
+                        }
+                    }
+                } else alert(data.mensagem);
+            });
+        }
+
+        // =========================================================
+        // SCRIPTS PARA PAÍSES
+        // =========================================================
+        function abrirModalPaisSobreposto() {
+            var modalPais = new bootstrap.Modal(document.getElementById('modalNovoPais'));
+            modalPais.show();
+            document.getElementById('modalNovoPais').style.zIndex = '1060';
+            setTimeout(() => {
+                const backdrops = document.querySelectorAll('.modal-backdrop');
+                if (backdrops.length > 1) backdrops[backdrops.length - 1].style.zIndex = '1059';
+            }, 100);
         }
 
         function salvarPaisAjax() {
@@ -273,11 +512,8 @@
             const ddi = document.getElementById('modalPaisDdi').value;
             const moeda = document.getElementById('modalPaisMoeda').value;
 
-            if(!nome || !sigla || !ddi || !moeda) {
-                alert('Preencha todos os campos do país!'); return;
-            }
+            if(!nome || !sigla || !ddi || !moeda) { alert('Preencha todos os campos do país!'); return; }
 
-            const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value || '';
             const formData = new URLSearchParams({ paisNome: nome, paisSigla: sigla, paisDdi: ddi, paisMoeda: moeda });
 
             fetch('?handler=CriarPaisRapido', {
@@ -288,89 +524,117 @@
             .then(res => res.json())
             .then(data => {
                 if (data.sucesso) {
-                    const select = document.getElementById('selectPaisModalEstado');
-                    if(select) select.add(new Option(data.nome, data.id, true, true));
+                    const selectEstado = document.getElementById('selectPaisModalEstado');
+                    const selectEditEstado = document.getElementById('editEstadoIdPais');
+                    
+                    if(selectEstado) selectEstado.add(new Option(data.nome, data.id, true, true));
+                    if(selectEditEstado) selectEditEstado.add(new Option(data.nome, data.id, false, false));
 
                     const tbody = document.querySelector('#modalNovoPais tbody');
                     if(tbody) {
-                        const novaLinha = `
-                            <tr>
+                        tbody.insertAdjacentHTML('beforeend', `
+                            <tr id="linha-pais-${data.id}">
                                 <td>${data.id}</td>
-                                <td class="fw-bold">${data.nome.toUpperCase()}</td>
-                                <td class="text-uppercase">${sigla.toUpperCase()}</td>
-                                <td>${ddi}</td>
-                                <td class="text-uppercase">${moeda.toUpperCase()}</td>
-                            </tr>`;
-                        tbody.insertAdjacentHTML('beforeend', novaLinha);
+                                <td class="fw-bold" id="td-pais-nome-${data.id}">${nome.toUpperCase()}</td>
+                                <td class="text-uppercase" id="td-pais-sigla-${data.id}">${sigla.toUpperCase()}</td>
+                                <td id="td-pais-ddi-${data.id}">${ddi}</td>
+                                <td class="text-uppercase" id="td-pais-moeda-${data.id}">${moeda.toUpperCase()}</td>
+                                <td>${dataAtualBR()}</td>
+                                <td id="td-pais-alteracao-${data.id}"></td>
+                                <td>
+                                    <button type="button" class="btn btn-warning btn-sm fw-bold" onclick="abrirModalEditarPais(${data.id}, '${nome.toUpperCase()}', '${sigla.toUpperCase()}', '${ddi}', '${moeda.toUpperCase()}')">EDITAR</button>
+                                    <button type="button" class="btn btn-danger btn-sm fw-bold" onclick="excluirPaisAjax(${data.id})">EXCLUIR</button>
+                                </td>
+                            </tr>`);
                     }
-
+                    
                     document.getElementById('modalPaisNome').value = '';
                     document.getElementById('modalPaisSigla').value = '';
                     document.getElementById('modalPaisDdi').value = '';
                     document.getElementById('modalPaisMoeda').value = '';
-
-                }
+                    document.getElementById('modalPaisErro').classList.add('d-none');
+                } else document.getElementById('modalPaisErro').classList.remove('d-none');
             })
             .catch(err => console.error(err));
         }
 
-        function salvarEstadoAjax() {
-            const nome = document.getElementById('modalEstadoNome').value;
-            const uf = document.getElementById('modalEstadoUf').value;
-            const idPais = document.getElementById('selectPaisModalEstado').value;
+        function abrirModalEditarPais(id, nome, sigla, ddi, moeda) {
+            document.getElementById('editPaisId').value = id;
+            document.getElementById('editPaisNome').value = nome;
+            document.getElementById('editPaisSigla').value = sigla;
+            document.getElementById('editPaisDdi').value = ddi;
+            document.getElementById('editPaisMoeda').value = moeda;
 
-            if(!nome || !uf || !idPais) {
-                alert('Preencha todos os campos do estado (incluindo o País)!'); return;
-            }
+            var modal = new bootstrap.Modal(document.getElementById('modalEditarPais'));
+            modal.show();
+            document.getElementById('modalEditarPais').style.zIndex = '1070';
+            setTimeout(() => {
+                const backdrops = document.querySelectorAll('.modal-backdrop');
+                if (backdrops.length > 2) backdrops[backdrops.length - 1].style.zIndex = '1069';
+            }, 100);
+        }
 
-            const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value || '';
-            const formData = new URLSearchParams({ estadoNome: nome, estadoUf: uf, idPais: idPais });
+        function salvarEdicaoPaisAjax() {
+            const id = document.getElementById('editPaisId').value;
+            const nome = document.getElementById('editPaisNome').value;
+            const sigla = document.getElementById('editPaisSigla').value;
+            const ddi = document.getElementById('editPaisDdi').value;
+            const moeda = document.getElementById('editPaisMoeda').value;
 
-            fetch('?handler=CriarEstadoRapido', {
+            if(!nome || !sigla || !ddi || !moeda) { alert('Preencha os campos!'); return; }
+
+            const formData = new URLSearchParams({ id: id, paisNome: nome, paisSigla: sigla, paisDdi: ddi, paisMoeda: moeda });
+
+            fetch('?handler=EditarPaisRapido', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'RequestVerificationToken': token },
                 body: formData.toString()
             })
-            .then(res => {
-                if (!res.ok) throw new Error('Erro 400/500 no C#');
-                return res.json();
-            })
+            .then(res => res.json())
             .then(data => {
-
                 if (data.sucesso) {
-                    // Descobre qual país estava selecionado no modal
-                    const dropdownPais = document.getElementById('selectPaisModalEstado');
-                    const nomeDoPais = dropdownPais.options[dropdownPais.selectedIndex].text;
+                    document.getElementById('td-pais-nome-' + id).innerText = nome.toUpperCase();
+                    document.getElementById('td-pais-sigla-' + id).innerText = sigla.toUpperCase();
+                    document.getElementById('td-pais-ddi-' + id).innerText = ddi;
+                    document.getElementById('td-pais-moeda-' + id).innerText = moeda.toUpperCase();
+                    document.getElementById('td-pais-alteracao-' + id).innerText = dataAtualBR();
 
-                    // 1. Atualiza o select principal que está lá atrás na tela de Cidades
-                    const select = document.getElementById('selectEstado');
-                    if(select) {
-                        // Junta o "Estado - UF" (que vem do data.nome) com o País
-                        const textoCompleto = `${data.nome} - ${nomeDoPais.toUpperCase()}`;
-                        select.add(new Option(textoCompleto, data.id, true, true));
-                    }
+                    const selects = [document.getElementById('selectPaisModalEstado'), document.getElementById('editEstadoIdPais')];
+                    selects.forEach(select => {
+                        if (select) {
+                            for (let i = 0; i < select.options.length; i++) {
+                                if (select.options[i].value === id) { select.options[i].text = nome.toUpperCase(); break; }
+                            }
+                        }
+                    });
 
-                    // 2. Adiciona o novo estado na tabela do modal na hora!
-                    const tbody = document.querySelector('#modalNovoEstado tbody');
-                    if(tbody) {
-                        const novaLinha = `
-                            <tr>
-                                <td>${data.id}</td>
-                                <td class="fw-bold text-uppercase">${nome.toUpperCase()}</td>
-                                <td class="text-uppercase">${uf.toUpperCase()}</td>
-                            </tr>`;
-                        tbody.insertAdjacentHTML('beforeend', novaLinha);
-                    }
-                    // 3. Limpa os campos
-                    document.getElementById('modalEstadoNome').value = '';
-                    document.getElementById('modalEstadoUf').value = '';
-                }
-            })
-            .catch(err => {
-                console.error(err);
-                alert('Erro de comunicação. O método C# existe e está acessível?');
+                    bootstrap.Modal.getInstance(document.getElementById('modalEditarPais')).hide();
+                } else alert(data.mensagem);
             });
         }
 
+        function excluirPaisAjax(id) {
+            if (!confirm('Tem certeza que deseja excluir este país?')) return;
+            const formData = new URLSearchParams({ id: id });
+            fetch('?handler=ExcluirPaisRapido', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'RequestVerificationToken': token },
+                body: formData.toString()
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.sucesso) {
+                    document.getElementById('linha-pais-' + id).remove();
+                    const selects = [document.getElementById('selectPaisModalEstado'), document.getElementById('editEstadoIdPais')];
+                    selects.forEach(select => {
+                        if (select) {
+                            for (let i = 0; i < select.options.length; i++) {
+                                if (select.options[i].value == id) { select.remove(i); break; }
+                            }
+                        }
+                    });
+                } else alert(data.mensagem);
+            });
+        }
     </script>
 }

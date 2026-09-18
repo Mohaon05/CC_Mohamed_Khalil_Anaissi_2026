@@ -72,7 +72,10 @@ namespace trabalho_kaneko.Pages
             ListaPaisesDisponiveis = _paisRepository.ListarTodos();
         }
 
-        // Método para salvar País direto da tela de Editar Estado
+        // ========================================================================
+        // MÉTODOS AJAX: GESTÃO RÁPIDA DE PAÍSES DENTRO DA TELA DE EDITAR ESTADO
+        // ========================================================================
+
         public JsonResult OnPostCriarPaisRapido(string paisNome, string paisSigla, string paisDdi, string paisMoeda)
         {
             if (string.IsNullOrEmpty(paisNome) || string.IsNullOrEmpty(paisSigla))
@@ -96,6 +99,37 @@ namespace trabalho_kaneko.Pages
             }
 
             return new JsonResult(new { sucesso = false });
+        }
+
+        public JsonResult OnPostEditarPaisRapido(int id, string paisNome, string paisSigla, string paisDdi, string paisMoeda)
+        {
+            if (id <= 0 || string.IsNullOrEmpty(paisNome))
+                return new JsonResult(new { sucesso = false, mensagem = "Dados inválidos." });
+
+            var paisEditado = new PaisModel
+            {
+                IdPais = id,
+                Pais = paisNome,
+                Sigla = paisSigla,
+                Ddi = paisDdi,
+                Moeda = paisMoeda
+            };
+
+            bool sucesso = _paisRepository.Atualizar(paisEditado);
+
+            if (sucesso) return new JsonResult(new { sucesso = true });
+            return new JsonResult(new { sucesso = false, mensagem = "Erro ao atualizar país no banco." });
+        }
+
+        public JsonResult OnPostExcluirPaisRapido(int id)
+        {
+            if (id <= 0) return new JsonResult(new { sucesso = false });
+
+            bool sucesso = _paisRepository.Excluir(id);
+
+            if (sucesso) return new JsonResult(new { sucesso = true });
+
+            return new JsonResult(new { sucesso = false, mensagem = "Não é possível excluir este país pois ele já está vinculado a outro cadastro (como a um Estado)." });
         }
     }
 }

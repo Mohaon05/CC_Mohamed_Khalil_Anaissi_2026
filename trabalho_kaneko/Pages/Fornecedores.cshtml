@@ -6,7 +6,7 @@
 
 <div class="container mt-4">
     <div class="mb-3">
-        <a asp-page="/FornecedoresListar" class="btn btn-secondary btn-sm">Voltar para a Lista</a>
+        <a asp-page="/FornecedoresListar" class="btn btn-danger btn-sm">Voltar para a Lista</a>
     </div>
 
     <div class="card shadow-sm border-success">
@@ -123,6 +123,7 @@
     </div>
 </div>
 
+
 <div class="modal fade" id="modalNovaCidade" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content border-success shadow-lg">
@@ -132,7 +133,7 @@
             </div>
             <div class="modal-body bg-light">
                 <div class="card shadow-sm border-secondary mb-4">
-                    <div class="card-header bg-secondary text-white fw-bold text-uppercase">Cidades Cadastradas</div>
+                    <div class="card-header bg-dark text-white fw-bold text-uppercase">Cidades Cadastradas</div>
                     <div class="card-body p-0">
                         <div class="table-responsive" style="max-height: 250px; overflow-y: auto;">
                             <table class="table table-striped table-hover mb-0 text-center" style="font-size: 0.9rem;">
@@ -197,7 +198,7 @@
             </div>
             <div class="modal-body bg-light">
                 <div class="card shadow-sm border-secondary mb-4">
-                    <div class="card-header bg-secondary text-white fw-bold text-uppercase">Estados Cadastrados</div>
+                    <div class="card-header bg-dark text-white fw-bold text-uppercase">Estados Cadastrados</div>
                     <div class="card-body p-0">
                         <div class="table-responsive" style="max-height: 250px; overflow-y: auto;">
                             <table class="table table-striped table-hover mb-0 text-center" style="font-size: 0.9rem;">
@@ -266,7 +267,7 @@
             </div>
             <div class="modal-body bg-light">
                 <div class="card shadow-sm border-secondary mb-4">
-                    <div class="card-header bg-secondary text-white fw-bold text-uppercase">Países Cadastrados</div>
+                    <div class="card-header bg-dark text-white fw-bold text-uppercase">Países Cadastrados</div>
                     <div class="card-body p-0">
                         <div class="table-responsive" style="max-height: 250px; overflow-y: auto;">
                             <table class="table table-striped table-hover mb-0 text-center" style="font-size: 0.9rem;">
@@ -366,7 +367,6 @@
                     document.getElementById('modalPaisSigla').value = '';
                     document.getElementById('modalPaisDdi').value = '';
                     document.getElementById('modalPaisMoeda').value = '';
-                    alert('País salvo com sucesso!');
                 } else alert('Erro ao salvar país.');
             });
         }
@@ -399,7 +399,6 @@
                     }
                     document.getElementById('modalEstadoNome').value = '';
                     document.getElementById('modalEstadoUf').value = '';
-                    alert('Estado salvo com sucesso!');
                 } else alert('Erro ao salvar estado.');
             });
         }
@@ -425,7 +424,6 @@
                         tbody.insertAdjacentHTML('beforeend', `<tr><td>${data.id}</td><td class="fw-bold text-uppercase">${nome.toUpperCase()}</td></tr>`);
                     }
                     document.getElementById('modalCidadeNome').value = '';
-                    alert('Cidade salva com sucesso!');
                 } else alert('Erro ao salvar cidade.');
             });
         }

@@ -37,14 +37,14 @@ namespace trabalho_kaneko.Pages
 
         public void OnGet()
         {
-            ListaCidades = _cidadeRepository.ListarTodos();
+            CarregarListas();
         }
 
         public IActionResult OnPost()
         {
             if (!ModelState.IsValid)
             {
-                ListaCidades = _cidadeRepository.ListarTodos();
+                CarregarListas();
                 return Page();
             }
 
@@ -55,9 +55,44 @@ namespace trabalho_kaneko.Pages
                 return RedirectToPage("/FornecedoresListar");
             }
 
-            ModelState.AddModelError(string.Empty, "Erro ao salvar. Verifique se o CPF/CNPJ já existe.");
-            ListaCidades = _cidadeRepository.ListarTodos();
+            ModelState.AddModelError(string.Empty, "Erro ao salvar o Fornecedor. Verifique se o CPF já não existe.");
+            CarregarListas();
             return Page();
+        }
+
+        private void CarregarListas()
+        {
+            ListaCidades = _cidadeRepository.ListarTodos();
+            ListaEstados = _estadoRepository.ListarTodos();
+            ListaPaises = _paisRepository.ListarTodos();
+        }
+
+        public JsonResult OnPostCriarCidadeRapido(string cidadeNome, int idEstado)
+        {
+            if (string.IsNullOrEmpty(cidadeNome) || idEstado <= 0) return new JsonResult(new { sucesso = false });
+            var novaCidade = new CidadeModel { Cidade = cidadeNome, IdEstado = idEstado };
+            int novoId = _cidadeRepository.InserirRetornandoId(novaCidade);
+            if (novoId > 0) return new JsonResult(new { sucesso = true, id = novoId, nome = novaCidade.Cidade });
+            return new JsonResult(new { sucesso = false });
+        }
+
+        public JsonResult OnPostCriarEstadoRapido(string estadoNome, string estadoUf, int idPais)
+        {
+            if (string.IsNullOrEmpty(estadoNome) || idPais <= 0) return new JsonResult(new { sucesso = false });
+            var novoEstado = new EstadoModel { Estado = estadoNome, Uf = estadoUf, IdPais = idPais };
+            int novoId = _estadoRepository.InserirRetornandoId(novoEstado);
+            if (novoId > 0) return new JsonResult(new { sucesso = true, id = novoId, nome = novoEstado.Estado });
+            return new JsonResult(new { sucesso = false });
+        }
+
+        public JsonResult OnPostCriarPaisRapido(string paisNome, string paisSigla, string paisDdi, string paisMoeda)
+        {
+            if (string.IsNullOrEmpty(paisNome)) return new JsonResult(new { sucesso = false });
+            var novoPais = new PaisModel { Pais = paisNome, Sigla = paisSigla, Ddi = paisDdi, Moeda = paisMoeda };
+            int novoId = _paisRepository.InserirRetornandoId(novoPais);
+            if (novoId > 0) return new JsonResult(new { sucesso = true, id = novoId, nome = novoPais.Pais });
+            return new JsonResult(new { sucesso = false });
+
         }
     }
 }
