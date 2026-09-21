@@ -78,7 +78,7 @@
                                     }
                                 }
                             </select>
-                            <button class="btn btn-outline-success fw-bold" type="button" data-bs-toggle="modal" data-bs-target="#modalNovaCidade">
+                            <button class="btn btn-outline-warning fw-bold" type="button" data-bs-toggle="modal" data-bs-target="#modalNovaCidade">
                                 + Novo
                             </button>
                         </div>
@@ -120,8 +120,8 @@
 <!-- ============================================== -->
 <div class="modal fade" id="modalNovaCidade" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl">
-        <div class="modal-content border-success shadow-lg">
-            <div class="modal-header bg-success text-white">
+        <div class="modal-content border-warning shadow-lg">
+            <div class="modal-header bg-warning text-white">
                 <h5 class="modal-title fw-bold text-uppercase">Gestão Rápida de Cidades</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -165,8 +165,8 @@
                     </div>
                 </div>
 
-                <div class="card shadow-sm border-success">
-                    <div class="card-header bg-success text-white fw-bold text-uppercase">+ Nova Cidade</div>
+                <div class="card shadow-sm border-warning">
+                    <div class="card-header bg-warning text-white fw-bold text-uppercase">+ Nova Cidade</div>
                     <div class="card-body">
                         <div class="row g-3">
                             <div class="col-md-7">
@@ -186,7 +186,7 @@
                                             }
                                         }
                                     </select>
-                                    <button class="btn btn-outline-success fw-bold" type="button" onclick="abrirModalEstadoSobreposto()">+ Novo</button>
+                                    <button class="btn btn-outline-warning fw-bold" type="button" onclick="abrirModalEstadoSobreposto()">+ Novo</button>
                                 </div>
                             </div>
                         </div>
@@ -195,7 +195,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary fw-bold" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-success fw-bold" onclick="salvarCidadeAjax()">Salvar Cidade</button>
+                <button type="button" class="btn btn-warning fw-bold" onclick="salvarCidadeAjax()">Salvar Cidade</button>
             </div>
         </div>
     </div>
@@ -250,8 +250,8 @@
 <!-- ============================================== -->
 <div class="modal fade" id="modalNovoEstado" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl">
-        <div class="modal-content border-success shadow-lg">
-            <div class="modal-header bg-success text-white">
+        <div class="modal-content border-warning shadow-lg">
+            <div class="modal-header bg-warning text-white">
                 <h5 class="modal-title fw-bold text-uppercase">Gestão Rápida de Estados</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -295,8 +295,8 @@
                     </div>
                 </div>
 
-                <div class="card shadow-sm border-success">
-                    <div class="card-header bg-success text-white fw-bold text-uppercase">+ Novo Estado</div>
+                <div class="card shadow-sm border-warning">
+                    <div class="card-header bg-warning text-white fw-bold text-uppercase">+ Novo Estado</div>
                     <div class="card-body">
                         <div class="row g-3">
                             <div class="col-md-6">
@@ -320,7 +320,7 @@
                                             }
                                         }
                                     </select>
-                                    <button class="btn btn-outline-success fw-bold" type="button" onclick="abrirModalPaisSobreposto()">+ Novo</button>
+                                    <button class="btn btn-outline-warning fw-bold" type="button" onclick="abrirModalPaisSobreposto()">+ Novo</button>
                                 </div>
                             </div>
                         </div>
@@ -329,7 +329,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary fw-bold" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-success fw-bold" onclick="salvarEstadoAjax()">Salvar Estado</button>
+                <button type="button" class="btn btn-warning fw-bold" onclick="salvarEstadoAjax()">Salvar Estado</button>
             </div>
         </div>
     </div>
@@ -388,8 +388,8 @@
 <!-- ============================================== -->
 <div class="modal fade" id="modalNovoPais" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl">
-        <div class="modal-content border-success shadow-lg">
-            <div class="modal-header bg-success text-white">
+        <div class="modal-content border-warning shadow-lg">
+            <div class="modal-header bg-warning text-white">
                 <h5 class="modal-title fw-bold text-uppercase">Gestão Rápida de Países</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -437,8 +437,8 @@
                     </div>
                 </div>
 
-                <div class="card shadow-sm border-success">
-                    <div class="card-header bg-success text-white fw-bold text-uppercase">+ Novo País</div>
+                <div class="card shadow-sm border-warning">
+                    <div class="card-header bg-warning text-white fw-bold text-uppercase">+ Novo País</div>
                     <div class="card-body">
                         <div class="row g-3">
                             <div class="col-md-5">
@@ -463,7 +463,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary fw-bold" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-success fw-bold" onclick="salvarPaisAjax()">Salvar País</button>
+                <button type="button" class="btn btn-warning fw-bold" onclick="salvarPaisAjax()">Salvar País</button>
             </div>
         </div>
     </div>
@@ -531,6 +531,7 @@
             const now = new Date();
             return now.toLocaleDateString('pt-BR') + ' ' + now.toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'});
         };
+
 
         // =========================================================
         // SCRIPTS PARA CIDADES
@@ -643,6 +644,7 @@
                 } else alert(data.mensagem);
             });
         }
+
 
         // =========================================================
         // SCRIPTS PARA ESTADOS
@@ -768,6 +770,7 @@
                 } else alert(data.mensagem);
             });
         }
+
 
         // =========================================================
         // SCRIPTS PARA PAÍSES
