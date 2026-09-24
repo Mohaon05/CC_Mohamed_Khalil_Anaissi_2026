@@ -63,5 +63,79 @@ namespace trabalho_kaneko.Pages
             ListaMarcas = _marcaRepository.ListarTodos();
             ListaGrupos = _grupoRepository.ListarTodos();
         }
+
+        // ========================================================================
+        // MÉTODOS AJAX: GESTÃO RÁPIDA DE GRUPOS
+        // ========================================================================
+        public JsonResult OnPostCriarGrupoRapido(string grupoNome)
+        {
+            if (string.IsNullOrEmpty(grupoNome))
+                return new JsonResult(new { sucesso = false, mensagem = "Dados incompletos." });
+
+            var novoGrupo = new GrupoModel { Grupo = grupoNome };
+            int novoId = _grupoRepository.InserirRetornandoId(novoGrupo);
+
+            if (novoId > 0) return new JsonResult(new { sucesso = true, id = novoId, nome = novoGrupo.Grupo.ToUpper() });
+            return new JsonResult(new { sucesso = false, mensagem = "Erro ao salvar grupo no banco." });
+        }
+
+        public JsonResult OnPostEditarGrupoRapido(int id, string grupoNome)
+        {
+            if (id <= 0 || string.IsNullOrEmpty(grupoNome))
+                return new JsonResult(new { sucesso = false, mensagem = "Dados inválidos." });
+
+            var grupoEditado = new GrupoModel { IdGrupo = id, Grupo = grupoNome };
+            bool sucesso = _grupoRepository.Atualizar(grupoEditado);
+
+            if (sucesso) return new JsonResult(new { sucesso = true });
+            return new JsonResult(new { sucesso = false, mensagem = "Erro ao atualizar grupo." });
+        }
+
+        public JsonResult OnPostExcluirGrupoRapido(int id)
+        {
+            if (id <= 0) return new JsonResult(new { sucesso = false });
+
+            bool sucesso = _grupoRepository.Excluir(id);
+            if (sucesso) return new JsonResult(new { sucesso = true });
+
+            return new JsonResult(new { sucesso = false, mensagem = "Não é possível excluir este grupo pois ele já está vinculado a um Produto." });
+        }
+
+        // ========================================================================
+        // MÉTODOS AJAX: GESTÃO RÁPIDA DE MARCAS
+        // ========================================================================
+        public JsonResult OnPostCriarMarcaRapido(string marcaNome)
+        {
+            if (string.IsNullOrEmpty(marcaNome))
+                return new JsonResult(new { sucesso = false, mensagem = "Dados incompletos." });
+
+            var novaMarca = new MarcaModel { Marca = marcaNome };
+            int novoId = _marcaRepository.InserirRetornandoId(novaMarca);
+
+            if (novoId > 0) return new JsonResult(new { sucesso = true, id = novoId, nome = novaMarca.Marca.ToUpper() });
+            return new JsonResult(new { sucesso = false, mensagem = "Erro ao salvar marca no banco." });
+        }
+
+        public JsonResult OnPostEditarMarcaRapido(int id, string marcaNome)
+        {
+            if (id <= 0 || string.IsNullOrEmpty(marcaNome))
+                return new JsonResult(new { sucesso = false, mensagem = "Dados inválidos." });
+
+            var marcaEditada = new MarcaModel { IdMarca = id, Marca = marcaNome };
+            bool sucesso = _marcaRepository.Atualizar(marcaEditada);
+
+            if (sucesso) return new JsonResult(new { sucesso = true });
+            return new JsonResult(new { sucesso = false, mensagem = "Erro ao atualizar marca." });
+        }
+
+        public JsonResult OnPostExcluirMarcaRapido(int id)
+        {
+            if (id <= 0) return new JsonResult(new { sucesso = false });
+
+            bool sucesso = _marcaRepository.Excluir(id);
+            if (sucesso) return new JsonResult(new { sucesso = true });
+
+            return new JsonResult(new { sucesso = false, mensagem = "Não é possível excluir esta marca pois ela já está vinculada a um Produto." });
+        }
     }
 }

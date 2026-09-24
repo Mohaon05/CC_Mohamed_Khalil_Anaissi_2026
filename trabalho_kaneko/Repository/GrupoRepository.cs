@@ -146,5 +146,36 @@ namespace trabalho_kaneko.Repository
                 return false;
             }
         }
+
+        public int InserirRetornandoId(GrupoModel grupo)
+        {
+            int idGerado = 0;
+            try
+            {
+                using (var connection = _context.CreateConnection())
+                {
+                    connection.Open();
+                    // No MySQL usamos SELECT LAST_INSERT_ID() para pegar o ID que acabou de ser gerado
+                    string query = "INSERT INTO grupos (grupo) VALUES (@grupo); SELECT LAST_INSERT_ID();";
+
+                    using (var command = new MySqlCommand(query, (MySqlConnection)connection))
+                    {
+                        command.Parameters.AddWithValue("@grupo", grupo.Grupo);
+
+                        // ExecuteScalar executa a query e devolve a primeira coluna da primeira linha (o ID)
+                        object result = command.ExecuteScalar();
+                        if (result != null)
+                        {
+                            idGerado = Convert.ToInt32(result);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Erro ao inserir grupo retornando ID: " + ex.Message);
+            }
+            return idGerado;
+        }
     }
 }

@@ -6,85 +6,526 @@
 
 <div class="container mt-4">
     <div class="mb-3">
-        <a asp-page="/ProdutosListar" class="btn btn-secondary btn-sm">Voltar para a Lista</a>
+        <a asp-page="/ProdutosListar" class="btn btn-danger btn-sm fw-bold">Voltar para a Lista</a>
     </div>
 
-    <div class="card shadow-sm border-warning">
-        <div class="card-header bg-warning text-dark fw-bold">
+    <div class="card shadow-sm border-warning mb-5">
+        <div class="card-header bg-warning text-dark fw-bold text-uppercase">
             <h4 class="mb-0">Editar Produto</h4>
         </div>
         <div class="card-body">
+            @if (TempData["MensagemErro"] != null)
+            {
+                <div class="alert alert-danger fw-bold">@TempData["MensagemErro"]</div>
+            }
+
             <form method="post">
                 <input type="hidden" asp-for="ProdutoObj.IdProduto" />
-                <div asp-validation-summary="All" class="text-danger mb-3 fw-bold"></div>
+                <div asp-validation-summary="All" class="text-danger mb-3 fw-bold fs-5"></div>
 
                 <div class="row g-3">
-                    <h5 class="border-bottom pb-2">Informações Básicas</h5>
+                    <h5 class="border-bottom pb-2 w-100 text-uppercase fw-bold text-secondary">Informações Básicas</h5>
 
                     <div class="col-md-9">
-                        <label class="form-label fw-bold campo-obrigatorio">Produto</label>
-                        <input asp-for="ProdutoObj.Produto" class="form-control" required maxlength="50" />
+                        <label class="form-label fw-bold campo-obrigatorio text-uppercase">Produto</label>
+                        <input asp-for="ProdutoObj.Produto" class="form-control" style="text-transform: uppercase;" required maxlength="50" placeholder="NOME DO PRODUTO" />
                     </div>
 
                     <div class="col-md-3">
-                        <label class="form-label fw-bold campo-obrigatorio">Und. Medida</label>
-                        <input asp-for="ProdutoObj.Und" class="form-control" required maxlength="3" style="text-transform: uppercase;" />
+                        <label class="form-label fw-bold campo-obrigatorio text-uppercase">Und. Medida</label>
+                        <input asp-for="ProdutoObj.Und" class="form-control" required maxlength="3" placeholder="EX: UN" style="text-transform: uppercase;" />
                     </div>
 
                     <div class="col-md-6">
-                        <label class="form-label fw-bold campo-obrigatorio">Grupo</label>
-                        <select asp-for="ProdutoObj.IdGrupo" class="form-select" required>
-                            <option value="">-- Selecione o Grupo --</option>
-                            @foreach (var grupo in Model.ListaGrupos)
-                            {
-                                <option value="@grupo.IdGrupo">@grupo.Grupo</option>
-                            }
-                        </select>
+                        <label class="form-label fw-bold campo-obrigatorio text-uppercase">Grupo</label>
+                        <div class="input-group flex-nowrap">
+                            <select asp-for="ProdutoObj.IdGrupo" class="form-select" id="selectGrupoPrincipal" required>
+                                <option value="">-- Selecione o Grupo --</option>
+                                @if (Model.ListaGrupos != null)
+                                {
+                                    foreach (var grupo in Model.ListaGrupos)
+                                    {
+                                        <option value="@grupo.IdGrupo">@grupo.Grupo</option>
+                                    }
+                                }
+                            </select>
+                            <button class="btn btn-outline-warning text-dark fw-bold" type="button" data-bs-toggle="modal" data-bs-target="#modalNovoGrupo">
+                                + Novo
+                            </button>
+                        </div>
                     </div>
 
                     <div class="col-md-6">
-                        <label class="form-label fw-bold campo-obrigatorio">Marca</label>
-                        <select asp-for="ProdutoObj.IdMarca" class="form-select" required>
-                            <option value="">-- Selecione a Marca --</option>
-                            @foreach (var marca in Model.ListaMarcas)
-                            {
-                                <option value="@marca.IdMarca">@marca.Marca</option>
-                            }
-                        </select>
+                        <label class="form-label fw-bold campo-obrigatorio text-uppercase">Marca</label>
+                        <div class="input-group flex-nowrap">
+                            <select asp-for="ProdutoObj.IdMarca" class="form-select" id="selectMarcaPrincipal" required>
+                                <option value="">-- Selecione a Marca --</option>
+                                @if (Model.ListaMarcas != null)
+                                {
+                                    foreach (var marca in Model.ListaMarcas)
+                                    {
+                                        <option value="@marca.IdMarca">@marca.Marca</option>
+                                    }
+                                }
+                            </select>
+                            <button class="btn btn-outline-warning text-dark fw-bold" type="button" data-bs-toggle="modal" data-bs-target="#modalNovaMarca">
+                                + Novo
+                            </button>
+                        </div>
                     </div>
 
-                    <h5 class="mt-4 border-bottom pb-2">Valores, Estoque e Prazos</h5>
+                    <h5 class="mt-4 border-bottom pb-2 w-100 text-uppercase fw-bold text-secondary">Valores, Estoque e Prazos</h5>
 
                     <div class="col-md-2">
-                        <label class="form-label fw-bold campo-obrigatorio">Preço de Venda</label>
+                        <label class="form-label fw-bold campo-obrigatorio text-uppercase">Preço de Venda</label>
                         <input asp-for="ProdutoObj.PrecoVenda" type="number" step="0.01" class="form-control" required />
                     </div>
 
                     <div class="col-md-2">
-                        <label class="form-label fw-bold campo-obrigatorio">Preço Compra</label>
+                        <label class="form-label fw-bold campo-obrigatorio text-uppercase">Preço Compra</label>
                         <input asp-for="ProdutoObj.PrecoCompra" type="number" step="0.01" class="form-control" required />
                     </div>
 
                     <div class="col-md-2">
-                        <label class="form-label fw-bold campo-obrigatorio">Custo Adicional</label>
+                        <label class="form-label fw-bold campo-obrigatorio text-uppercase">Custo Adicional</label>
                         <input asp-for="ProdutoObj.Custo" type="number" step="0.01" class="form-control" required />
                     </div>
 
                     <div class="col-md-3">
-                        <label class="form-label fw-bold text-primary campo-obrigatorio">Saldo (Estoque)</label>
-                        <input asp-for="ProdutoObj.Saldo" type="number" class="form-control" required />
+                        <label class="form-label fw-bold text-primary campo-obrigatorio text-uppercase">Saldo (Estoque)</label>
+                        <input asp-for="ProdutoObj.Saldo" type="number" class="form-control border-primary" required />
                     </div>
 
                     <div class="col-md-3">
-                        <label class="form-label fw-bold">Data Últ. Compra</label>
+                        <label class="form-label fw-bold text-uppercase">Data Últ. Compra</label>
                         <input asp-for="ProdutoObj.DataUltCompra" type="date" class="form-control" />
                     </div>
                 </div>
 
                 <div class="mt-4 text-end">
-                    <button type="submit" class="btn btn-warning px-4 fw-bold">Salvar Alterações</button>
+                    <button type="submit" class="btn btn-warning px-5 py-2 fw-bold text-uppercase text-dark">Salvar Alterações</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
+
+<!-- ============================================== -->
+<!-- MODAL 1: GESTÃO E CADASTRO DE GRUPOS           -->
+<!-- ============================================== -->
+<div class="modal fade" id="modalNovoGrupo" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content border-warning shadow-lg">
+            <div class="modal-header bg-warning text-dark">
+                <h5 class="modal-title fw-bold text-uppercase">Gestão Rápida de Grupos</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body bg-light">
+                <div class="card shadow-sm border-secondary mb-4">
+                    <div class="card-header bg-dark text-white fw-bold text-uppercase">Grupos Cadastrados</div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive" style="max-height: 250px; overflow-y: auto;">
+                            <table class="table table-striped table-hover mb-0 text-center align-middle" style="font-size: 0.9rem;">
+                                <thead style="position: sticky; top: 0; z-index: 1;" class="table-dark">
+                                    <tr>
+                                        <th>CÓDIGO</th>
+                                        <th>GRUPO</th>
+                                        <th>DATA DE INCLUSÃO</th>
+                                        <th>ÚLTIMA ALTERAÇÃO</th>
+                                        <th>AÇÕES</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model.ListaGrupos != null)
+                                    {
+                                        foreach (var grupo in Model.ListaGrupos)
+                                        {
+                                            <tr id="linha-grupo-@grupo.IdGrupo">
+                                                <td>@grupo.IdGrupo</td>
+                                                <td class="fw-bold text-uppercase" id="td-grupo-nome-@grupo.IdGrupo">@grupo.Grupo</td>
+                                                <td>@grupo.DataInclusao</td>
+                                                <td id="td-grupo-alteracao-@grupo.IdGrupo">@grupo.DataAlteracao</td>
+                                                <td>
+                                                    <button type="button" class="btn btn-warning btn-sm fw-bold" onclick="abrirModalEditarGrupo(@grupo.IdGrupo, '@grupo.Grupo')">EDITAR</button>
+                                                    <button type="button" class="btn btn-danger btn-sm fw-bold" onclick="excluirGrupoAjax(@grupo.IdGrupo)">EXCLUIR</button>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card shadow-sm border-warning">
+                    <div class="card-header bg-warning text-dark fw-bold text-uppercase">+ Novo Grupo</div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-12">
+                                <label class="form-label fw-bold campo-obrigatorio text-uppercase">Nome do Grupo</label>
+                                <input type="text" id="modalGrupoNome" class="form-control" maxlength="50" style="text-transform: uppercase;" required />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary fw-bold" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-warning fw-bold text-dark" onclick="salvarGrupoAjax()">Salvar Grupo</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ============================================== -->
+<!-- MODAL 2: EDITAR GRUPO (Abre por cima)          -->
+<!-- ============================================== -->
+<div class="modal fade" id="modalEditarGrupo" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content border-warning shadow-lg">
+            <div class="modal-header bg-warning text-dark">
+                <h5 class="modal-title fw-bold text-uppercase">Editar Grupo</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body bg-light">
+                <div class="card shadow-sm border-secondary bg-dark text-white rounded">
+                    <div class="card-body">
+                        <input type="hidden" id="editGrupoId" />
+                        <div class="row g-3">
+                            <div class="col-md-12">
+                                <label class="form-label fw-bold text-uppercase">Nome do Grupo</label>
+                                <input type="text" id="editGrupoNome" class="form-control" maxlength="50" style="text-transform: uppercase;" required />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary fw-bold" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-warning fw-bold text-dark" onclick="salvarEdicaoGrupoAjax()">Salvar Alterações</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ============================================== -->
+<!-- MODAL 3: GESTÃO E CADASTRO DE MARCAS           -->
+<!-- ============================================== -->
+<div class="modal fade" id="modalNovaMarca" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content border-warning shadow-lg">
+            <div class="modal-header bg-warning text-dark">
+                <h5 class="modal-title fw-bold text-uppercase">Gestão Rápida de Marcas</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body bg-light">
+                <div class="card shadow-sm border-secondary mb-4">
+                    <div class="card-header bg-dark text-white fw-bold text-uppercase">Marcas Cadastradas</div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive" style="max-height: 250px; overflow-y: auto;">
+                            <table class="table table-striped table-hover mb-0 text-center align-middle" style="font-size: 0.9rem;">
+                                <thead style="position: sticky; top: 0; z-index: 1;" class="table-dark">
+                                    <tr>
+                                        <th>CÓDIGO</th>
+                                        <th>MARCA</th>
+                                        <th>DATA DE INCLUSÃO</th>
+                                        <th>ÚLTIMA ALTERAÇÃO</th>
+                                        <th>AÇÕES</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model.ListaMarcas != null)
+                                    {
+                                        foreach (var marca in Model.ListaMarcas)
+                                        {
+                                            <tr id="linha-marca-@marca.IdMarca">
+                                                <td>@marca.IdMarca</td>
+                                                <td class="fw-bold text-uppercase" id="td-marca-nome-@marca.IdMarca">@marca.Marca</td>
+                                                <td>@marca.DataInclusao</td>
+                                                <td id="td-marca-alteracao-@marca.IdMarca">@marca.DataAlteracao</td>
+                                                <td>
+                                                    <button type="button" class="btn btn-warning btn-sm fw-bold" onclick="abrirModalEditarMarca(@marca.IdMarca, '@marca.Marca')">EDITAR</button>
+                                                    <button type="button" class="btn btn-danger btn-sm fw-bold" onclick="excluirMarcaAjax(@marca.IdMarca)">EXCLUIR</button>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card shadow-sm border-warning">
+                    <div class="card-header bg-warning text-dark fw-bold text-uppercase">+ Nova Marca</div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-12">
+                                <label class="form-label fw-bold campo-obrigatorio text-uppercase">Nome da Marca</label>
+                                <input type="text" id="modalMarcaNome" class="form-control" maxlength="50" style="text-transform: uppercase;" required />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary fw-bold" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-warning fw-bold text-dark" onclick="salvarMarcaAjax()">Salvar Marca</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ============================================== -->
+<!-- MODAL 4: EDITAR MARCA (Abre por cima)          -->
+<!-- ============================================== -->
+<div class="modal fade" id="modalEditarMarca" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content border-warning shadow-lg">
+            <div class="modal-header bg-warning text-dark">
+                <h5 class="modal-title fw-bold text-uppercase">Editar Marca</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body bg-light">
+                <div class="card shadow-sm border-secondary bg-dark text-white rounded">
+                    <div class="card-body">
+                        <input type="hidden" id="editMarcaId" />
+                        <div class="row g-3">
+                            <div class="col-md-12">
+                                <label class="form-label fw-bold text-uppercase">Nome da Marca</label>
+                                <input type="text" id="editMarcaNome" class="form-control" maxlength="50" style="text-transform: uppercase;" required />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary fw-bold" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-warning fw-bold text-dark" onclick="salvarEdicaoMarcaAjax()">Salvar Alterações</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Correção de Bug do Bootstrap para manter scroll em múltiplos modais
+        const modals = ['modalNovoGrupo', 'modalEditarGrupo', 'modalNovaMarca', 'modalEditarMarca'];
+        modals.forEach(modalId => {
+            document.getElementById(modalId)?.addEventListener('hidden.bs.modal', function () {
+                if (document.querySelector('.modal.show')) {
+                    document.body.classList.add('modal-open');
+                }
+            });
+        });
+
+        const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value || '';
+
+        const dataAtualBR = () => {
+            const now = new Date();
+            return now.toLocaleDateString('pt-BR') + ' ' + now.toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'});
+        };
+
+        // =========================================================
+        // SCRIPTS PARA GRUPOS
+        // =========================================================
+        function salvarGrupoAjax() {
+            const nome = document.getElementById('modalGrupoNome').value;
+
+            if (!nome) { alert('Preencha o nome do grupo!'); return; }
+
+            const formData = new URLSearchParams({ grupoNome: nome });
+
+            fetch('?handler=CriarGrupoRapido', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'RequestVerificationToken': token }, body: formData.toString() })
+            .then(res => res.json())
+            .then(data => {
+                if (data.sucesso) {
+                    const select = document.getElementById('selectGrupoPrincipal');
+                    if (select) select.add(new Option(data.nome, data.id, true, true));
+
+                    const tbody = document.querySelector('#modalNovoGrupo tbody');
+                    if (tbody) {
+                        tbody.insertAdjacentHTML('beforeend', `
+                            <tr id="linha-grupo-${data.id}">
+                                <td>${data.id}</td>
+                                <td class="fw-bold text-uppercase" id="td-grupo-nome-${data.id}">${nome.toUpperCase()}</td>
+                                <td>${dataAtualBR()}</td>
+                                <td id="td-grupo-alteracao-${data.id}"></td>
+                                <td>
+                                    <button type="button" class="btn btn-warning btn-sm fw-bold" onclick="abrirModalEditarGrupo(${data.id}, '${nome.toUpperCase()}')">EDITAR</button>
+                                    <button type="button" class="btn btn-danger btn-sm fw-bold" onclick="excluirGrupoAjax(${data.id})">EXCLUIR</button>
+                                </td>
+                            </tr>`);
+                    }
+                    document.getElementById('modalGrupoNome').value = '';
+                } else alert(data.mensagem || 'Erro ao salvar grupo.');
+            });
+        }
+
+        function abrirModalEditarGrupo(id, nome) {
+            document.getElementById('editGrupoId').value = id;
+            document.getElementById('editGrupoNome').value = nome;
+
+            var modal = new bootstrap.Modal(document.getElementById('modalEditarGrupo'));
+            modal.show();
+            document.getElementById('modalEditarGrupo').style.zIndex = '1060';
+            setTimeout(() => {
+                const backdrops = document.querySelectorAll('.modal-backdrop');
+                if (backdrops.length > 1) backdrops[backdrops.length - 1].style.zIndex = '1059';
+            }, 100);
+        }
+
+        function salvarEdicaoGrupoAjax() {
+            const id = document.getElementById('editGrupoId').value;
+            const nome = document.getElementById('editGrupoNome').value;
+
+            if(!nome) { alert('Preencha o nome do grupo!'); return; }
+
+            const formData = new URLSearchParams({ id: id, grupoNome: nome });
+
+            fetch('?handler=EditarGrupoRapido', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'RequestVerificationToken': token }, body: formData.toString() })
+            .then(res => res.json())
+            .then(data => {
+                if (data.sucesso) {
+                    document.getElementById('td-grupo-nome-' + id).innerText = nome.toUpperCase();
+                    document.getElementById('td-grupo-alteracao-' + id).innerText = dataAtualBR();
+
+                    const select = document.getElementById('selectGrupoPrincipal');
+                    if (select) {
+                        for (let i = 0; i < select.options.length; i++) {
+                            if (select.options[i].value === id) { select.options[i].text = nome.toUpperCase(); break; }
+                        }
+                    }
+
+                    const tr = document.getElementById('linha-grupo-' + id);
+                    if(tr) {
+                        const btnEdit = tr.querySelector('.btn-warning');
+                        if(btnEdit) btnEdit.setAttribute('onclick', `abrirModalEditarGrupo(${id}, '${nome.toUpperCase()}')`);
+                    }
+
+                    bootstrap.Modal.getInstance(document.getElementById('modalEditarGrupo')).hide();
+                } else alert(data.mensagem);
+            });
+        }
+
+        function excluirGrupoAjax(id) {
+            if (!confirm('Tem certeza que deseja excluir este grupo?')) return;
+            const formData = new URLSearchParams({ id: id });
+            fetch('?handler=ExcluirGrupoRapido', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'RequestVerificationToken': token }, body: formData.toString() })
+            .then(res => res.json())
+            .then(data => {
+                if (data.sucesso) {
+                    document.getElementById('linha-grupo-' + id).remove();
+                    const select = document.getElementById('selectGrupoPrincipal');
+                    if (select) {
+                        for (let i = 0; i < select.options.length; i++) {
+                            if (select.options[i].value == id) { select.remove(i); break; }
+                        }
+                    }
+                } else alert(data.mensagem);
+            });
+        }
+
+        // =========================================================
+        // SCRIPTS PARA MARCAS
+        // =========================================================
+        function salvarMarcaAjax() {
+            const nome = document.getElementById('modalMarcaNome').value;
+
+            if (!nome) { alert('Preencha o nome da marca!'); return; }
+
+            const formData = new URLSearchParams({ marcaNome: nome });
+
+            fetch('?handler=CriarMarcaRapido', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'RequestVerificationToken': token }, body: formData.toString() })
+            .then(res => res.json())
+            .then(data => {
+                if (data.sucesso) {
+                    const select = document.getElementById('selectMarcaPrincipal');
+                    if (select) select.add(new Option(data.nome, data.id, true, true));
+
+                    const tbody = document.querySelector('#modalNovaMarca tbody');
+                    if (tbody) {
+                        tbody.insertAdjacentHTML('beforeend', `
+                            <tr id="linha-marca-${data.id}">
+                                <td>${data.id}</td>
+                                <td class="fw-bold text-uppercase" id="td-marca-nome-${data.id}">${nome.toUpperCase()}</td>
+                                <td>${dataAtualBR()}</td>
+                                <td id="td-marca-alteracao-${data.id}"></td>
+                                <td>
+                                    <button type="button" class="btn btn-warning btn-sm fw-bold" onclick="abrirModalEditarMarca(${data.id}, '${nome.toUpperCase()}')">EDITAR</button>
+                                    <button type="button" class="btn btn-danger btn-sm fw-bold" onclick="excluirMarcaAjax(${data.id})">EXCLUIR</button>
+                                </td>
+                            </tr>`);
+                    }
+                    document.getElementById('modalMarcaNome').value = '';
+                } else alert(data.mensagem || 'Erro ao salvar marca.');
+            });
+        }
+
+        function abrirModalEditarMarca(id, nome) {
+            document.getElementById('editMarcaId').value = id;
+            document.getElementById('editMarcaNome').value = nome;
+
+            var modal = new bootstrap.Modal(document.getElementById('modalEditarMarca'));
+            modal.show();
+            document.getElementById('modalEditarMarca').style.zIndex = '1060';
+            setTimeout(() => {
+                const backdrops = document.querySelectorAll('.modal-backdrop');
+                if (backdrops.length > 1) backdrops[backdrops.length - 1].style.zIndex = '1059';
+            }, 100);
+        }
+
+        function salvarEdicaoMarcaAjax() {
+            const id = document.getElementById('editMarcaId').value;
+            const nome = document.getElementById('editMarcaNome').value;
+
+            if(!nome) { alert('Preencha o nome da marca!'); return; }
+
+            const formData = new URLSearchParams({ id: id, marcaNome: nome });
+
+            fetch('?handler=EditarMarcaRapido', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'RequestVerificationToken': token }, body: formData.toString() })
+            .then(res => res.json())
+            .then(data => {
+                if (data.sucesso) {
+                    document.getElementById('td-marca-nome-' + id).innerText = nome.toUpperCase();
+                    document.getElementById('td-marca-alteracao-' + id).innerText = dataAtualBR();
+
+                    const select = document.getElementById('selectMarcaPrincipal');
+                    if (select) {
+                        for (let i = 0; i < select.options.length; i++) {
+                            if (select.options[i].value === id) { select.options[i].text = nome.toUpperCase(); break; }
+                        }
+                    }
+
+                    const tr = document.getElementById('linha-marca-' + id);
+                    if(tr) {
+                        const btnEdit = tr.querySelector('.btn-warning');
+                        if(btnEdit) btnEdit.setAttribute('onclick', `abrirModalEditarMarca(${id}, '${nome.toUpperCase()}')`);
+                    }
+
+                    bootstrap.Modal.getInstance(document.getElementById('modalEditarMarca')).hide();
+                } else alert(data.mensagem);
+            });
+        }
+
+        function excluirMarcaAjax(id) 
+        {
+            if (!confirm('Tem certeza que deseja excluir esta marca?')) return;
+            const formData = new URLSearchParams({ id: id });
+            fetch('?handler=ExcluirMarcaRapido', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'RequestVerificationToken': token }, body: formData.toString() })
+            .then(res => res.json())
+            .then(data => {
+                if (data.sucesso) {
+                    document.getElementById('linha-marca-' + id).remove();
+                    const select = document.getElementById('selectMarcaPrincipal');
+                    if (select) {
+                        for (let i = 0; i < select.options.length; i++) {
+                            if (select.options[i].value == id) { select.remove(i); break; }
+                        }
+                    }
+                } else alert(data.mensagem);
+            });
+        }
+    </script>
+}

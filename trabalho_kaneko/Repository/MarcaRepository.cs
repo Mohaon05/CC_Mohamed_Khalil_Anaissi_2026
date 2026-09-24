@@ -157,5 +157,40 @@ namespace trabalho_kaneko.Repository
                 return false;
             }
         }
+
+        // ========================================================================
+        // MÉTODO NOVO PARA A GESTÃO RÁPIDA (AJAX) - MYSQL
+        // ========================================================================
+        public int InserirRetornandoId(MarcaModel marca)
+        {
+            int idGerado = 0;
+            try
+            {
+                using (var connection = _context.CreateConnection())
+                {
+                    connection.Open();
+                    // Usamos SELECT LAST_INSERT_ID() após o INSERT
+                    string query = "INSERT INTO marcas (marca, id_grupo) VALUES (@marca, @id_grupo); SELECT LAST_INSERT_ID();";
+
+                    using (var command = new MySqlCommand(query, (MySqlConnection)connection))
+                    {
+                        command.Parameters.AddWithValue("@marca", marca.Marca);
+                        // Trata o IdGrupo podendo ser nulo, igual ao seu Inserir() padrão
+                        command.Parameters.AddWithValue("@id_grupo", marca.IdGrupo.HasValue ? (object)marca.IdGrupo.Value : DBNull.Value);
+
+                        object result = command.ExecuteScalar();
+                        if (result != null)
+                        {
+                            idGerado = Convert.ToInt32(result);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Erro ao inserir marca retornando ID: " + ex.Message);
+            }
+            return idGerado;
+        }
     }
 }
