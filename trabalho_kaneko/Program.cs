@@ -15,6 +15,7 @@ builder.Services.AddScoped<MarcaRepository>();
 builder.Services.AddScoped<ProdutoRepository>();
 builder.Services.AddScoped<FormaPagamentoRepository>();
 builder.Services.AddScoped<CondicaoPagamentoRepository>();
+builder.Services.AddScoped<CompraRepository>();
 
 // Add services to the container.
 builder.Services.AddRazorPages();

@@ -17,28 +17,44 @@ namespace trabalho_kaneko.Pages
         [BindProperty]
         public CondicaoPagamentoModel CondicaoObj { get; set; }
 
+        // Estrutura preparada para quando tiver a tabela de parcelas no banco:
+        // [BindProperty]
+        // public List<ParcelaModel> Parcelas { get; set; } = new List<ParcelaModel>();
+
         public IActionResult OnGet(int id)
         {
             CondicaoObj = _condicaoRepository.BuscarPorId(id);
+
             if (CondicaoObj == null)
             {
+                TempData["MensagemErro"] = "Condição de pagamento não encontrada.";
                 return RedirectToPage("/CondicoesPagamentoListar");
             }
+
+            // Futuramente: carregar as parcelas existentes para exibição no frontend
+            // Parcelas = _condicaoRepository.ListarParcelasPorCondicao(id);
+
             return Page();
         }
 
         public IActionResult OnPost()
         {
-            if (!ModelState.IsValid) return Page();
+            if (!ModelState.IsValid)
+            {
+                return Page();
+            }
 
             bool sucesso = _condicaoRepository.Atualizar(CondicaoObj);
+
             if (sucesso)
             {
-                TempData["MensagemSucesso"] = "Condição atualizada com sucesso!";
+                // Futuramente: lógica para apagar as parcelas antigas e inserir as novas aqui
+
+                TempData["MensagemSucesso"] = "Condição de pagamento atualizada com sucesso!";
                 return RedirectToPage("/CondicoesPagamentoListar");
             }
 
-            ModelState.AddModelError(string.Empty, "Erro ao atualizar.");
+            TempData["MensagemErro"] = "Erro ao atualizar a condição de pagamento na base de dados.";
             return Page();
         }
     }

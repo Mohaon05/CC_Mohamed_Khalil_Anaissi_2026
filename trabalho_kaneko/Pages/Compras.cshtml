@@ -1,0 +1,137 @@
+﻿@page
+@model trabalho_kaneko.Pages.ComprasModel
+@{
+    ViewData["Title"] = "Lançamento de Compra (NFe)";
+}
+
+<div class="container mt-4">
+    <div class="mb-3">
+        <a asp-page="/ComprasListar" class="btn btn-danger btn-sm fw-bold">VOLTAR PARA A LISTA</a>
+    </div>
+
+    <div class="card shadow-sm border-success mb-5">
+        <div class="card-header bg-success text-white fw-bold text-uppercase">
+            <h4 class="mb-0">+ Lançamento de NFe (Compra)</h4>
+        </div>
+        <div class="card-body">
+            @if (TempData["MensagemErro"] != null)
+            {
+                <div class="alert alert-danger fw-bold">@TempData["MensagemErro"]</div>
+            }
+
+            <form method="post">
+                <div asp-validation-summary="All" class="text-danger mb-3 fw-bold fs-5"></div>
+
+                <!-- DADOS PRINCIPAIS -->
+                <h5 class="border-bottom pb-2 w-100 text-uppercase fw-bold text-secondary">Identificação da Nota</h5>
+                <div class="row g-3 mb-4">
+                    <div class="col-md-2">
+                        <label class="form-label fw-bold campo-obrigatorio text-uppercase">Modelo</label>
+                        <input asp-for="CompraObj.Modelo" class="form-control" required maxlength="2" placeholder="55" />
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label fw-bold campo-obrigatorio text-uppercase">Série</label>
+                        <input asp-for="CompraObj.Serie" class="form-control" required maxlength="3" placeholder="001" />
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold campo-obrigatorio text-uppercase">Nº NFe</label>
+                        <input asp-for="CompraObj.NumNfe" type="number" class="form-control" required />
+                    </div>
+                    <div class="col-md-5">
+                        <label class="form-label fw-bold campo-obrigatorio text-uppercase">Fornecedor</label>
+                        <select asp-for="CompraObj.IdFornecedor" class="form-select" required>
+                            <option value="">-- Selecione --</option>
+                            @if (Model.ListaFornecedores != null)
+                            {
+                                foreach (var f in Model.ListaFornecedores)
+                                {
+                                    <option value="@f.IdFornecedor">@f.Fornecedor</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-12">
+                        <label class="form-label fw-bold text-uppercase">Chave de Acesso (44 dígitos)</label>
+                        <input asp-for="CompraObj.ChaveAcessoNfe" class="form-control" maxlength="44" />
+                    </div>
+                </div>
+
+                <!-- DATAS -->
+                <h5 class="border-bottom pb-2 w-100 text-uppercase fw-bold text-secondary">Datas e Operação</h5>
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold text-uppercase">Natureza da Operação</label>
+                        <input asp-for="CompraObj.NatOper" class="form-control" maxlength="60" />
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold text-uppercase">Emissão NFe</label>
+                        <input asp-for="CompraObj.DataEmitNfe" type="date" class="form-control" />
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold text-uppercase">Entrada NFe</label>
+                        <input asp-for="CompraObj.DataEntNfe" type="date" class="form-control" />
+                    </div>
+                </div>
+
+                <!-- VALORES E TRIBUTOS -->
+                <h5 class="border-bottom pb-2 w-100 text-uppercase fw-bold text-secondary">Valores e Tributos</h5>
+                <div class="row g-3 mb-4">
+                    <div class="col-md-2">
+                        <label class="form-label fw-bold text-uppercase">Base ICMS</label>
+                        <input asp-for="CompraObj.BaseCalcIcms" type="number" step="0.01" class="form-control" />
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label fw-bold text-uppercase text-danger">Valor ICMS</label>
+                        <input asp-for="CompraObj.ValorIcms" type="number" step="0.01" class="form-control" />
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label fw-bold text-uppercase">Frete</label>
+                        <input asp-for="CompraObj.ValorFreteNfe" type="number" step="0.01" class="form-control" />
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label fw-bold text-uppercase text-success">Desconto</label>
+                        <input asp-for="CompraObj.DescontoNfe" type="number" step="0.01" class="form-control" />
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label fw-bold text-uppercase text-danger">IPI</label>
+                        <input asp-for="CompraObj.ValorIpi" type="number" step="0.01" class="form-control" />
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label fw-bold text-uppercase">Outras Desp.</label>
+                        <input asp-for="CompraObj.OutrasDespNfe" type="number" step="0.01" class="form-control" />
+                    </div>
+                </div>
+
+                <!-- VOLUMES E FINANCEIRO -->
+                <h5 class="border-bottom pb-2 w-100 text-uppercase fw-bold text-secondary">Transporte, Volumes e Pagamento</h5>
+                <div class="row g-3 mb-4">
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold text-uppercase">Qtd Volumes</label>
+                        <input asp-for="CompraObj.QtdeVol" type="number" class="form-control" />
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold text-uppercase">Peso Bruto</label>
+                        <input asp-for="CompraObj.PesoBruto" type="number" step="0.001" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold campo-obrigatorio text-uppercase">Condição de Pagamento</label>
+                        <select asp-for="CompraObj.IdCondicao" class="form-select" required>
+                            <option value="">-- Selecione --</option>
+                            @if (Model.ListaCondicoes != null)
+                            {
+                                foreach (var c in Model.ListaCondicoes)
+                                {
+                                    <option value="@c.IdCondicao">@c.CondicaoPagamento</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="mt-4 text-end">
+                    <button type="submit" class="btn btn-success px-5 py-2 fw-bold text-uppercase">Gravar NFe</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

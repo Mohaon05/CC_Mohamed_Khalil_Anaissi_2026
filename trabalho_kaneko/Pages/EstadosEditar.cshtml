@@ -36,23 +36,23 @@
                         <input asp-for="Estado.Uf" class="form-control" required maxlength="2" style="text-transform: uppercase;" />
                     </div>
 
+                    <!-- BLOCO DO PAÍS ATUALIZADO COM FLEXBOX E SELECT2 -->
                     <div class="col-md-4">
-                        <label class="form-label fw-bold">País</label>
-
-                        <div class="input-group flex-nowrap">
-                            <!-- Adicionado o id="selectPais" para o JS conseguir atualizar a lista -->
-                            <select asp-for="Estado.IdPais" class="form-select" id="selectPais" required>
-                                <option value="">-- Selecione um País --</option>
-                                @if (Model.ListaPaisesDisponiveis != null)
-                                {
-                                    foreach (var pais in Model.ListaPaisesDisponiveis)
+                        <label class="form-label fw-bold text-uppercase">País</label>
+                        <div class="d-flex gap-2">
+                            <div class="flex-grow-1">
+                                <select asp-for="Estado.IdPais" class="form-select select2-search" id="selectPais" required>
+                                    <option value="">-- Selecione um País --</option>
+                                    @if (Model.ListaPaisesDisponiveis != null)
                                     {
-                                        <option value="@pais.IdPais">@pais.Pais</option>
+                                        foreach (var pais in Model.ListaPaisesDisponiveis)
+                                        {
+                                            <option value="@pais.IdPais">@pais.Pais</option>
+                                        }
                                     }
-                                }
-                            </select>
-
-                            <button class="btn btn-outline-warning fw-bold text-nowrap" type="button" data-bs-toggle="modal" data-bs-target="#modalNovoPais">
+                                </select>
+                            </div>
+                            <button class="btn btn-outline-warning fw-bold px-3 text-dark" type="button" data-bs-toggle="modal" data-bs-target="#modalNovoPais" style="height: 38px; white-space: nowrap;">
                                 + Novo
                             </button>
                         </div>
@@ -178,10 +178,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             
-            <!-- O modal-body volta a ser claro para dar o espaçamento (padding) natural nas bordas -->
             <div class="modal-body bg-light">
-                
-                <!-- Adicionamos um Card escuro com cantos arredondados (rounded) -->
                 <div class="card shadow-sm border-secondary bg-dark text-white rounded">
                     <div class="card-body">
                         <input type="hidden" id="editPaisId" />
@@ -205,7 +202,6 @@
                         </div>
                     </div>
                 </div>
-
             </div>
             
             <div class="modal-footer">
@@ -246,7 +242,10 @@
             .then(data => {
                 if (data.sucesso) {
                     const select = document.getElementById('selectPais');
-                    if (select) select.add(new Option(data.nome, data.id, true, true));
+                    if (select) {
+                        select.add(new Option(data.nome, data.id, true, true));
+                        $(select).trigger('change'); // Atualiza o Select2
+                    }
 
                     const dataAtual = new Date().toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute:'2-digit' });
 
@@ -342,8 +341,12 @@
                     const select = document.getElementById('selectPais');
                     if (select) {
                         for (let i = 0; i < select.options.length; i++) {
-                            if (select.options[i].value === id) { select.options[i].text = nome.toUpperCase(); break; }
+                            if (select.options[i].value === id) { 
+                                select.options[i].text = nome.toUpperCase(); 
+                                break; 
+                            }
                         }
+                        $(select).trigger('change'); // Atualiza o Select2
                     }
 
                     bootstrap.Modal.getInstance(document.getElementById('modalEditarPais')).hide();
@@ -373,8 +376,12 @@
                     const select = document.getElementById('selectPais');
                     if (select) {
                         for (let i = 0; i < select.options.length; i++) {
-                            if (select.options[i].value == id) { select.remove(i); break; }
+                            if (select.options[i].value == id) { 
+                                select.remove(i); 
+                                break; 
+                            }
                         }
+                        $(select).trigger('change'); // Atualiza o Select2
                     }
                 } else {
                     alert(data.mensagem);

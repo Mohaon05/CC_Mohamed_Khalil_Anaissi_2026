@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using trabalho_kaneko.Models;
-using trabalho_kaneko.Repository;
+using trabalho_kaneko.Repository; // Necessário para aceder ao repositório
 
 namespace trabalho_kaneko.Pages
 {
@@ -15,31 +15,42 @@ namespace trabalho_kaneko.Pages
         }
 
         [BindProperty]
-        public CondicaoPagamentoModel CondicaoObj { get; set; }
+        public CondicaoPagamentoModel Condicao { get; set; }
 
         public void OnGet()
         {
-            // Espelhando o banco: Qtd = 1 e Juros = 0.00
-            CondicaoObj = new CondicaoPagamentoModel
+            // Ao abrir a página, define os valores padrão
+            if (Condicao == null)
             {
-                QuantidadeParcelas = 1,
-                Juros = 0.00m
-            };
+                Condicao = new CondicaoPagamentoModel
+                {
+                    QuantidadeParcelas = 1,
+                    Juros = 0.00m,
+                    Multa = 0.00m,
+                    Desconto = 0.00m
+                };
+            }
         }
 
         public IActionResult OnPost()
         {
-            if (!ModelState.IsValid) return Page();
-
-            bool sucesso = _condicaoRepository.Inserir(CondicaoObj);
-            if (sucesso)
+            if (!ModelState.IsValid)
             {
-                TempData["MensagemSucesso"] = "Condição cadastrada com sucesso!";
-                return RedirectToPage("/CondicoesPagamentoListar");
+                return Page();
             }
 
-            ModelState.AddModelError(string.Empty, "Erro ao salvar os dados.");
-            return Page();
+            bool sucesso = _condicaoRepository.Inserir(Condicao);
+
+            if (sucesso)
+            {
+                TempData["MensagemSucesso"] = "Condição de pagamento guardada com sucesso!";
+                return RedirectToPage("/CondicoesPagamentoListar");
+            }
+            else
+            {
+                ModelState.AddModelError(string.Empty, "Erro ao guardar a condição de pagamento na base de dados.");
+                return Page();
+            }
         }
     }
 }

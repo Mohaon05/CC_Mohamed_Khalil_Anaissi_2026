@@ -1,0 +1,82 @@
+﻿@page
+@model trabalho_kaneko.Pages.ComprasListarModel
+@{
+    ViewData["Title"] = "Listagem de Compras (NFe)";
+}
+
+<div class="container mt-4">
+    <div class="card shadow-sm border-secondary">
+        <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center fw-bold text-uppercase">
+            <h4 class="mb-0">Gestão de Compras (NFe)</h4>
+            <!-- BOTÃO QUE LEVA PARA A TELA DE CRIAÇÃO -->
+            <a asp-page="/Compras" class="btn btn-success fw-bold">+ Lançar NFe</a>
+        </div>
+        
+        <div class="card-body p-0">
+            @if (TempData["MensagemSucesso"] != null)
+            {
+                <div class="alert alert-success m-3 fw-bold">@TempData["MensagemSucesso"]</div>
+            }
+            @if (TempData["MensagemErro"] != null)
+            {
+                <div class="alert alert-danger m-3 fw-bold">@TempData["MensagemErro"]</div>
+            }
+
+            <div class="table-responsive">
+                <table class="table table-striped table-hover mb-0 text-center align-middle">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>FORNECEDOR</th>
+                            <th>MODELO</th>
+                            <th>SÉRIE</th>
+                            <th>Nº NFE</th>
+                            <th>EMISSÃO</th>
+                            <th>AÇÕES</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.ListaCompras != null && Model.ListaCompras.Count > 0)
+                        {
+                            foreach (var compra in Model.ListaCompras)
+                            {
+                                <tr>
+                                    <!-- Se no futuro você adicionar o Nome do Fornecedor no CompraModel usando um JOIN, pode trocar IdFornecedor pelo Nome -->
+                                    <td class="fw-bold">@compra.IdFornecedor</td> 
+                                    <td>@compra.Modelo</td>
+                                    <td>@compra.Serie</td>
+                                    <td class="text-primary fw-bold">@compra.NumNfe</td>
+                                    <td>@(compra.DataEmitNfe?.ToString("dd/MM/yyyy") ?? "-")</td>
+                                    <td>
+                                        <form method="post" asp-page-handler="Excluir" class="d-inline" onsubmit="return confirm('Tem certeza que deseja excluir a NFe @compra.NumNfe?');">
+                                            <!-- Envia as 4 chaves primárias ocultas para deletar o registro correto -->
+                                            <input type="hidden" name="modelo" value="@compra.Modelo" />
+                                            <input type="hidden" name="serie" value="@compra.Serie" />
+                                            <input type="hidden" name="numNfe" value="@compra.NumNfe" />
+                                            <input type="hidden" name="idFornecedor" value="@compra.IdFornecedor" />
+                                            
+                                            <!-- Botão de Editar passando as 4 chaves na URL -->
+                                            <a asp-page="/ComprasEditar" 
+                                               asp-route-modelo="@compra.Modelo" 
+                                               asp-route-serie="@compra.Serie" 
+                                               asp-route-numNfe="@compra.NumNfe" 
+                                               asp-route-idFornecedor="@compra.IdFornecedor" 
+                                               class="btn btn-warning btn-sm fw-bold">EDITAR</a>
+                                               
+                                            <button type="submit" class="btn btn-danger btn-sm fw-bold">EXCLUIR</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="6" class="text-muted py-4">Nenhuma Nota Fiscal cadastrada.</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
