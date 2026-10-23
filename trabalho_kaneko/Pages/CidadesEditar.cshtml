@@ -4,6 +4,13 @@
     ViewData["Title"] = "Editar Cidade";
 }
 
+<!-- CORREÇÃO DE LARGURA DO SELECT2: Força a ocupar 100% do espaço no modal -->
+<style>
+    .select2-container {
+        width: 100% !important;
+    }
+</style>
+
 <div class="container mt-4">
     <div class="mb-3">
         <a asp-page="/CidadesListar" class="btn btn-danger btn-sm">Voltar para a Lista</a>
@@ -33,19 +40,21 @@
 
                     <div class="col-md-4">
                         <label class="form-label fw-bold campo-obrigatorio text-uppercase">Estado</label>
-                        <div class="input-group flex-nowrap">
-                            <select asp-for="Cidade.IdEstado" class="form-select" id="selectEstado" required>
-                                <option value="">-- Selecione um Estado --</option>
-                                @if (Model.ListaEstados != null)
-                                {
-                                    foreach (var estado in Model.ListaEstados)
+                        <div class="d-flex gap-2">
+                            <div class="flex-grow-1">
+                                <select asp-for="Cidade.IdEstado" class="form-select select2-search" id="selectEstado" required>
+                                    <option value="">-- Selecione um Estado --</option>
+                                    @if (Model.ListaEstados != null)
                                     {
-                                        <option value="@estado.IdEstado">@estado.Estado - @estado.Uf - @estado.NomePais</option>
+                                        foreach (var estado in Model.ListaEstados)
+                                        {
+                                            <option value="@estado.IdEstado">@estado.Estado - @estado.Uf - @estado.NomePais</option>
+                                        }
                                     }
-                                }
-                            </select>
-
-                            <button class="btn btn-outline-warning fw-bold text-nowrap" type="button" data-bs-toggle="modal" data-bs-target="#modalNovoEstado">
+                                </select>
+                            </div>
+                            <!-- Aponta para a modal de Gestão (Lista) -->
+                            <button class="btn btn-outline-warning fw-bold px-3 text-nowrap text-dark" type="button" data-bs-toggle="modal" data-bs-target="#modalGestaoEstados" style="height: 38px;">
                                 + Novo
                             </button>
                         </div>
@@ -61,24 +70,25 @@
 </div>
 
 <!-- ============================================== -->
-<!-- MODAL 1: GESTÃO E CADASTRO DE ESTADOS          -->
+<!-- MODAL 1: GESTÃO RÁPIDA DE ESTADOS (TABELA)     -->
 <!-- ============================================== -->
-<div class="modal fade" id="modalNovoEstado" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="modalGestaoEstados" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl">
-        <div class="modal-content border-warning shadow-lg">
-
-            <div class="modal-header bg-warning text-dark">
-                <h5 class="modal-title fw-bold text-uppercase">Gestão Rápida de Estados</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="modal-content border-success shadow-lg">
+            <div class="modal-header bg-success text-white d-flex justify-content-between align-items-center">
+                <h5 class="modal-title fw-bold text-uppercase mb-0">Gestão Rápida de Estados</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-
             <div class="modal-body bg-light">
-                <div class="card shadow-sm border-secondary mb-4">
-                    <div class="card-header bg-dark text-white fw-bold text-uppercase">
-                        Estados Cadastrados
-                    </div>
+
+                <div class="text-end mb-3">
+                    <button type="button" class="btn btn-success fw-bold" onclick="abrirModalCadastrarEstado()">+ NOVO ESTADO</button>
+                </div>
+
+                <div class="card shadow-sm border-secondary">
+                    <div class="card-header bg-dark text-white fw-bold text-uppercase">Estados Cadastrados</div>
                     <div class="card-body p-0">
-                        <div class="table-responsive" style="max-height: 250px; overflow-y: auto;">
+                        <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
                             <table class="table table-striped table-hover mb-0 text-center align-middle" style="font-size: 0.9rem;">
                                 <thead style="position: sticky; top: 0; z-index: 1;" class="table-dark">
                                     <tr>
@@ -113,37 +123,52 @@
                         </div>
                     </div>
                 </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary fw-bold" data-bs-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
 
-                <div class="card shadow-sm border-warning">
-                    <div class="card-header bg-warning text-dark fw-bold text-uppercase">
-                        + Novo Estado
-                    </div>
+<!-- ============================================== -->
+<!-- MODAL 2: CADASTRAR NOVO ESTADO                 -->
+<!-- ============================================== -->
+<div class="modal fade" id="modalCadastrarEstado" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content border-success shadow-lg">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title fw-bold text-uppercase">Cadastrar Novo Estado</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body bg-light">
+                <div class="card shadow-sm border-secondary bg-white rounded">
                     <div class="card-body">
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <label class="form-label fw-bold campo-obrigatorio text-uppercase">Estado</label>
                                 <input type="text" id="modalEstadoNome" class="form-control" maxlength="50" placeholder="EX: PARANÁ" style="text-transform: uppercase;" required />
                             </div>
-
                             <div class="col-md-2">
                                 <label class="form-label fw-bold campo-obrigatorio text-uppercase">UF</label>
                                 <input type="text" id="modalEstadoUf" class="form-control" maxlength="2" placeholder="PR" style="text-transform: uppercase;" required />
                             </div>
-
                             <div class="col-md-4">
                                 <label class="form-label fw-bold campo-obrigatorio text-uppercase">País</label>
-                                <div class="input-group flex-nowrap">
-                                    <select class="form-select" id="selectPaisModalEstado" required>
-                                        <option value="">-- Selecione --</option>
-                                        @if (Model.ListaPaises != null)
-                                        {
-                                            foreach (var pais in Model.ListaPaises)
+                                <div class="d-flex gap-2">
+                                    <div class="flex-grow-1">
+                                        <select class="form-select select2-search" id="selectPaisModalEstado" required style="width: 100%;">
+                                            <option value="">-- Selecione --</option>
+                                            @if (Model.ListaPaises != null)
                                             {
-                                                <option value="@pais.IdPais">@pais.Pais</option>
+                                                foreach (var pais in Model.ListaPaises)
+                                                {
+                                                    <option value="@pais.IdPais">@pais.Pais</option>
+                                                }
                                             }
-                                        }
-                                    </select>
-                                    <button class="btn btn-outline-warning fw-bold text-nowrap" type="button" onclick="abrirModalPaisSobreposto()">
+                                        </select>
+                                    </div>
+                                    <button class="btn btn-outline-success fw-bold px-3 text-nowrap" type="button" onclick="abrirModalGestaoPaises()" style="height: 38px;">
                                         + Novo
                                     </button>
                                 </div>
@@ -152,20 +177,17 @@
                         <div id="modalEstadoErro" class="text-danger fw-bold d-none mt-3">Erro ao salvar estado. Verifique os dados.</div>
                     </div>
                 </div>
-
             </div>
-
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary fw-bold" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-warning fw-bold text-dark" onclick="salvarEstadoAjax()">Salvar Estado</button>
+                <button type="button" class="btn btn-success fw-bold" onclick="salvarEstadoAjax()">Salvar Estado</button>
             </div>
-
         </div>
     </div>
 </div>
 
 <!-- ============================================== -->
-<!-- MODAL 2: EDITAR ESTADO (Abre por cima)         -->
+<!-- MODAL 3: EDITAR ESTADO (Abre por cima)         -->
 <!-- ============================================== -->
 <div class="modal fade" id="modalEditarEstado" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -189,7 +211,7 @@
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label fw-bold text-uppercase">País</label>
-                                <select class="form-select" id="editEstadoIdPais" required>
+                                <select class="form-select select2-search" id="editEstadoIdPais" required style="width: 100%;">
                                     <option value="">-- Selecione --</option>
                                     @if (Model.ListaPaises != null)
                                     {
@@ -213,24 +235,23 @@
 </div>
 
 <!-- ============================================== -->
-<!-- MODAL 3: GESTÃO E CADASTRO DE PAÍSES           -->
+<!-- MODAL 4: GESTÃO RÁPIDA DE PAÍSES (TABELA)      -->
 <!-- ============================================== -->
-<div class="modal fade" id="modalNovoPais" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="modalGestaoPaises" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl">
-        <div class="modal-content border-warning shadow-lg">
-
-            <div class="modal-header bg-warning text-dark">
-                <h5 class="modal-title fw-bold text-uppercase">Gestão Rápida de Países</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="modal-content border-success shadow-lg">
+            <div class="modal-header bg-success text-white d-flex justify-content-between align-items-center">
+                <h5 class="modal-title fw-bold text-uppercase mb-0">Gestão Rápida de Países</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-
             <div class="modal-body bg-light">
-                <div class="card shadow-sm border-secondary mb-4">
-                    <div class="card-header bg-dark text-white fw-bold text-uppercase">
-                        Países Cadastrados
-                    </div>
+                <div class="text-end mb-3">
+                    <button type="button" class="btn btn-success fw-bold" onclick="abrirModalCadastrarPais()">+ NOVO PAÍS</button>
+                </div>
+                <div class="card shadow-sm border-secondary">
+                    <div class="card-header bg-dark text-white fw-bold text-uppercase">Países Cadastrados</div>
                     <div class="card-body p-0">
-                        <div class="table-responsive" style="max-height: 250px; overflow-y: auto;">
+                        <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
                             <table class="table table-striped table-hover mb-0 text-center align-middle" style="font-size: 0.9rem;">
                                 <thead style="position: sticky; top: 0; z-index: 1;" class="table-dark">
                                     <tr>
@@ -269,11 +290,26 @@
                         </div>
                     </div>
                 </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary fw-bold" data-bs-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
 
-                <div class="card shadow-sm border-warning">
-                    <div class="card-header bg-warning text-dark fw-bold text-uppercase">
-                        + Novo País
-                    </div>
+<!-- ============================================== -->
+<!-- MODAL 5: CADASTRAR NOVO PAÍS                   -->
+<!-- ============================================== -->
+<div class="modal fade" id="modalCadastrarPais" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content border-success shadow-lg">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title fw-bold text-uppercase">Cadastrar Novo País</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body bg-light">
+                <div class="card shadow-sm border-secondary bg-white rounded">
                     <div class="card-body">
                         <div class="row g-3">
                             <div class="col-md-5">
@@ -296,20 +332,17 @@
                         <div id="modalPaisErro" class="text-danger fw-bold d-none mt-3">Erro ao salvar país. Verifique os dados.</div>
                     </div>
                 </div>
-
             </div>
-
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary fw-bold" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-warning fw-bold text-dark" onclick="salvarPaisAjax()">Salvar País</button>
+                <button type="button" class="btn btn-success fw-bold" onclick="salvarPaisAjax()">Salvar País</button>
             </div>
-
         </div>
     </div>
 </div>
 
 <!-- ============================================== -->
-<!-- MODAL 4: EDITAR PAÍS (Abre por cima do outro)  -->
+<!-- MODAL 6: EDITAR PAÍS                           -->
 <!-- ============================================== -->
 <div class="modal fade" id="modalEditarPais" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -353,12 +386,27 @@
 
 @section Scripts {
     <script>
-        // Correção de Bug do Bootstrap: Mantém o scroll natural quando múltiplos modais fecham
-        document.getElementById('modalNovoPais').addEventListener('hidden.bs.modal', function () {
-            if (document.getElementById('modalNovoEstado').classList.contains('show')) document.body.classList.add('modal-open');
+        $(document).ready(function() {
+            // Inicializa o Select2 apontando para os modais Corretos
+            $('#selectPaisModalEstado').select2({
+                dropdownParent: $('#modalCadastrarEstado'),
+                width: '100%'
+            });
+
+            $('#editEstadoIdPais').select2({
+                dropdownParent: $('#modalEditarEstado'),
+                width: '100%'
+            });
         });
-        document.getElementById('modalEditarEstado').addEventListener('hidden.bs.modal', function () {
-            if (document.getElementById('modalNovoEstado').classList.contains('show')) document.body.classList.add('modal-open');
+
+        // Correção de Bug do Bootstrap para manter o scroll aninhado
+        const modals = ['modalGestaoEstados', 'modalCadastrarEstado', 'modalEditarEstado', 'modalGestaoPaises', 'modalCadastrarPais', 'modalEditarPais'];
+        modals.forEach(modalId => {
+            document.getElementById(modalId)?.addEventListener('hidden.bs.modal', function () {
+                if (document.querySelector('.modal.show')) {
+                    document.body.classList.add('modal-open');
+                }
+            });
         });
 
         const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value || '';
@@ -367,6 +415,16 @@
         // =========================================================
         // SCRIPTS PARA ESTADOS
         // =========================================================
+        function abrirModalCadastrarEstado() {
+            var modal = new bootstrap.Modal(document.getElementById('modalCadastrarEstado'));
+            modal.show();
+            document.getElementById('modalCadastrarEstado').style.zIndex = '1060';
+            setTimeout(() => {
+                const backdrops = document.querySelectorAll('.modal-backdrop');
+                if (backdrops.length > 1) backdrops[backdrops.length - 1].style.zIndex = '1059';
+            }, 100);
+        }
+
         function salvarEstadoAjax() {
             const nome = document.getElementById('modalEstadoNome').value;
             const uf = document.getElementById('modalEstadoUf').value;
@@ -389,9 +447,12 @@
                     const textoCompleto = `${data.nome} - ${nomeDoPais.toUpperCase()}`;
 
                     const select = document.getElementById('selectEstado');
-                    if(select) select.add(new Option(textoCompleto, data.id, true, true));
+                    if(select) {
+                        select.add(new Option(textoCompleto, data.id, true, true));
+                        $(select).trigger('change');
+                    }
 
-                    const tbody = document.querySelector('#modalNovoEstado tbody');
+                    const tbody = document.querySelector('#modalGestaoEstados tbody');
                     if(tbody) {
                         tbody.insertAdjacentHTML('beforeend', `
                             <tr id="linha-estado-${data.id}">
@@ -410,6 +471,8 @@
                     document.getElementById('modalEstadoNome').value = '';
                     document.getElementById('modalEstadoUf').value = '';
                     document.getElementById('modalEstadoErro').classList.add('d-none');
+
+                    bootstrap.Modal.getInstance(document.getElementById('modalCadastrarEstado')).hide();
                 } else {
                     document.getElementById('modalEstadoErro').classList.remove('d-none');
                 }
@@ -421,7 +484,10 @@
             document.getElementById('editEstadoId').value = id;
             document.getElementById('editEstadoNome').value = nome;
             document.getElementById('editEstadoUf').value = uf;
-            document.getElementById('editEstadoIdPais').value = idPais;
+
+            const dropdownPais = document.getElementById('editEstadoIdPais');
+            dropdownPais.value = idPais;
+            $(dropdownPais).trigger('change');
 
             var modal = new bootstrap.Modal(document.getElementById('modalEditarEstado'));
             modal.show();
@@ -463,6 +529,7 @@
                         for (let i = 0; i < select.options.length; i++) {
                             if (select.options[i].value === id) { select.options[i].text = textoCompleto; break; }
                         }
+                        $(select).trigger('change');
                     }
 
                     bootstrap.Modal.getInstance(document.getElementById('modalEditarEstado')).hide();
@@ -487,6 +554,7 @@
                         for (let i = 0; i < select.options.length; i++) {
                             if (select.options[i].value == id) { select.remove(i); break; }
                         }
+                        $(select).trigger('change');
                     }
                 } else alert(data.mensagem);
             });
@@ -495,13 +563,23 @@
         // =========================================================
         // SCRIPTS PARA PAÍSES
         // =========================================================
-        function abrirModalPaisSobreposto() {
-            var modalPais = new bootstrap.Modal(document.getElementById('modalNovoPais'));
-            modalPais.show();
-            document.getElementById('modalNovoPais').style.zIndex = '1060';
+        function abrirModalGestaoPaises() {
+            var modal = new bootstrap.Modal(document.getElementById('modalGestaoPaises'));
+            modal.show();
+            document.getElementById('modalGestaoPaises').style.zIndex = '1070';
             setTimeout(() => {
                 const backdrops = document.querySelectorAll('.modal-backdrop');
-                if (backdrops.length > 1) backdrops[backdrops.length - 1].style.zIndex = '1059';
+                if (backdrops.length > 2) backdrops[backdrops.length - 1].style.zIndex = '1069';
+            }, 100);
+        }
+
+        function abrirModalCadastrarPais() {
+            var modal = new bootstrap.Modal(document.getElementById('modalCadastrarPais'));
+            modal.show();
+            document.getElementById('modalCadastrarPais').style.zIndex = '1080';
+            setTimeout(() => {
+                const backdrops = document.querySelectorAll('.modal-backdrop');
+                if (backdrops.length > 3) backdrops[backdrops.length - 1].style.zIndex = '1079';
             }, 100);
         }
 
@@ -525,11 +603,17 @@
                 if (data.sucesso) {
                     const selectEstado = document.getElementById('selectPaisModalEstado');
                     const selectEditEstado = document.getElementById('editEstadoIdPais');
-                    
-                    if(selectEstado) selectEstado.add(new Option(data.nome, data.id, true, true));
-                    if(selectEditEstado) selectEditEstado.add(new Option(data.nome, data.id, false, false));
 
-                    const tbody = document.querySelector('#modalNovoPais tbody');
+                    if(selectEstado) {
+                        selectEstado.add(new Option(data.nome, data.id, true, true));
+                        $(selectEstado).trigger('change');
+                    }
+                    if(selectEditEstado) {
+                        selectEditEstado.add(new Option(data.nome, data.id, false, false));
+                        $(selectEditEstado).trigger('change');
+                    }
+
+                    const tbody = document.querySelector('#modalGestaoPaises tbody');
                     if(tbody) {
                         tbody.insertAdjacentHTML('beforeend', `
                             <tr id="linha-pais-${data.id}">
@@ -546,12 +630,14 @@
                                 </td>
                             </tr>`);
                     }
-                    
+
                     document.getElementById('modalPaisNome').value = '';
                     document.getElementById('modalPaisSigla').value = '';
                     document.getElementById('modalPaisDdi').value = '';
                     document.getElementById('modalPaisMoeda').value = '';
                     document.getElementById('modalPaisErro').classList.add('d-none');
+
+                    bootstrap.Modal.getInstance(document.getElementById('modalCadastrarPais')).hide();
                 } else document.getElementById('modalPaisErro').classList.remove('d-none');
             })
             .catch(err => console.error(err));
@@ -566,10 +652,10 @@
 
             var modal = new bootstrap.Modal(document.getElementById('modalEditarPais'));
             modal.show();
-            document.getElementById('modalEditarPais').style.zIndex = '1070';
+            document.getElementById('modalEditarPais').style.zIndex = '1090';
             setTimeout(() => {
                 const backdrops = document.querySelectorAll('.modal-backdrop');
-                if (backdrops.length > 2) backdrops[backdrops.length - 1].style.zIndex = '1069';
+                if (backdrops.length > 4) backdrops[backdrops.length - 1].style.zIndex = '1089';
             }, 100);
         }
 
@@ -604,6 +690,7 @@
                             for (let i = 0; i < select.options.length; i++) {
                                 if (select.options[i].value === id) { select.options[i].text = nome.toUpperCase(); break; }
                             }
+                            $(select).trigger('change');
                         }
                     });
 
@@ -630,6 +717,7 @@
                             for (let i = 0; i < select.options.length; i++) {
                                 if (select.options[i].value == id) { select.remove(i); break; }
                             }
+                            $(select).trigger('change');
                         }
                     });
                 } else alert(data.mensagem);
